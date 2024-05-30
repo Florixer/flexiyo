@@ -59,14 +59,16 @@ const Music = () => {
         getTopTracks();
       } else {
         const cachedTracks = localStorage.getItem("cachedTracks");
-        const cachedTracksObject = JSON.parse(cachedTracks);
-        setTopTracks(Object.values(cachedTracksObject));
-        setTopTrackIds(Object.keys(cachedTracksObject));
+        if (cachedTracks) {
+          const cachedTracksObject = JSON.parse(cachedTracks);
+          setTopTracks(Object.values(cachedTracksObject));
+          setTopTrackIds(Object.keys(cachedTracksObject));
+        }
       }
     } else {
       getTopTracks();
     }
-  }, []);
+  }, [isNetworkConnected]);
 
   const openDownloadModal = (data) => {
     setModalDownloadData(data);
