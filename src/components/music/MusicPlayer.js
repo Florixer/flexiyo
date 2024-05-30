@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { Capacitor } from "@capacitor/core";
+import { CapacitorMusicControls as CapacitorMediaSession } from "capacitor-music-controls-plugin";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import MusicContext from "../../context/music/MusicContext";
@@ -104,7 +105,44 @@ const MusicPlayer = () => {
       ],
     };
 
-    if (!Capacitor.isNativePlatform()) {
+    if (Capacitor.isNativePlatform()) {
+      CapacitorMediaSession.create({
+        track: currentTrackName,
+        artist: currentTrackArtists,
+        cover: currentTrackImage,
+        isPlaying: isPlaying,
+        dismissable: false,
+        hasPrev: false,
+        hasNext: true,
+        hasClose: false,
+      });
+
+      CapacitorMediaSession.updateIsPlaying(isPlaying);
+
+      CapacitorMediaSession.subscribe().subscribe((action) => {
+        const message = JSON.parse(action).message;
+        switch (message) {
+          case "music-controls-play":
+            handleTogglePlay();
+            break;
+          case "music-controls-pause":
+            handleTogglePlay();
+            break;
+          case "music-controls-next":
+            handleNextTrack();
+            break;
+          case "music-controls-destroy":
+            CapacitorMediaSession.destroy();
+            break;
+          case "music-controls-headset-unplugged":
+            // Handle headset unplugged
+            break;
+          case "music-controls-headset-plugged":
+            // Handle headset plugged
+            break;
+        }
+      });
+    } else {
       // Web Media Session Handler
       if ("mediaSession" in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata(
@@ -129,11 +167,15 @@ const MusicPlayer = () => {
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
-      if (window.MusicControls) {
-        window.MusicControls.destroy();
-      }
+      CapacitorMediaSession.destroy();
     };
-  }, [currentTrackLink, handleNextTrack, handleTogglePlay]);
+  }, [currentTrackLink, handleNextTrack, isPlaying, handleTogglePlay]);
+
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      CapacitorMediaSession.updateIsPlaying(isPlaying);
+    }
+  }, [isPlaying]);
 
   const handleProgressBarClick = (e) => {
     const audio = audioRef.current;
@@ -162,26 +204,31 @@ const MusicPlayer = () => {
     setIsDragging(true);
     setTouchStartPosition(e.touches[0].clientX);
   };
-
   const handleTouchMove = useCallback(
     (e) => {
       if (isDragging) {
         const audio = audioRef.current;
         const progressBar = progressBarRef.current;
         const touchPosition = e.touches[0].clientX;
-        const deltaX = touchPosition - touchStartPosition;
+        const progressBarRect = progressBar.getBoundingClientRect();
         const newPosition =
-          (((progress + (deltaX / progressBar.clientWidth) * 100) % 100) +
-            100) %
+          ((touchPosition - progressBarRect.left) / progressBarRect.width) *
           100;
 
-        setProgress(newPosition);
-        audio.pause();
-        audio.currentTime = (newPosition / 100) * audio.duration;
-        setTouchStartPosition(touchPosition);
+        const clampedPosition = Math.max(0, Math.min(100, newPosition));
+
+        setProgress(clampedPosition);
+        audio.currentTime = (clampedPosition / 100) * audio.duration;
+
+        if (
+          touchPosition < progressBarRect.left ||
+          touchPosition > progressBarRect.right
+        ) {
+          setIsDragging(false);
+        }
       }
     },
-    [isDragging, progress, touchStartPosition],
+    [isDragging],
   );
 
   const handleTouchEnd = useCallback(() => {
@@ -311,11 +358,11 @@ const MusicPlayer = () => {
               <div className="music-player--controls-preloader"></div>
             )}
             {isPlaying && !isAudioLoading ? (
-              <svg role="img" ariaHidden="true" viewBox="0 0 24 24">
+              <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
                 <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
               </svg>
             ) : (
-              <svg role="img" ariaHidden="true" viewBox="0 0 24 24">
+              <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
                 <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
               </svg>
             )}
@@ -324,12 +371,8 @@ const MusicPlayer = () => {
             className="music-player--controls-item"
             onClick={handleNextTrack}
           >
-            <svg role="img" ariaHidden="true" viewBox="0 0 24 24">
-              <path
-                d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4
-          4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0
-          .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"
-              ></path>
+            <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
             </svg>
           </span>
         </div>
