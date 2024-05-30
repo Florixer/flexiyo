@@ -86,8 +86,8 @@ const useMusicUtility = () => {
         };
         setCurrentTrack(trackData);
         await cacheTrackData(trackData);
-        setIsAudioLoading(false);
       }
+        setIsAudioLoading(false);
     } catch (error) {
       console.error("Error fetching track:", error);
       setIsAudioLoading(false);
