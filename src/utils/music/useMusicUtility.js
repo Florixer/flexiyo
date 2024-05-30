@@ -1,6 +1,9 @@
 import { useContext } from "react";
 import axios from "axios";
-import { Filesystem, Directory } from "@capacitor/filesystem";
+import {
+  Filesystem as CapacitorFilesystem,
+  Directory,
+} from "@capacitor/filesystem";
 import { Capacitor } from "@capacitor/core";
 import MusicContext from "../../context/music/MusicContext";
 
@@ -25,8 +28,15 @@ const useMusicUtility = () => {
 
       if (cachedTracks[trackId]) {
         const cachedTrackData = cachedTracks[trackId];
-        if (Capacitor.isNativePlatform()) {
-          const fileData = await Filesystem.readFile({
+        const { files } = await CapacitorFilesystem.readdir({
+          path: "audio_cache",
+          directory: Directory.cache,
+        });
+        const fileExists = files.some(
+          (file) => file.name === `${trackId}.file`,
+        );
+        if (Capacitor.isNativePlatform() && fileExists) {
+          const fileData = await CapacitorFilesystem.readFile({
             path: `audio_cache/${trackId}.file`,
             directory: Directory.Cache,
           });
@@ -60,54 +70,97 @@ const useMusicUtility = () => {
 
         const resultData = data.data[0];
 
-        const trackData = {
-          id: resultData.id,
-          name: resultData.name,
-          album: resultData.album.name,
-          artists: resultData.artists.primary
-            .map((artist) => artist.name)
-            .join(", "),
-          image:
-            contentQuality === "low"
-              ? resultData.image[0].url
-              : contentQuality === "normal"
-                ? resultData.image[1].url
-                : contentQuality === "high"
-                  ? resultData.image[2].url
-                  : resultData.image[1].url,
-          link:
-            contentQuality === "low"
-              ? resultData.downloadUrl[2].url
-              : contentQuality === "normal"
-                ? resultData.downloadUrl[3].url
-                : contentQuality === "high"
-                  ? resultData.downloadUrl[4].url
-                  : resultData.downloadUrl[3].url,
+        const response = await axios.get(
+          contentQuality === "low"
+            ? resultData.downloadUrl[1].url
+            : contentQuality === "normal"
+              ? resultData.downloadUrl[3].url
+              : contentQuality === "high"
+                ? resultData.downloadUrl[4].url
+                : resultData.downloadUrl[3].url,
+          {
+            responseType: "blob",
+          },
+        );
+        const blobData = response.data;
+
+        const reader = new FileReader();
+        reader.readAsDataURL(blobData);
+        reader.onloadend = async () => {
+          const audioBase64Data = reader.result;
+
+          const trackData = {
+            id: resultData.id,
+            name: resultData.name,
+            album: resultData.album.name,
+            artists: resultData.artists.primary
+              .map((artist) => artist.name)
+              .join(", "),
+            image:
+              contentQuality === "low"
+                ? resultData.image[0].url
+                : contentQuality === "normal"
+                  ? resultData.image[1].url
+                  : contentQuality === "high"
+                    ? resultData.image[2].url
+                    : resultData.image[1].url,
+            link:
+              contentQuality === "low"
+                ? resultData.downloadUrl[1].url
+                : contentQuality === "normal"
+                  ? resultData.downloadUrl[3].url
+                  : contentQuality === "high"
+                    ? resultData.downloadUrl[4].url
+                    : resultData.downloadUrl[3].url,
+          };
+          const newTrackData = {
+            ...trackData,
+            link: `data:audio/mp4;base64,${audioBase64Data}`,
+          };
+          setCurrentTrack(newTrackData);
+          await cacheTrackData(trackData, audioBase64Data);
         };
-        setCurrentTrack(trackData);
-        await cacheTrackData(trackData);
       }
-        setIsAudioLoading(false);
+      setIsAudioLoading(false);
     } catch (error) {
       console.error("Error fetching track:", error);
       setIsAudioLoading(false);
     }
   };
 
+  const cacheTrackData = async (trackData, audioBase64Data) => {
+    try {
+      if (Capacitor.isNativePlatform()) {
+        await CapacitorFilesystem.writeFile({
+          path: `audio_cache/${trackData.id}.file`,
+          data: audioBase64Data,
+          directory: Directory.Cache,
+          recursive: true,
+        });
+        const cachedTracks = JSON.parse(
+          localStorage.getItem("cachedTracks") || "{}",
+        );
+        cachedTracks[trackData.id] = trackData;
+        localStorage.setItem("cachedTracks", JSON.stringify(cachedTracks));
+      } else {
+        const cachedTracks = JSON.parse(
+          localStorage.getItem("cachedTracks") || "{}",
+        );
+        cachedTracks[trackData.id] = trackData;
+        localStorage.setItem("cachedTracks", JSON.stringify(cachedTracks));
+      }
+    } catch (error) {
+      console.error("Error caching track data:", error);
+    }
+  };
   const deleteCachedAudioData = async () => {
     try {
       if (Capacitor.isNativePlatform()) {
-        const { files } = await Filesystem.readdir({
+        await CapacitorFilesystem.rmdir({
           path: "audio_cache",
           directory: Directory.Cache,
+          recursive: true,
         });
-
-        for (const file of files) {
-          await Filesystem.deleteFile({
-            path: file,
-            directory: Directory.Cache,
-          });
-        }
         localStorage.removeItem("cachedTracks");
         alert("Cached Audio Data deleted successfully");
       } else {
@@ -116,37 +169,6 @@ const useMusicUtility = () => {
       }
     } catch (e) {
       console.error("Unable to delete Cached Audio Data", e);
-    }
-  };
-  const cacheTrackData = async (trackData) => {
-    try {
-      if (Capacitor.isNativePlatform()) {
-        const response = await axios.get(trackData.link, {
-          responseType: "blob",
-        });
-        const blobData = response.data;
-
-        const reader = new FileReader();
-        reader.readAsDataURL(blobData);
-        reader.onloadend = async () => {
-          const base64Data = reader.result;
-
-          await Filesystem.writeFile({
-            path: `audio_cache/${trackData.id}.file`,
-            data: base64Data,
-            directory: Directory.Cache,
-            recursive: true,
-          });
-        };
-      }
-
-      const cachedTracks = JSON.parse(
-        localStorage.getItem("cachedTracks") || "{}",
-      );
-      cachedTracks[trackData.id] = trackData;
-      localStorage.setItem("cachedTracks", JSON.stringify(cachedTracks));
-    } catch (error) {
-      console.error("Error caching track data:", error);
     }
   };
 
