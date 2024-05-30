@@ -6,6 +6,7 @@ import MusicContext from "../../context/music/MusicContext";
 
 const useMusicUtility = () => {
   const {
+    currentTrack,
     setCurrentTrack,
     setPlayedTrackIds,
     setIsAudioLoading,
@@ -83,11 +84,10 @@ const useMusicUtility = () => {
                   ? resultData.downloadUrl[4].url
                   : resultData.downloadUrl[3].url,
         };
-
         setCurrentTrack(trackData);
         await cacheTrackData(trackData);
+        setIsAudioLoading(false);
       }
-      setIsAudioLoading(false);
     } catch (error) {
       console.error("Error fetching track:", error);
       setIsAudioLoading(false);
@@ -104,7 +104,7 @@ const useMusicUtility = () => {
 
         for (const file of files) {
           await Filesystem.deleteFile({
-            path: `audio_cache/${file}`,
+            path: file,
             directory: Directory.Cache,
           });
         }

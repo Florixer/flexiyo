@@ -6,7 +6,6 @@ import React, {
   useContext,
 } from "react";
 import { Capacitor } from "@capacitor/core";
-import { CapacitorMusicControls as CapacitorMediaSession } from "capacitor-music-controls-plugin";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import MusicContext from "../../context/music/MusicContext";
@@ -105,48 +104,7 @@ const MusicPlayer = () => {
       ],
     };
 
-    if (Capacitor.isNativePlatform()) {
-      CapacitorMediaSession.create({
-        track: currentTrackName,
-        artist: currentTrackArtists,
-        cover: currentTrackImage,
-        isPlaying: isPlaying,
-        dismissable: false,
-        hasPrev: false,
-        hasNext: true,
-        hasClose: false,
-        playIcon: "media_play",
-        pauseIcon: "media_pause",
-        nextIcon: "media_next",
-        notificationIcon: "notification",
-      });
-
-      CapacitorMediaSession.updateIsPlaying(isPlaying);
-
-      CapacitorMediaSession.subscribe().subscribe((action) => {
-        const message = JSON.parse(action).message;
-        switch (message) {
-          case "music-controls-play":
-            handleTogglePlay();
-            break;
-          case "music-controls-pause":
-            handleTogglePlay();
-            break;
-          case "music-controls-next":
-            handleNextTrack();
-            break;
-          case "music-controls-destroy":
-            CapacitorMediaSession.destroy();
-            break;
-          case "music-controls-headset-unplugged":
-            // Handle headset unplugged
-            break;
-          case "music-controls-headset-plugged":
-            // Handle headset plugged
-            break;
-        }
-      });
-    } else {
+    if (!Capacitor.isNativePlatform()) {
       // Web Media Session Handler
       if ("mediaSession" in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata(
@@ -171,15 +129,8 @@ const MusicPlayer = () => {
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
-      CapacitorMediaSession.destroy();
     };
   }, [currentTrackLink, handleNextTrack, isPlaying, handleTogglePlay]);
-
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      CapacitorMediaSession.updateIsPlaying(isPlaying);
-    }
-  }, [isPlaying]);
 
   const handleProgressBarClick = (e) => {
     const audio = audioRef.current;

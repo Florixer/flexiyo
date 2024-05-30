@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Network as CapacitorNetwork } from "@capacitor/network";
 import axios from "axios";
 import Modal from "react-modal";
 import Headroom from "react-headroom";
+import ReactJson from "@microlink/react-json-view";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import TrackItem from "../components/music/TrackItem";
 import MusicContext from "../context/music/MusicContext";
@@ -18,6 +18,7 @@ const Music = () => {
   const {
     topTracks,
     setTopTracks,
+    topTrackIds,
     setTopTrackIds,
     isSpeechModalOpen,
     setIsSpeechModalOpen,
@@ -59,11 +60,10 @@ const Music = () => {
         getTopTracks();
       } else {
         const cachedTracks = localStorage.getItem("cachedTracks");
-        if (cachedTracks) {
-          const cachedTracksObject = JSON.parse(cachedTracks);
-          setTopTracks(Object.values(cachedTracksObject));
-          setTopTrackIds(Object.keys(cachedTracksObject));
-        }
+        const cachedTracksObject = JSON.parse(cachedTracks);
+        setTopTracks(Object.values(cachedTracksObject));
+        setTopTrackIds(Object.keys(cachedTracksObject));
+        setTracks(Object.values(cachedTracksObject));
       }
     } else {
       getTopTracks();

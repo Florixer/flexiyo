@@ -39,14 +39,14 @@ const TrackItem = ({ id, track, index, onDownloadTrack }) => {
                       : track.image[1].url
                 : track.image
             }
-            alt="Track Cover"
+            alt="Track Image"
           />
         </div>
         <div className="track-item--details">
           <span className="track-item--details-name">{track.name}</span>
           <div className="track-item--details-artists">
             <span className="track-item--details-artists-item" key={index}>
-              {Array.isArray(track.artists.primary)
+              {track.artists.primary
                 ? track.artists.primary.length > 1
                   ? track.artists.primary
                       .map((artist) => artist.name)
