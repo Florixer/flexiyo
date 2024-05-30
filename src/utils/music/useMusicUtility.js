@@ -77,7 +77,7 @@ const useMusicUtility = () => {
                   : resultData.image[1].url,
           link:
             contentQuality === "low"
-              ? resultData.downloadUrl[0].url
+              ? resultData.downloadUrl[2].url
               : contentQuality === "normal"
                 ? resultData.downloadUrl[3].url
                 : contentQuality === "high"
