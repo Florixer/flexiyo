@@ -1,25 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.c92ff8de.css",
-    "main.js": "/static/js/main.0b7e9439.js",
-    "static/js/970.96851b0f.chunk.js": "/static/js/970.96851b0f.chunk.js",
-    "static/js/126.e6fc256d.chunk.js": "/static/js/126.e6fc256d.chunk.js",
-    "static/js/831.4ddebde2.chunk.js": "/static/js/831.4ddebde2.chunk.js",
-    "static/js/169.dbb269ae.chunk.js": "/static/js/169.dbb269ae.chunk.js",
-    "static/media/clip2.mp4": "/static/media/clip2.3052f8eb091ea2dc42ea.mp4",
+    "main.css": "/static/css/main.3169420c.css",
+    "main.js": "/static/js/main.773685a0.js",
     "static/media/bg.jpg": "/static/media/bg.6c55cacbc04d1badba8e.jpg",
     "static/media/demo-person.jpg": "/static/media/demo-person.fdbcc3f2755dc770cf62.jpg",
     "static/media/clip.mp4": "/static/media/clip.ce88dc65cbbc402b6c71.mp4",
-    "static/media/flexomate_gradient.jpg": "/static/media/flexomate_gradient.485eb24ad665ab81c4ba.jpg",
     "static/media/CircularSpotifyText-Medium.otf": "/static/media/CircularSpotifyText-Medium.7f8341c6940468e86d8d.otf",
     "static/media/kaushal_krishna.jpg": "/static/media/kaushal_krishna.261c8a8c52b0caf45b5b.jpg",
-    "static/media/profile-user-banner.svg": "/static/media/profile-user-banner.a6324be5466870343c3d.svg",
-    "static/media/flexomate_light.svg": "/static/media/flexomate_light.984084348ca56ab30689b6d4493f150e.svg",
+    "static/media/profile-user-banner.svg": "/static/media/profile-user-banner.831a7681b085f971a3f2.svg",
+    "static/media/flexomate_light.svg": "/static/media/flexomate_light.4c13b7ff0522f4d88f91c7a476f4f7c7.svg",
     "index.html": "/index.html",
-    "static/media/spotifyLogo.svg": "/static/media/spotifyLogo.bc1a3e4cce4eff3ae498bb3540e8da44.svg"
+    "main.3169420c.css.map": "/static/css/main.3169420c.css.map",
+    "main.773685a0.js.map": "/static/js/main.773685a0.js.map"
   },
-  "entrypoints": [
-    "static/css/main.c92ff8de.css",
-    "static/js/main.0b7e9439.js"
-  ]
+  "entrypoints": ["static/css/main.3169420c.css", "static/js/main.773685a0.js"]
 }

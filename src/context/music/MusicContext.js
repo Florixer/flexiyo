@@ -21,6 +21,9 @@ export const MusicProvider = ({ children }) => {
   const [isNetworkConnected, setIsNetworkConnected] = useState(false);
 
   useEffect(() => {
+    CapacitorNetwork.getStatus().then((status) => {
+      setIsNetworkConnected(status.connected);
+    });
     const handleNetworkStatusChange = (status) => {
       setIsNetworkConnected(status.connected);
     };
