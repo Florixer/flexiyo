@@ -18,9 +18,7 @@ export const MusicProvider = ({ children }) => {
   const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [isSpeechModalOpen, setIsSpeechModalOpen] = useState(false);
   const [contentQuality, setContentQuality] = useState("low");
-  const [isNetworkConnected, setIsNetworkConnected] = useState(
-    CapacitorNetwork.getStatus().then((status) => status.connected),
-  );
+  const [isNetworkConnected, setIsNetworkConnected] = useState(false);
 
   useEffect(() => {
     const handleNetworkStatusChange = (status) => {

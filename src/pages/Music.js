@@ -56,14 +56,14 @@ const Music = () => {
 
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
-      if (isNetworkConnected) {
-        getTopTracks();
-      } else {
+      if (!isNetworkConnected) {
         const cachedTracks = localStorage.getItem("cachedTracks");
         const cachedTracksObject = JSON.parse(cachedTracks);
         setTopTracks(Object.values(cachedTracksObject));
         setTopTrackIds(Object.keys(cachedTracksObject));
         setTracks(Object.values(cachedTracksObject));
+      } else {
+        getTopTracks();
       }
     } else {
       getTopTracks();
