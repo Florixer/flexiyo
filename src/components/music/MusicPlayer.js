@@ -115,6 +115,10 @@ const MusicPlayer = () => {
         hasPrev: false,
         hasNext: true,
         hasClose: false,
+        playIcon: "media_play",
+        pauseIcon: "media_pause",
+        nextIcon: "media_next",
+        notificationIcon: "notification",
       });
 
       CapacitorMediaSession.updateIsPlaying(isPlaying);
