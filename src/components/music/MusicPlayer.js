@@ -229,7 +229,7 @@ const MusicPlayer = () => {
     };
   }, [currentTrackLink]);
 
-  return currentTrack.id ? (
+  return currentTrack ? (
     <div className="music-player">
       <div className="music-player-box">
         <div className="music-player--image">

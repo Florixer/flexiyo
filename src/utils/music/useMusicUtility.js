@@ -30,7 +30,7 @@ const useMusicUtility = () => {
         const cachedTrackData = cachedTracks[trackId];
         const { files } = await CapacitorFilesystem.readdir({
           path: "audio_cache",
-          directory: Directory.cache,
+          directory: Directory.Cache,
         });
         const fileExists = files.some(
           (file) => file.name === `${trackId}.file`,
@@ -115,7 +115,7 @@ const useMusicUtility = () => {
           };
           const newTrackData = {
             ...trackData,
-            link: `data:audio/mp4;base64,${audioBase64Data}`,
+            link: audioBase64Data,
           };
           setCurrentTrack(newTrackData);
           await cacheTrackData(trackData, audioBase64Data);
