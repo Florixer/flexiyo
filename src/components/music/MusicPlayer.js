@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from "react";
+import axios from "axios";
 import { Capacitor } from "@capacitor/core";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import useMusicUtility from "../../utils/music/useMusicUtility";
@@ -14,18 +15,22 @@ const MusicPlayer = () => {
   const {
     currentTrack,
     topTracks,
-    playedTrackIds,
     isAudioLoading,
+    setIsAudioLoading,
     isSpeechModalOpen,
     contentQuality,
+    isNetworkConnected,
   } = useContext(MusicContext);
   const { getTrack } = useMusicUtility();
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
+  const [nextTrackId, setNextTrackId] = useState(null);
+
   const progressBarRef = useRef(null);
   const audioRef = useRef(new Audio());
+  const saavnApiBaseUrl = "https://saavn.dev/api";
 
   const {
     id: currentTrackId,
@@ -47,33 +52,46 @@ const MusicPlayer = () => {
     }
   }, []);
 
-  if (isSpeechModalOpen && isPlaying) {
-    audioRef.current.pause();
-    setIsPlaying(false);
-  }
-
   const handleNextTrack = useCallback(async () => {
     try {
       const audio = audioRef.current;
       audio.pause();
       setIsPlaying(false);
-      const availableTracks = topTracks.filter(
-        (track) => !playedTrackIds.includes(track.id),
-      );
-      const randomTrack =
-        availableTracks[Math.floor(Math.random() * availableTracks.length)];
-      getTrack(randomTrack.id);
+      setIsAudioLoading(true);
+
+      let trackIdToFetch;
+      if (isNetworkConnected) {
+        trackIdToFetch = await getSuggestedTrackId();
+      } else {
+        const trackIds = Object.keys(topTracks);
+        trackIdToFetch = trackIds[Math.floor(Math.random() * trackIds.length)];
+      }
+
+      await getTrack(trackIdToFetch);
+      setIsAudioLoading(false);
     } catch (error) {
       console.error("Error handling next track:", error);
+      setIsAudioLoading(false);
     }
-  }, [topTracks, getTrack, playedTrackIds]);
+  }, [getTrack, isNetworkConnected, topTracks]);
+
+  const getSuggestedTrackId = async () => {
+    const { data } = await axios.get(
+      `${saavnApiBaseUrl}/songs/${currentTrackId}/suggestions`,
+      { params: { limit: 10 } },
+    );
+    const suggestedTrackId = data.data[Math.floor(Math.random() * 10)].id;
+    return suggestedTrackId;
+  };
 
   useEffect(() => {
     const audio = audioRef.current;
 
     const handleTimeUpdate = () => {
-      const newPosition = (audio.currentTime / audio.duration) * 100;
-      setProgress(newPosition);
+      if (!isDragging) {
+        const newPosition = (audio.currentTime / audio.duration) * 100;
+        setProgress(newPosition);
+      }
     };
 
     const handleEnded = () => {
@@ -83,54 +101,29 @@ const MusicPlayer = () => {
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("ended", handleEnded);
 
-    const mediaSessionMetadata = {
-      id: currentTrackId,
-      title: currentTrackName,
-      album: currentTrackAlbum,
-      artist: currentTrackArtists,
-      artwork: [
-        {
-          src: currentTrackImage,
-          sizes:
-            contentQuality === "low"
-              ? "50x50"
-              : contentQuality === "normal"
-                ? "150x150"
-                : contentQuality === "high"
-                  ? "500x500"
-                  : "150x150",
-          type: "image/jpg",
-        },
-      ],
-    };
-
-    if (!Capacitor.isNativePlatform()) {
-      // Web Media Session Handler
-      if ("mediaSession" in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata(
-          mediaSessionMetadata,
-        );
-        navigator.mediaSession.setActionHandler("play", () => {
-          handleTogglePlay();
-          setIsPlaying(true);
-        });
-
-        navigator.mediaSession.setActionHandler("pause", () => {
-          handleTogglePlay();
-          setIsPlaying(false);
-        });
-
-        navigator.mediaSession.setActionHandler("nexttrack", () => {
-          handleNextTrack();
-        });
-      }
-    }
-
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [currentTrackLink, handleNextTrack, isPlaying, handleTogglePlay]);
+  }, [handleNextTrack, isDragging]);
+
+  useEffect(() => {
+    const playAudio = async () => {
+      if (currentTrackLink) {
+        try {
+          const audio = audioRef.current;
+          audio.src = currentTrackLink;
+          await audio.play();
+          setIsPlaying(true);
+        } catch (error) {
+          console.error("Error playing audio:", error);
+          setIsPlaying(false);
+        }
+      }
+    };
+
+    playAudio();
+  }, [currentTrackLink]);
 
   const handleProgressBarClick = (e) => {
     const audio = audioRef.current;
@@ -142,6 +135,10 @@ const MusicPlayer = () => {
 
   const handleProgressBarMouseDown = () => {
     setIsDragging(true);
+  };
+
+  const handleProgressBarMouseUp = () => {
+    setIsDragging(false);
   };
 
   const handleProgressBarDrag = (e) => {
@@ -159,6 +156,7 @@ const MusicPlayer = () => {
     setIsDragging(true);
     setTouchStartPosition(e.touches[0].clientX);
   };
+
   const handleTouchMove = useCallback(
     (e) => {
       if (isDragging) {
@@ -215,20 +213,6 @@ const MusicPlayer = () => {
     };
   }, [handleTouchMove, handleTouchEnd]);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-
-    audio.src = currentTrackLink;
-    audio.play();
-    setIsPlaying(true);
-
-    return () => {
-      audio.pause();
-      setIsPlaying(false);
-      setProgress(0);
-    };
-  }, [currentTrackLink]);
-
   return currentTrack ? (
     <div className="music-player">
       <div className="music-player-box">
@@ -266,8 +250,8 @@ const MusicPlayer = () => {
             onClick={handleProgressBarClick}
             onMouseDown={handleProgressBarMouseDown}
             onMouseMove={handleProgressBarDrag}
-            onMouseUp={() => setIsDragging(false)}
-            onTouchStart={(e) => handleTouchStart(e)}
+            onMouseUp={handleProgressBarMouseUp}
+            onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             style={{

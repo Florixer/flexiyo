@@ -16,12 +16,13 @@ import { Capacitor } from "@capacitor/core";
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
   const {
+    currentTrack,
+    setCurrentTrack,
     topTracks,
     setTopTracks,
-    topTrackIds,
-    setTopTrackIds,
     isSpeechModalOpen,
     setIsSpeechModalOpen,
+    contentQuality,
     isNetworkConnected,
   } = useContext(MusicContext);
   const { download: downloadFile } = useDownloader;
@@ -45,7 +46,6 @@ const Music = () => {
         `${saavnApiBaseUrl}/playlists?id=1134543272&limit=50`,
       );
       setTopTracks(response.data.songs);
-      setTopTrackIds(response.data.songs.map((track) => track.id));
       setTracks(response.data.songs);
       setApiLoading(false);
     } catch (error) {
@@ -60,7 +60,6 @@ const Music = () => {
         const cachedTracks = localStorage.getItem("cachedTracks");
         const cachedTracksObject = JSON.parse(cachedTracks);
         setTopTracks(Object.values(cachedTracksObject));
-        setTopTrackIds(Object.keys(cachedTracksObject));
         setTracks(Object.values(cachedTracksObject));
       } else {
         getTopTracks();

@@ -1,23 +1,29 @@
 import { createContext, useEffect, useState } from "react";
 import { Network as CapacitorNetwork } from "@capacitor/network";
+import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
 
 const MusicContext = createContext(null);
 
 export const MusicProvider = ({ children }) => {
+  const [contentQuality, setContentQuality] = useState("normal");
   const [currentTrack, setCurrentTrack] = useState({
-    id: "",
-    image: "",
-    name: "",
+    id: "e0kCEwoC",
+    image: logo,
+    name: "Play a random Track",
     album: "",
-    artists: "",
-    link: "",
+    artists: "Flexiyo Music",
+    link:
+      contentQuality === "low"
+        ? "https://aac.saavncdn.com/694/f3ca9af9ec18aadbf685b83d88c0ca2c_48.mp4"
+        : contentQuality === "normal"
+          ? "https://aac.saavncdn.com/694/f3ca9af9ec18aadbf685b83d88c0ca2c_160.mp4"
+          : contentQuality === "high"
+            ? "https://aac.saavncdn.com/694/f3ca9af9ec18aadbf685b83d88c0ca2c_320.mp4"
+            : "https://aac.saavncdn.com/694/f3ca9af9ec18aadbf685b83d88c0ca2c_160.mp4",
   });
   const [topTracks, setTopTracks] = useState({});
-  const [topTrackIds, setTopTrackIds] = useState([]);
-  const [playedTrackIds, setPlayedTrackIds] = useState([]);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [isSpeechModalOpen, setIsSpeechModalOpen] = useState(false);
-  const [contentQuality, setContentQuality] = useState("low");
   const [isNetworkConnected, setIsNetworkConnected] = useState(false);
 
   useEffect(() => {
@@ -45,10 +51,6 @@ export const MusicProvider = ({ children }) => {
         setCurrentTrack,
         topTracks,
         setTopTracks,
-        topTrackIds,
-        setTopTrackIds,
-        playedTrackIds,
-        setPlayedTrackIds,
         isAudioLoading,
         setIsAudioLoading,
         isSpeechModalOpen,
