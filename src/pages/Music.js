@@ -250,26 +250,33 @@ const Music = () => {
   };
 
   const downloadTrack = async (trackId) => {
-    // Fetch the MP3 file as a blob
-    const response = await axios.get(modalDownloadData.fileUrl, {
-      responseType: "blob",
-      onDownloadProgress: (progressEvent) => {
-        const total = progressEvent.total || 1;
-        const current = progressEvent.loaded;
-        const percentCompleted = Math.floor((current / total) * 100);
-        setDownloadProgress(percentCompleted);
-      },
-    });
+    try {
+      // Fetch the MP3 file as a blob with progress tracking
+      const response = await axios.get(modalDownloadData.fileUrl, {
+        responseType: "blob",
+        onDownloadProgress: (progressEvent) => {
+          const total = progressEvent.total || 1;
+          const current = progressEvent.loaded;
+          const percentCompleted = Math.floor((current / total) * 100);
+          setDownloadProgress(percentCompleted);
+        },
+      });
 
-    const blob = new Blob([response.data], { type: "audio/mp4" });
+      const blob = new Blob([response.data], { type: "audio/mp4" });
 
-    // Create a link element and trigger a download
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = modalDownloadData.fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      // Create a link element and trigger a download
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = modalDownloadData.fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Call the callback function to indicate download completion
+      closeDownloadModal();
+    } catch (error) {
+      console.error(`Error downloading track: ${error.message}`);
+    }
   };
 
   const renderTracks = () => {
@@ -396,12 +403,11 @@ const Music = () => {
           <b style={{ color: "var(--fm-primary-text)" }}>
             {modalDownloadData.trackName}
             <br />
-            <br />
             •&nbsp;&nbsp;320kbps (High Quality)
+            <br />
             <br />
           </b>
           <p>Download in progress: {downloadProgress}%</p>
-          <br />
           <progress value={downloadProgress} max="100"></progress>
           <button
             className="fm-primary-btn-inverse"
