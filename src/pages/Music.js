@@ -36,6 +36,7 @@ const Music = () => {
   const [isDownloadLoading, setIsDownloadLoading] = useState(false);
   const [modalDownloadData, setModalDownloadData] = useState("");
   const [isDownlodModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState(0);
 
   const saavnApiBaseUrl = "https://saavn.dev/api";
 
@@ -252,6 +253,12 @@ const Music = () => {
     // Fetch the MP3 file as a blob
     const response = await axios.get(modalDownloadData.fileUrl, {
       responseType: "blob",
+      onDownloadProgress: (progressEvent) => {
+        const total = progressEvent.total || 1;
+        const current = progressEvent.loaded;
+        const percentCompleted = Math.floor((current / total) * 100);
+        setDownloadProgress(percentCompleted);
+      },
     });
 
     const blob = new Blob([response.data], { type: "audio/mp4" });
@@ -393,6 +400,9 @@ const Music = () => {
             •&nbsp;&nbsp;320kbps (High Quality)
             <br />
           </b>
+          <p>Download in progress: {downloadProgress}%</p>
+          <br />
+          <progress value={downloadProgress} max="100"></progress>
           <button
             className="fm-primary-btn-inverse"
             onClick={closeDownloadModal}
