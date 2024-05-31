@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
-const TrackItem = ({ id, track, index, onDownloadTrack }) => {
+const TrackItem = ({ id, track, index, onOpenDownloadModal }) => {
   const { contentQuality } = useContext(MusicContext);
   const { getTrack } = useMusicUtility();
   const [isDownloadLoading, setIsDownloadLoading] = useState(false);
@@ -15,7 +15,7 @@ const TrackItem = ({ id, track, index, onDownloadTrack }) => {
 
   const handleDownloadClick = async (trackId) => {
     setIsDownloadLoading(true);
-    await onDownloadTrack(trackId);
+    await onOpenDownloadModal(trackId);
     setIsDownloadLoading(false);
   };
 

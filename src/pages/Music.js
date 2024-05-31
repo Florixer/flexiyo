@@ -25,7 +25,7 @@ const Music = () => {
     contentQuality,
     isNetworkConnected,
   } = useContext(MusicContext);
-  const { download: downloadFile } = useDownloader;
+  const { download } = useDownloader;
   const { getTrack, deleteCachedAudioData } = useMusicUtility();
   const [searchText, setSearchText] = useState("");
   const [searchFieldActive, setSearchFieldActive] = useState(false);
@@ -69,9 +69,27 @@ const Music = () => {
     }
   }, [isNetworkConnected]);
 
-  const openDownloadModal = (data) => {
-    setModalDownloadData(data);
-    setIsDownloadModalOpen(true);
+  const openDownloadModal = async (trackId) => {
+    try {
+      setIsDownloadLoading(true);
+      // Fetch the audio data
+      const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
+
+      const resultData = data.data[0];
+      // Show a confirmation dialog
+      const artistsArray = resultData.artists.primary;
+      setModalDownloadData({
+        fileUrl: resultData.downloadUrl[4].url,
+        fileName: `${resultData.name} - ${artistsArray[0].name}.mp3`,
+      });
+      setIsDownloadModalOpen(true);
+      setApiError(false);
+    } catch (error) {
+      setApiError(true);
+      setPrintError(`${error.code} : ${error.message}`);
+    } finally {
+      setIsDownloadLoading(false);
+    }
   };
 
   const closeDownloadModal = () => {
@@ -231,27 +249,20 @@ const Music = () => {
   };
 
   const downloadTrack = async (trackId) => {
-    try {
-      setIsDownloadLoading(true);
+    // Fetch the MP3 file as a blob
+    const response = await axios.get(modalDownloadData.fileUrl, {
+      responseType: "blob",
+    });
 
-      // Fetch the audio data
-      const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
+    const blob = new Blob([response.data], { type: "audio/mp4" });
 
-      const resultData = data.data[0];
-
-      // Show a confirmation dialog
-      const artistsArray = resultData.artists.primary;
-      openDownloadModal({
-        fileUrl: resultData.downloadUrl[4].url,
-        fileName: `${resultData.name} - ${artistsArray[0].name}.mp3`,
-      });
-      setApiError(false);
-    } catch (error) {
-      setApiError(true);
-      setPrintError(`${error.code} : ${error.message}`);
-    } finally {
-      setIsDownloadLoading(false);
-    }
+    // Create a link element and trigger a download
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = modalDownloadData.fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const renderTracks = () => {
@@ -260,7 +271,7 @@ const Music = () => {
         track={track}
         index={index}
         onGetTrack={getTrack}
-        onDownloadTrack={downloadTrack}
+        onOpenDownloadModal={(trackId) => openDownloadModal(trackId)}
         isDownloadLoading={isDownloadLoading}
       />
     ));
@@ -398,12 +409,7 @@ const Music = () => {
           </button>
           <button
             className="fm-primary-btn"
-            onClick={() =>
-              downloadFile(
-                modalDownloadData.fileUrl,
-                modalDownloadData.fileName,
-              )
-            }
+            onClick={() => downloadTrack(modalDownloadData.trackId)}
             style={{
               position: "absolute",
               bottom: "2rem",
