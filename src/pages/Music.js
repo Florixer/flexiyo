@@ -399,7 +399,6 @@ const Music = () => {
           style={customModalStyles}
         >
           <h4>Do you want to download?</h4>
-          <br />
           <b style={{ color: "var(--fm-primary-text)" }}>
             {modalDownloadData.trackName}
             <br />
