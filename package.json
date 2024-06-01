@@ -33,7 +33,6 @@
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
     "react-speech-recognition": "^3.10.0",
-    "react-use-downloader": "^1.2.8",
     "socket.io-client": "^4.7.5",
     "typewriter-effect": "^2.21.0",
     "yup": "^1.4.0"

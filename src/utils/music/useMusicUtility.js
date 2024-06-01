@@ -23,30 +23,41 @@ const useMusicUtility = () => {
 
       if (cachedTracks[trackId]) {
         const cachedTrackData = cachedTracks[trackId];
-        const { files } = await CapacitorFilesystem.readdir({
-          path: "audio_cache",
-          directory: Directory.Cache,
-        });
-        const fileExists = files.some(
-          (file) => file.name === `${trackId}.file`,
-        );
+        if (Capacitor.isNativePlatform()) {
+          const cachedTrack = cachedTracks[trackId];
+          const files = (
+            await CapacitorFilesystem.readdir({
+              path: "audio_cache",
+              directory: Directory.Cache,
+            })
+          ).files;
 
-        if (Capacitor.isNativePlatform() && fileExists) {
-          const fileData = await CapacitorFilesystem.readFile({
-            path: `audio_cache/${trackId}.file`,
-            directory: Directory.Cache,
-          });
+          if (files.some((file) => file.name === `${trackId}.file`)) {
+            const fileData = await CapacitorFilesystem.readFile({
+              path: `audio_cache/${trackId}.file`,
+              directory: Directory.Cache,
+            });
 
-          const audioBase64Data = `data:audio/mp4;base64,${fileData.data}`;
+            const audioBase64Data = `data:audio/mp4;base64,${fileData.data}`;
 
-          setCurrentTrack({
-            id: trackId,
-            name: cachedTrackData.name,
-            album: cachedTrackData.album,
-            artists: cachedTrackData.artists,
-            image: cachedTrackData.image,
-            link: audioBase64Data,
-          });
+            setCurrentTrack({
+              id: trackId,
+              name: cachedTrackData.name,
+              album: cachedTrackData.album,
+              artists: cachedTrackData.artists,
+              image: cachedTrackData.image,
+              link: audioBase64Data,
+            });
+          } else {
+            setCurrentTrack({
+              id: trackId,
+              name: cachedTrackData.name,
+              album: cachedTrackData.album,
+              artists: cachedTrackData.artists,
+              image: cachedTrackData.image,
+              link: cachedTrackData.link,
+            });
+          }
         } else {
           setCurrentTrack({
             id: trackId,
@@ -57,6 +68,7 @@ const useMusicUtility = () => {
             link: cachedTrackData.link,
           });
         }
+
         setIsAudioLoading(false);
         return;
       } else {

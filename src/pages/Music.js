@@ -11,7 +11,6 @@ import spotifyLogo from "../assets/media/img/logo/spotifyLogo.svg";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import useDownloader from "react-use-downloader";
 import { Capacitor } from "@capacitor/core";
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
@@ -25,7 +24,6 @@ const Music = () => {
     contentQuality,
     isNetworkConnected,
   } = useContext(MusicContext);
-  const { download } = useDownloader;
   const { getTrack, deleteCachedAudioData } = useMusicUtility();
   const [searchText, setSearchText] = useState("");
   const [searchFieldActive, setSearchFieldActive] = useState(false);
@@ -274,6 +272,7 @@ const Music = () => {
 
       // Call the callback function to indicate download completion
       closeDownloadModal();
+      setDownloadProgress(0);
     } catch (error) {
       console.error(`Error downloading track: ${error.message}`);
     }

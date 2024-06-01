@@ -108,6 +108,57 @@ const MusicPlayer = () => {
   }, [handleNextTrack, isDragging]);
 
   useEffect(() => {
+    const audio = audioRef.current;
+    if (isSpeechModalOpen) {
+      audio.pause();
+      setIsPlaying(false);
+    }
+    return () => {
+      audio.play();
+      setIsPlaying(true);
+    };
+  }, [isSpeechModalOpen]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (!Capacitor.isNativePlatform()) {
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.metadata = new window.MediaMetadata({
+          title: currentTrackName,
+          artist: currentTrackArtists,
+          album: currentTrackAlbum,
+          artwork: [
+            {
+              src: currentTrackImage,
+              sizes:
+                contentQuality === "low"
+                  ? "50x50"
+                  : contentQuality === "normal"
+                    ? "150x150"
+                    : contentQuality === "high"
+                      ? "500x500"
+                      : "150x150",
+              type: "image/jpg",
+            },
+          ],
+        });
+
+        navigator.mediaSession.setActionHandler("play", handleTogglePlay);
+
+        navigator.mediaSession.setActionHandler("pause", handleTogglePlay);
+
+        navigator.mediaSession.setActionHandler("nexttrack", handleNextTrack);
+
+        navigator.mediaSession.setActionHandler("stop", () => {
+          audio.pause();
+          setIsPlaying(false);
+        });
+      }
+    }
+  }, [currentTrackId, handleTogglePlay]);
+
+  useEffect(() => {
     const playAudio = async () => {
       if (currentTrackLink) {
         try {
@@ -288,33 +339,58 @@ const MusicPlayer = () => {
             ></div>
           </div>
         </div>
-        <div className="music-player--controls">
-          <span
-            className="music-player--controls-item"
-            onClick={handleTogglePlay}
-          >
-            {isAudioLoading && (
-              <div className="music-player--controls-preloader"></div>
-            )}
-            {isPlaying && !isAudioLoading ? (
+        {currentTrackLink ? (
+          <div className="music-player--controls">
+            <span
+              className="music-player--controls-item"
+              onClick={handleTogglePlay}
+            >
+              {isAudioLoading && (
+                <div className="music-player--controls-preloader"></div>
+              )}
+              {isPlaying && !isAudioLoading ? (
+                <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
+                </svg>
+              ) : (
+                <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
+                </svg>
+              )}
+            </span>
+            <span
+              className="music-player--controls-item"
+              onClick={handleNextTrack}
+            >
               <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
+                <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
               </svg>
-            ) : (
-              <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+            </span>
+          </div>
+        ) : (
+          <div className="music-player--controls">
+            <span className="music-player--controls-item">
+              <svg
+                role="img"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                style={{ fill: "#737373" }}
+              >
                 <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
               </svg>
-            )}
-          </span>
-          <span
-            className="music-player--controls-item"
-            onClick={handleNextTrack}
-          >
-            <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
-            </svg>
-          </span>
-        </div>
+            </span>
+            <span className="music-player--controls-item">
+              <svg
+                role="img"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                style={{ fill: "#737373" }}
+              >
+                <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
+              </svg>
+            </span>
+          </div>
+        )}
       </div>
     </div>
   ) : null;
