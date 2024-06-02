@@ -11,7 +11,7 @@ import spotifyLogo from "../assets/media/img/logo/spotifyLogo.svg";
 import WebSpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import { SpeechRecognition as CapacitorSpeechRecognition } from "@capacitor-community/speech-recognition";
+import { SpeechRecognition as CapSpeechRecognition } from "@capacitor-community/speech-recognition";
 import { Capacitor } from "@capacitor/core";
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
@@ -96,10 +96,77 @@ const Music = () => {
     setIsDownloadModalOpen(false);
   };
 
+  // Speech Recognition
+  // Function to open speech modal and pause audio
+  const openSpeechModal = () => {
+    setIsSpeechModalOpen(true);
+    startSpeechRecognition();
+  };
+
+  // Function to close speech modal and resume audio
+  const closeSpeechModal = () => {
+    setIsSpeechModalOpen(false);
+    stopSpeechRecognition();
+  };
+
+  const startSpeechRecognition = () => {
+    if (Capacitor.isNativePlatform()) {
+      constructCapSpeech();
+    } else {
+      WebSpeechRecognition.startListening();
+    }
+    setTimeout(() => {
+      closeSpeechModal();
+    }, 7000);
+  };
+
+  const stopSpeechRecognition = () => {
+    if (Capacitor.isNativePlatform()) {
+      CapSpeechRecognition.stop();
+    } else {
+      WebSpeechRecognition.stopListening();
+    }
+  };
+
   // Native Speech Recognition
+  const constructCapSpeech = async () => {
+    const permissions = await CapSpeechRecognition.checkPermissions();
+    const { available } = await CapSpeechRecognition.available();
+    if (!permissions.granted) {
+      await CapSpeechRecognition.requestPermissions();
+    } else {
+      if (available) {
+        try {
+          const results = await CapSpeechRecognition.start({
+            language: "en-US",
+            maxResults: 2,
+            prompt: false,
+            partialResults: true,
+            popup: false,
+          });
+          const speechSearchTerm = results.matches[0];
+          if (
+            speechSearchTerm.startsWith("play") &&
+            speechSearchTerm.length > 4
+          ) {
+            const slicedSearchTerm = speechSearchTerm.slice(4);
+            playOnSpeechCommand(slicedSearchTerm);
+            closeSpeechModal();
+          } else if (speechSearchTerm === "play") {
+            closeSpeechModal();
+          } else {
+            searchSpeechTracks(speechSearchTerm);
+          }
+        } catch (error) {
+          console.error("Speech recognition error:", error);
+        }
+      } else {
+        alert("Your device does not support this feature!");
+      }
+    }
+  };
 
   // Web Speech Recognition
-
   const { listening: speechListening, transcript: speechTranscript } =
     useSpeechRecognition({
       commands: [
@@ -116,29 +183,14 @@ const Music = () => {
       ],
     });
 
-  // Function to open speech modal and pause audio
-  const openSpeechModal = () => {
-    setIsSpeechModalOpen(true);
-    WebSpeechRecognition.startListening();
-  };
-
-  // Function to close speech modal and resume audio
-  const closeSpeechModal = () => {
-    setIsSpeechModalOpen(false);
-    WebSpeechRecognition.stopListening();
-  };
-
-  const startSpeechRecognition = () => {
-    WebSpeechRecognition.startListening();
-    setTimeout(() => {
-      WebSpeechRecognition.stopListening();
-    }, 7000);
-  };
-
   const speechModalWaves = document.querySelectorAll(
     ".speechWaveBox1, .speechWaveBox2, .speechWaveBox3, .speechWaveBox4, .speechWaveBox5",
   );
-  if (speechListening) {
+  if (
+    Capacitor.isNativePlatform()
+      ? CapSpeechRecognition.isListening()
+      : speechListening
+  ) {
     speechModalWaves.forEach((element) => {
       element.style.animationPlayState = "running";
     });
@@ -164,8 +216,9 @@ const Music = () => {
     if (speechSearchTerm) {
       searchSpeechTracks(speechSearchTerm);
       setSearchText(speechSearchTerm);
+      closeSpeechModal();
       setTimeout(() => {
-        closeSpeechModal();
+        stopSpeechRecognition();
       }, 1000);
     }
   };
@@ -477,8 +530,8 @@ const Music = () => {
             {!speechTranscript && !speechListening
               ? "Didn't Catch, Speak again"
               : !speechTranscript
-                ? `Play "${topTracks[0].name}"`
-                : speechTranscript}
+              ? `Play "${topTracks[0].name}"`
+              : speechTranscript}
             <br />
             <br />
             {!speechTranscript && !speechListening ? (
