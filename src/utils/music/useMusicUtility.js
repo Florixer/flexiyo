@@ -24,13 +24,10 @@ const useMusicUtility = () => {
       if (cachedTracks[trackId]) {
         const cachedTrackData = cachedTracks[trackId];
         if (Capacitor.isNativePlatform()) {
-          const cachedTrack = cachedTracks[trackId];
-          const files = (
-            await CapacitorFilesystem.readdir({
-              path: "audio_cache",
-              directory: Directory.Cache,
-            })
-          ).files;
+          const { files } = await CapacitorFilesystem.readdir({
+            path: "audio_cache",
+            directory: Directory.Cache,
+          });
 
           if (files.some((file) => file.name === `${trackId}.file`)) {
             const fileData = await CapacitorFilesystem.readFile({
@@ -70,7 +67,6 @@ const useMusicUtility = () => {
         }
 
         setIsAudioLoading(false);
-        return;
       } else {
         const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
         const resultData = data.data[0];
@@ -103,24 +99,29 @@ const useMusicUtility = () => {
         };
 
         if (Capacitor.isNativePlatform()) {
-          const audioResponse = await axios({
-            url: songLink,
-            method: "GET",
-            responseType: "arraybuffer",
-          });
+          const audioBlob = (
+            await axios({
+              url: songLink,
+              method: "GET",
+              responseType: "blob",
+            })
+          ).data;
 
-          const audioBlob = new Blob([audioResponse.data], {
-            type: "audio/mp4",
-          });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          setCurrentTrack({ ...trackData, link: audioUrl });
-          await cacheTrackData(trackData, audioBlob);
+          const reader = new FileReader();
+          reader.onload = () => {
+            const audioBase64Data = reader.result.split(",")[1];
+            setCurrentTrack({
+              ...trackData,
+              link: `data:audio/mp4;base64,${audioBase64Data}`,
+            });
+            cacheTrackData(trackData, audioBase64Data);
+          };
+          reader.readAsDataURL(audioBlob);
         } else {
           setCurrentTrack(trackData);
-          await cacheTrackData(trackData, null);
+          cacheTrackData(trackData, null);
         }
       }
-
       setIsAudioLoading(false);
     } catch (error) {
       console.error("Error fetching track:", error);
@@ -128,10 +129,9 @@ const useMusicUtility = () => {
     }
   };
 
-  const cacheTrackData = async (trackData, audioBlob) => {
+  const cacheTrackData = async (trackData, audioBase64Data) => {
     try {
       if (Capacitor.isNativePlatform()) {
-        const audioBase64Data = await blobToBase64(audioBlob);
         await CapacitorFilesystem.writeFile({
           path: `audio_cache/${trackData.id}.file`,
           data: audioBase64Data,
@@ -147,15 +147,6 @@ const useMusicUtility = () => {
     } catch (error) {
       console.error("Error caching track data:", error);
     }
-  };
-
-  const blobToBase64 = (blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
   };
 
   const deleteCachedAudioData = async () => {

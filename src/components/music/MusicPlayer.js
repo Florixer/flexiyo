@@ -53,24 +53,20 @@ const MusicPlayer = () => {
   }, []);
 
   const handleNextTrack = useCallback(async () => {
+    const audio = audioRef.current;
     try {
-      const audio = audioRef.current;
+      const trackIdToFetch = isNetworkConnected
+        ? await getSuggestedTrackId()
+        : Object.keys(topTracks)[
+            Math.floor(Math.random() * Object.keys(topTracks).length)
+          ];
       audio.pause();
       setIsPlaying(false);
       setIsAudioLoading(true);
-
-      let trackIdToFetch;
-      if (isNetworkConnected) {
-        trackIdToFetch = await getSuggestedTrackId();
-      } else {
-        const trackIds = Object.keys(topTracks);
-        trackIdToFetch = trackIds[Math.floor(Math.random() * trackIds.length)];
-      }
-
       await getTrack(trackIdToFetch);
-      setIsAudioLoading(false);
     } catch (error) {
       console.error("Error handling next track:", error);
+    } finally {
       setIsAudioLoading(false);
     }
   }, [getTrack, isNetworkConnected, topTracks]);
@@ -78,9 +74,9 @@ const MusicPlayer = () => {
   const getSuggestedTrackId = async () => {
     const { data } = await axios.get(
       `${saavnApiBaseUrl}/songs/${currentTrackId}/suggestions`,
-      { params: { limit: 10 } },
+      { params: { limit: 5 } },
     );
-    const suggestedTrackId = data.data[Math.floor(Math.random() * 10)].id;
+    const suggestedTrackId = data.data[Math.floor(Math.random() * 5)].id;
     return suggestedTrackId;
   };
 
@@ -122,7 +118,7 @@ const MusicPlayer = () => {
   useEffect(() => {
     const audio = audioRef.current;
 
-    if (!Capacitor.isNativePlatform()) {
+    if (!Capacitor.isNativePlatform() && currentTrack.id) {
       if ("mediaSession" in navigator) {
         navigator.mediaSession.metadata = new window.MediaMetadata({
           title: currentTrackName,
@@ -264,7 +260,7 @@ const MusicPlayer = () => {
     };
   }, [handleTouchMove, handleTouchEnd]);
 
-  return currentTrack ? (
+  return currentTrack.id ? (
     <div className="music-player">
       <div className="music-player-box">
         <div className="music-player--image">

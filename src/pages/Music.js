@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { Capacitor } from "@capacitor/core";
 import axios from "axios";
 import Modal from "react-modal";
 import Headroom from "react-headroom";
@@ -11,8 +12,7 @@ import spotifyLogo from "../assets/media/img/logo/spotifyLogo.svg";
 import WebSpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import { SpeechRecognition as CapSpeechRecognition } from "@capacitor-community/speech-recognition";
-import { Capacitor } from "@capacitor/core";
+import { SpeechRecognition as CapacitorSpeechRecognition } from "@capacitor-community/speech-recognition";
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
   const {
@@ -55,15 +55,11 @@ const Music = () => {
   };
 
   useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      if (!isNetworkConnected) {
-        const cachedTracks = localStorage.getItem("cachedTracks");
-        const cachedTracksObject = JSON.parse(cachedTracks);
-        setTopTracks(Object.values(cachedTracksObject));
-        setTracks(Object.values(cachedTracksObject));
-      } else {
-        getTopTracks();
-      }
+    const cachedTracks = localStorage.getItem("cachedTracks");
+    if (!isNetworkConnected && cachedTracks) {
+      const cachedTracksObject = JSON.parse(cachedTracks);
+      setTopTracks(Object.values(cachedTracksObject));
+      setTracks(Object.values(cachedTracksObject));
     } else {
       getTopTracks();
     }
