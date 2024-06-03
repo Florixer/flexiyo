@@ -15,13 +15,10 @@ import WebSpeechRecognition, {
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
   const {
-    currentTrack,
-    setCurrentTrack,
     topTracks,
     setTopTracks,
     isSpeechModalOpen,
     setIsSpeechModalOpen,
-    contentQuality,
     isNetworkConnected,
   } = useContext(MusicContext);
   const { getTrack, deleteCachedAudioData } = useMusicUtility();
@@ -54,15 +51,12 @@ const Music = () => {
   };
 
   useEffect(() => {
-    const cachedTracks = localStorage.getItem("cachedTracks");
-    if (!isNetworkConnected && cachedTracks) {
-      const cachedTracksObject = JSON.parse(cachedTracks);
-      setTopTracks(Object.values(cachedTracksObject));
-      setTracks(Object.values(cachedTracksObject));
-    } else {
+    if (isNetworkConnected) {
       getTopTracks();
+    } else {
+      console.log("No internet connection");
     }
-  }, [isNetworkConnected]);
+  }, []);
 
   const openDownloadModal = async (trackId) => {
     try {
@@ -91,7 +85,6 @@ const Music = () => {
     setIsDownloadModalOpen(false);
   };
 
-  // Speech Recognition
   // Function to open speech modal and pause audio
   const openSpeechModal = () => {
     setIsSpeechModalOpen(true);
@@ -105,14 +98,14 @@ const Music = () => {
   };
 
   const startSpeechRecognition = () => {
-      WebSpeechRecognition.startListening();
+    WebSpeechRecognition.startListening();
     setTimeout(() => {
       closeSpeechModal();
     }, 7000);
   };
 
   const stopSpeechRecognition = () => {
-      WebSpeechRecognition.stopListening();
+    WebSpeechRecognition.stopListening();
   };
 
   // Native Speech Recognition
@@ -383,13 +376,13 @@ const Music = () => {
         >
           {printError}
         </div>
-        <button
+        {/*<button
           className="fm-primary-btn"
           style={{ padding: ".5rem", marginLeft: "1rem" }}
           onClick={deleteCachedAudioData}
         >
           Clear Cached Data
-        </button>
+        </button>*/}
         <div className="render-tracks">{renderTracks()}</div>
         <Modal
           isOpen={isDownlodModalOpen}
@@ -476,8 +469,8 @@ const Music = () => {
             {!speechTranscript && !speechListening
               ? "Didn't Catch, Speak again"
               : !speechTranscript
-              ? `Play "${topTracks[0].name}"`
-              : speechTranscript}
+                ? `Play "${topTracks[0].name}"`
+                : speechTranscript}
             <br />
             <br />
             {!speechTranscript && !speechListening ? (
