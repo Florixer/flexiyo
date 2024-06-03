@@ -1,18 +1,12 @@
 import { createContext, useEffect, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 import { Network as CapacitorNetwork } from "@capacitor/network";
 import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
 
 const MusicContext = createContext(null);
 
 export const MusicProvider = ({ children }) => {
-  const [currentTrack, setCurrentTrack] = useState({
-    id: "e0kCEwoC",
-    image: logo,
-    name: "Play a random Track",
-    album: "",
-    artists: "Flexiyo Music",
-    link: "",
-  });
+  const [currentTrack, setCurrentTrack] = useState({});
   const [contentQuality, setContentQuality] = useState("normal");
   const [topTracks, setTopTracks] = useState({});
   const [isAudioLoading, setIsAudioLoading] = useState(false);
@@ -20,17 +14,27 @@ export const MusicProvider = ({ children }) => {
   const [isNetworkConnected, setIsNetworkConnected] = useState(false);
 
   useEffect(() => {
-    CapacitorNetwork.getStatus().then((status) => {
-      setIsNetworkConnected(status.connected);
-    });
-    const handleNetworkStatusChange = (status) => {
-      setIsNetworkConnected(status.connected);
-    };
+    if (Capacitor.isNativePlatform()) {
+      CapacitorNetwork.getStatus().then((status) => {
+        setIsNetworkConnected(status.connected);
+      });
+      const handleNetworkStatusChange = (status) => {
+        setIsNetworkConnected(status.connected);
+      };
 
-    CapacitorNetwork.addListener(
-      "networkStatusChange",
-      handleNetworkStatusChange,
-    );
+      CapacitorNetwork.addListener(
+        "networkStatusChange",
+        handleNetworkStatusChange,
+      );
+    } else {
+      setIsNetworkConnected(navigator.onLine);
+      window.addEventListener("online", () => {
+        setIsNetworkConnected(true);
+      });
+      window.addEventListener("offline", () => {
+        setIsNetworkConnected(false);
+      });
+    }
 
     return () => {
       CapacitorNetwork.removeAllListeners();
