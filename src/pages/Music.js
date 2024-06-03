@@ -12,7 +12,6 @@ import spotifyLogo from "../assets/media/img/logo/spotifyLogo.svg";
 import WebSpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import { SpeechRecognition as CapacitorSpeechRecognition } from "@capacitor-community/speech-recognition";
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
   const {
@@ -106,67 +105,17 @@ const Music = () => {
   };
 
   const startSpeechRecognition = () => {
-    if (Capacitor.isNativePlatform()) {
-      constructCapSpeech();
-    } else {
       WebSpeechRecognition.startListening();
-    }
     setTimeout(() => {
       closeSpeechModal();
     }, 7000);
   };
 
   const stopSpeechRecognition = () => {
-    if (Capacitor.isNativePlatform()) {
-      CapSpeechRecognition.stop();
-    } else {
       WebSpeechRecognition.stopListening();
-    }
   };
 
   // Native Speech Recognition
-  const constructCapSpeech = async () => {
-    const { SpeechRecognition } = CapSpeechRecognition;
-    try {
-      const { permission } = await CapSpeechRecognition.getPermissionStatus();
-      if (permission !== "granted") {
-        const result = await CapSpeechRecognition.requestPermission();
-        if (result !== "granted") {
-          console.error("Permission denied for speech recognition");
-          return;
-        }
-      }
-
-      const { available } = await CapSpeechRecognition.available();
-      if (!available) {
-        console.error("Speech recognition not available on this device");
-        return;
-      }
-
-      const result = await CapSpeechRecognition.start({
-        language: "en-US",
-        partialResults: true,
-      });
-
-      if (result && result.matches && result.matches.length > 0) {
-        const speechSearchTerm = result.matches[0];
-        if (
-          speechSearchTerm.startsWith("play") &&
-          speechSearchTerm.length > 4
-        ) {
-          const slicedSearchTerm = speechSearchTerm.slice(4);
-          playOnSpeechCommand(slicedSearchTerm);
-          closeSpeechModal();
-        } else if (speechSearchTerm === "play") {
-          closeSpeechModal();
-        } else {
-          searchSpeechTracks(speechSearchTerm);
-        }
-      }
-    } catch (error) {
-      console.error("Speech recognition error:", error);
-    }
-  };
 
   // Web Speech Recognition
   const { listening: speechListening, transcript: speechTranscript } =
@@ -188,11 +137,7 @@ const Music = () => {
   const speechModalWaves = document.querySelectorAll(
     ".speechWaveBox1, .speechWaveBox2, .speechWaveBox3, .speechWaveBox4, .speechWaveBox5",
   );
-  if (
-    Capacitor.isNativePlatform()
-      ? CapSpeechRecognition.isListening()
-      : speechListening
-  ) {
+  if (speechListening) {
     speechModalWaves.forEach((element) => {
       element.style.animationPlayState = "running";
     });
@@ -229,7 +174,6 @@ const Music = () => {
     content: {
       top: "45%",
       left: "50%",
-      // margin: "0 0 0 2rem",
       maxWidth: "600px",
       width: "90%",
       transform: "translate(-50%, -50%)",
