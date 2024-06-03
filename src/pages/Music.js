@@ -130,39 +130,45 @@ const Music = () => {
 
   // Native Speech Recognition
   const constructCapSpeech = async () => {
-    const permissions = await CapSpeechRecognition.checkPermissions();
-    const { available } = await CapSpeechRecognition.available();
-    if (!permissions.granted) {
-      await CapSpeechRecognition.requestPermissions();
-    } else {
-      if (available) {
-        try {
-          const results = await CapSpeechRecognition.start({
-            language: "en-US",
-            maxResults: 2,
-            prompt: false,
-            partialResults: true,
-            popup: false,
-          });
-          const speechSearchTerm = results.matches[0];
-          if (
-            speechSearchTerm.startsWith("play") &&
-            speechSearchTerm.length > 4
-          ) {
-            const slicedSearchTerm = speechSearchTerm.slice(4);
-            playOnSpeechCommand(slicedSearchTerm);
-            closeSpeechModal();
-          } else if (speechSearchTerm === "play") {
-            closeSpeechModal();
-          } else {
-            searchSpeechTracks(speechSearchTerm);
-          }
-        } catch (error) {
-          console.error("Speech recognition error:", error);
+    const { SpeechRecognition } = CapSpeechRecognition;
+    try {
+      const { permission } = await CapSpeechRecognition.getPermissionStatus();
+      if (permission !== "granted") {
+        const result = await CapSpeechRecognition.requestPermission();
+        if (result !== "granted") {
+          console.error("Permission denied for speech recognition");
+          return;
         }
-      } else {
-        alert("Your device does not support this feature!");
       }
+
+      const { available } = await CapSpeechRecognition.available();
+      if (!available) {
+        console.error("Speech recognition not available on this device");
+        return;
+      }
+
+      const result = await CapSpeechRecognition.start({
+        language: "en-US",
+        partialResults: true,
+      });
+
+      if (result && result.matches && result.matches.length > 0) {
+        const speechSearchTerm = result.matches[0];
+        if (
+          speechSearchTerm.startsWith("play") &&
+          speechSearchTerm.length > 4
+        ) {
+          const slicedSearchTerm = speechSearchTerm.slice(4);
+          playOnSpeechCommand(slicedSearchTerm);
+          closeSpeechModal();
+        } else if (speechSearchTerm === "play") {
+          closeSpeechModal();
+        } else {
+          searchSpeechTracks(speechSearchTerm);
+        }
+      }
+    } catch (error) {
+      console.error("Speech recognition error:", error);
     }
   };
 
