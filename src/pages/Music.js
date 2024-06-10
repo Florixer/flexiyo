@@ -105,14 +105,14 @@ const Music = () => {
   };
 
   const startSpeechRecognition = () => {
-      WebSpeechRecognition.startListening();
+    WebSpeechRecognition.startListening();
     setTimeout(() => {
       closeSpeechModal();
     }, 7000);
   };
 
   const stopSpeechRecognition = () => {
-      WebSpeechRecognition.stopListening();
+    WebSpeechRecognition.stopListening();
   };
 
   // Native Speech Recognition
@@ -476,8 +476,8 @@ const Music = () => {
             {!speechTranscript && !speechListening
               ? "Didn't Catch, Speak again"
               : !speechTranscript
-              ? `Play "${topTracks[0].name}"`
-              : speechTranscript}
+                ? `Play "${topTracks[0].name}"`
+                : speechTranscript}
             <br />
             <br />
             {!speechTranscript && !speechListening ? (
