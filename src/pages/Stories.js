@@ -34,6 +34,12 @@ const Stories = () => {
       pfp: "https://i.pravatar.cc/300",
       backThumb: "https://picsum.photos/200/300",
     },
+    {
+      id: 6,
+      username: "me.23get",
+      pfp: "https://i.pravatar.cc/300",
+      backThumb: "https://picsum.photos/200/300",
+    },
   ];
 
   const renderStories = () => {
