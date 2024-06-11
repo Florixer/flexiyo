@@ -18,6 +18,7 @@ import MusicPlayer from "./components/music/MusicPlayer";
 import DirectInbox from "./pages/direct/Inbox";
 import DirectChat from "./pages/direct/Chat";
 import DirectChatNotification from "./components/direct/chat/ChatNotification";
+import Stories from "./pages/Stories";
 
 // Contexts
 import { MusicProvider } from "./context/music/MusicContext";
@@ -62,6 +63,7 @@ const App = () => {
               <Route exact path="/auth/signup" element={<AuthSignup />}></Route>
               <Route exact path="/search" element={<Search />}></Route>
               <Route exact path="/music" element={<Music />}></Route>
+              <Route exact path="/stories" element={<Stories />}></Route>
               <Route
                 exact
                 path="/direct/inbox"
