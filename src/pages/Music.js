@@ -480,8 +480,8 @@ const Music = () => {
             {!speechTranscript && !speechListening
               ? "Didn't Catch, Speak again"
               : !speechTranscript
-              ? `Play "${topTracks[0].name}"`
-              : speechTranscript}
+                ? `Play "${topTracks[0].name}"`
+                : speechTranscript}
             <br />
             <br />
             {!speechTranscript && !speechListening ? (
