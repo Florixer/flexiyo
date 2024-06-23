@@ -357,7 +357,7 @@ const Music = () => {
                 onClick={openSpeechModal}
               ></i>
               <button
-                type="submit"
+                type="button"
                 className="fm-primary-btn"
                 style={{
                   display: "flex",
