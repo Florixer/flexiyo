@@ -3,7 +3,6 @@ import { Capacitor } from "@capacitor/core";
 import axios from "axios";
 import Modal from "react-modal";
 import Headroom from "react-headroom";
-import ReactJson from "@microlink/react-json-view";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import TrackItem from "../components/music/TrackItem";
 import MusicContext from "../context/music/MusicContext";
@@ -12,6 +11,7 @@ import spotifyLogo from "../assets/media/img/logo/spotifyLogo.svg";
 import WebSpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { useLocation } from "react-router-dom";
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
   const {
@@ -21,8 +21,9 @@ const Music = () => {
     setIsSpeechModalOpen,
     isNetworkConnected,
   } = useContext(MusicContext);
+  const location = useLocation();
   const { getTrack, deleteCachedAudioData } = useMusicUtility();
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState();
   const [searchFieldActive, setSearchFieldActive] = useState(false);
   const [printError, setPrintError] = useState("");
   const [apiError, setApiError] = useState(false);
@@ -50,14 +51,23 @@ const Music = () => {
     }
   };
 
-  useEffect(() => {
-    if (isNetworkConnected) {
-      getTopTracks();
-    } else {
-      console.log("No internet connection");
-    }
-  }, []);
+  const getQueryParams = (query) => {
+    return new URLSearchParams(query);
+  };
 
+  useEffect(() => {
+    const queryParams = getQueryParams(location.search);
+    const q = queryParams.get("q");
+    setSearchText(q);
+  }, [location.search]);
+
+  useEffect(() => {
+    if (searchText) {
+      handleSearchSubmit(searchText);
+    } else {
+      getTopTracks();
+    }
+  }, [searchText]);
   const openDownloadModal = async (trackId) => {
     try {
       setIsDownloadLoading(true);
@@ -189,8 +199,7 @@ const Music = () => {
     setSearchText(event.target.value);
   };
 
-  const handleSearchSubmit = (searchTerm, event) => {
-    event.preventDefault();
+  const handleSearchSubmit = (searchTerm) => {
     searchTracks(searchTerm);
   };
 
@@ -296,7 +305,7 @@ const Music = () => {
       </Headroom>
       <div className="music-container">
         <div className="search-container">
-          <form className="search-box">
+          <form id="searchTracksForm" className="search-box">
             <div
               className="search-bar"
               style={{
@@ -328,7 +337,6 @@ const Music = () => {
               />
             </div>
             <div
-              id="searchSubmitBtn"
               style={{
                 display: "flex",
                 justifyContent: "center",
@@ -358,11 +366,14 @@ const Music = () => {
                   height: "100%",
                   borderLeft: ".1rem solid var(--fm-secondary-bg-color)",
                 }}
-                onClick={(event) => handleSearchSubmit(searchText, event)}
+                onClick={(event) => {
+                  setSearchText("");
+                  event.preventDefault();
+                }}
               >
                 <i
                   className={`${
-                    apiLoading ? "fa fa-spinner fa-spin" : "fa fa-search"
+                    apiLoading ? "fa fa-spinner fa-spin" : "fa fa-x"
                   }`}
                 ></i>
               </button>
@@ -469,8 +480,8 @@ const Music = () => {
             {!speechTranscript && !speechListening
               ? "Didn't Catch, Speak again"
               : !speechTranscript
-                ? `Play "${topTracks[0].name}"`
-                : speechTranscript}
+              ? `Play "${topTracks[0].name}"`
+              : speechTranscript}
             <br />
             <br />
             {!speechTranscript && !speechListening ? (
