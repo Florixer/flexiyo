@@ -86,6 +86,7 @@ body {
 #new-post,
 #music,
 #stories,
+#notifications,
 #create,
 #clips,
 #profile,
@@ -93,17 +94,18 @@ body {
 #chat {
   max-width: 1200px;
   width: 100%;
+  width: 100%;
   background-color: var(--fm-body-bg-color);
 }
 
 a {
   color: var(--fm-primary-color);
-  text-decoration: none;
+  text-decoration: 0;
 }
 
 a:hover {
   color: var(--fm-primary-color-flutter);
-  text-decoration: none;
+  text-decoration: 0;
 }
 
 p {
@@ -153,7 +155,7 @@ b {
   font-weight: bold !important;
   text-align: center;
   color: var(--fm-primary-text);
-  background: none;
+  background: 0;
   border: 0.07rem solid var(--fm-primary-link);
   cursor: pointer;
 }
@@ -286,7 +288,7 @@ b {
   font-family: "Montserrat", sans-serif;
   display: inline-block;
   font-weight: 700;
-  text-decoration: none;
+  text-decoration: 0;
   background-color: transparent;
   border: 2px solid transparent;
   text-transform: uppercase;
@@ -385,15 +387,15 @@ b {
   align-items: center;
   justify-content: flex-start;
   overflow-y: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: 0;
+  -ms-overflow-style: 0;
   width: 100%;
   height: 100%;
   flex-grow: 1;
 }
 
 .side-navbar-main::-webkit-scrollbar {
-  display: none;
+  display: 0;
 }
 
 .side-nav-icon {
@@ -402,8 +404,8 @@ b {
   justify-content: center;
   text-align: center;
   color: var(--fm-primary-text);
-  background: none;
-  border: none;
+  background: 0;
+  border: 0;
   margin: 0.7rem;
 }
 
@@ -446,7 +448,7 @@ b {
 /* Set Element's style on active */
 .home-icon path {
   fill: #fff;
-  stroke: none;
+  stroke: 0;
 }
 
 .search-icon path,
@@ -460,7 +462,7 @@ b {
 }
 
 .new-post-icon :nth-child(2) {
-  fill: none;
+  fill: 0;
   stroke: #151515;
 }
 
@@ -469,7 +471,7 @@ b {
 }
 
 .clips-icon #clipsPathNotActive {
-  display: none;
+  display: 0;
 }
 
 .user-profile-icon img {
@@ -478,7 +480,7 @@ b {
 
 /* Set Element's style on NOT active */
 .home-icon-link:not(.active) .home-icon path {
-  fill: none;
+  fill: 0;
   stroke: #fff;
   stroke-width: 2;
 }
@@ -489,7 +491,7 @@ b {
 }
 
 .new-post-icon-link:not(.active) .new-post-icon path {
-  fill: none;
+  fill: 0;
   stroke: #ffffff;
 }
 
@@ -498,8 +500,8 @@ b {
 }
 
 .clips-icon-link:not(.active) .clips-icon #clipsPathActive {
-  display: none;
-  fill: none;
+  display: 0;
+  fill: 0;
 }
 
 .clips-icon-link:not(.active) .clips-icon #clipsPathNotActive {
@@ -507,7 +509,7 @@ b {
 }
 
 .user-profile-icon-link:not(.active) .user-profile-icon img {
-  outline: none;
+  outline: 0;
 }
 
 /*--------------------------------------------------------------
@@ -611,7 +613,7 @@ b {
 }
 
 .user-files--sheet-grid::-webkit-scrollbar {
-  display: none;
+  display: 0;
 }
 
 .user-files--sheet-file {
@@ -749,7 +751,7 @@ b {
 }
 
 .right a {
-  text-decoration: none;
+  text-decoration: 0;
 }
 
 .auth-user {
@@ -793,7 +795,7 @@ b {
 
 @media screen and (max-width: 280px) {
   .stories-icon {
-    display: none;
+    display: 0;
   }
 }
 
@@ -888,7 +890,7 @@ b {
 }
 
 .today-picks.hidden {
-  display: none;
+  display: 0;
 }
 
 .suggestion-item,
@@ -930,7 +932,7 @@ b {
   color: var(--fm-primary-text);
   cursor: pointer;
   padding: 1rem 0 1rem 1rem;
-  border: none;
+  border: 0;
   align-items: center;
   border-radius: 1rem;
   font-size: 0.95rem;
@@ -1075,7 +1077,7 @@ b {
 
 .heart-icon {
   color: var(--fm-primary-text);
-  fill: none;
+  fill: 0;
 }
 
 .heart-icon.active {
@@ -1121,9 +1123,9 @@ b {
 
 .search-input-field {
   color: var(--fm-primary-text);
-  background: none;
-  border: none !important;
-  outline: none !important;
+  background: 0;
+  border: 0 !important;
+  outline: 0 !important;
   width: 100%;
   height: 100%;
 }
@@ -1133,7 +1135,7 @@ b {
 }
 
 .print-error.hidden {
-  display: none;
+  display: 0;
 }
 
 /*--------------------------------------------------------------
@@ -1235,12 +1237,12 @@ b {
   height: 100%;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
-  scrollbar-width: none;
+  scrollbar-width: 0;
   scroll-behavior: smooth;
 }
 
 .render-clips::-webkit-scrollbar {
-  display: none;
+  display: 0;
 }
 
 .clip-container {
@@ -1787,6 +1789,63 @@ b {
 }
 
 /*--------------------------------------------------------------
+  # NOTIFICATIONS
+  --------------------------------------------------------------*/
+
+/* #NOTIFICATIONS - Notifications List */
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--fm-body-bg-color);
+  color: var(--fm-primary-text);
+  margin: 1rem 0;
+}
+
+.notification {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  color: var(--fm-primary-text);
+  cursor: pointer;
+  padding: 1rem 0 1rem 0;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  height: 4rem;
+  margin: .5rem 0;
+}
+
+.notification-icon {
+  margin: 0 1rem;
+  font-size: 1rem;
+  padding: 1rem;
+  border: .01rem solid var(--fm-primary-border);
+  border-radius: 50%;
+}
+
+.notification-body--title {
+  font-size: .8rem;
+}
+
+.notification-body--time{
+  color: var(--fm-primary-text-muted);
+}
+
+.notification-body--actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.notification-body--actions-btn {
+  margin: .2rem .5rem;
+  border: 0;
+  background: 0;
+  cursor: pointer;
+  color: var(--fm-primary-link);  
+}
+
+/*--------------------------------------------------------------
   # DIRECT
   --------------------------------------------------------------*/
 /* #DIRECT - Inbox List */
@@ -2027,9 +2086,9 @@ b {
   margin: 0 0.3rem;
   width: 100%;
   height: 100%;
-  border: none;
-  outline: none;
-  background: none;
+  border: 0;
+  outline: 0;
+  background: 0;
   font-size: 1.1rem;
 }
 
@@ -2169,7 +2228,7 @@ b {
 
 .user-card-btn--following {
   color: #ccc;
-  background: none;
+  background: 0;
   border: 0.1rem solid #0a6aa6;
 }
 
@@ -2188,7 +2247,7 @@ b {
 }
 .user-card-btn--commated {
   color: #ccc;
-  background: none;
+  background: 0;
   border: 0.1rem solid #006e30;
 }
 
@@ -2247,6 +2306,7 @@ b {
   text-align: center;
   font-size: 1.3rem;
   background-color: var(--fm-secondary-bg-color);
+  cursor: pointer;
 }
 
 .user-block--btn:active {
@@ -2267,7 +2327,7 @@ b {
 }
 
 .user-block-links::-webkit-scrollbar {
-  display: none;
+  display: 0;
   /* Safari and Chrome */
 }
 
@@ -2279,6 +2339,7 @@ b {
   width: 100%;
   font-size: 1.4rem;
   color: var(--fm-primary-link-muted);
+  cursor: pointer;
 }
 
 .user-block--link:hover {
@@ -2309,6 +2370,7 @@ b {
   position: relative;
   overflow: hidden;
   background-color: var(--fm-quaternary-bg-color);
+  cursor: pointer;
 }
 
 .user-posts-grid--cell img {
@@ -2393,7 +2455,7 @@ b {
     align-items: flex-start;
   }
   .auth-main {
-    background: none;
+    background: 0;
   }
   .user-files--sheet {
     left: 0 !important;

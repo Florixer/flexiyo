@@ -15,11 +15,13 @@ const CustomTopNavbar = ({
             <i className="fm-small-icon far fa-arrow-left"></i>
           </Link>
         ) : null}
-        <img
-          src={navbarCover}
-          className="custom-top-navbar--left-cover"
-          alt="navbar-cover"
-        />
+        {navbarCover ? (
+          <img
+            src={navbarCover}
+            className="custom-top-navbar--left-cover"
+            alt="navbar-cover"
+          />
+        ) : null}
         <span className="custom-top-navbar--left-username">{navbarTitle}</span>
       </div>
       <div className="custom-top-navbar--right">
