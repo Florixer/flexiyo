@@ -1771,8 +1771,8 @@ b {
     justify-content: center;
     align-items: center;
     flex: 0 0 auto;
-    width: 5rem;
-    height: 7rem;
+    width: 7rem;
+    height: 9rem;
     margin: 0.5rem;
     border: 0.01rem solid var(--fm-primary-border);
     border-radius: .8rem;
