@@ -8,30 +8,13 @@ const Notifications = () => {
       id: 1,
       type: "success",
       icon: "fal fa-check",
-      title: "Congrats! Your account has been created.",
+      title: "Congratulations! Your account has been created.",
       actions: [
         {
           type: "button",
           text: "Get Started",
         },
       ],
-      time: "3d",
-    },
-    {
-      id: 1,
-      type: "normal",
-      icon: "fal fa-user-plus",
-      title: "@username has requested to follow you.",
-      actions: [
-        {
-          type: "button",
-          text: "Deny",
-        },
-        {
-          type: "button",
-          text: "Accept",
-        },
-      ],
       time: "2h",
     },
     {
@@ -49,7 +32,7 @@ const Notifications = () => {
           text: "Accept",
         },
       ],
-      time: "2h",
+      time: "13h",
     },
     {
       id: 1,
@@ -66,7 +49,7 @@ const Notifications = () => {
           text: "Accept",
         },
       ],
-      time: "2h",
+      time: "4d",
     },
     {
       id: 1,
@@ -83,7 +66,24 @@ const Notifications = () => {
           text: "Accept",
         },
       ],
-      time: "2h",
+      time: "7d",
+    },
+    {
+      id: 1,
+      type: "normal",
+      icon: "fal fa-user-plus",
+      title: "@username has requested to follow you.",
+      actions: [
+        {
+          type: "button",
+          text: "Deny",
+        },
+        {
+          type: "button",
+          text: "Accept",
+        },
+      ],
+      time: "8d",
     },
     {
       id: 1,
@@ -91,6 +91,12 @@ const Notifications = () => {
       icon: "fal fa-user-plus",
       title: "@username, @hesman and 28 others have liked your comment : Oo Good Idea!...",
       time: "2h",
+      actions: [
+        {
+          type: "button",
+          text: "See now",
+        },
+      ],
     },
   ];
 
@@ -109,7 +115,7 @@ const Notifications = () => {
             <div className="notification-body--actions">
               {notification.actions ? notification.actions.map((action) => {
                 return (
-                  <button type="button" className="notification-body--actions-btn">
+                  <button type="button" className="notification-body--actions-btn" style={{ color: action.text === "Deny" ? "var(--fm-primary-text-muted)" : "var(--fm-primary-link)" }}>
                     {action.text}
                   </button>
                 );
@@ -122,14 +128,6 @@ const Notifications = () => {
   };
   return (
     <section id="notifications">
-      <Headroom>
-      <CustomTopNavbar
-        navbarPrevPage="/"
-        navbarTitle="Notifications"
-        navbarFirstIcon="fa fa-plus"
-        navbarSecondIcon="fa fa-gear"
-      />
-      </Headroom>
       <div className="notifications-list">{renderNotifications()}</div>
     </section>
   );

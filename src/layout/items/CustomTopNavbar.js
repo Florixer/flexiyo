@@ -6,9 +6,13 @@ const CustomTopNavbar = ({
   navbarTitle,
   navbarFirstIcon,
   navbarSecondIcon,
+  setBorder,
 }) => {
   return (
-    <div className="custom-top-navbar">
+    <div
+      className="custom-top-navbar"
+      style={setBorder ? { borderBottom: "0.01rem solid var(--fm-primary-border)" } : null}
+    >
       <div className="custom-top-navbar--left">
         {navbarPrevPage ? (
           <Link to={navbarPrevPage}>

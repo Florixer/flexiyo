@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { socket, socketUser } from "../../data/user/SocketService";
-import Headroom from "react-headroom";
+import matchMedia from "matchmedia";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import CustomTopNavbar from "../../layout/items/CustomTopNavbar";
+import Inbox from "../direct/Inbox";
 import UserFilesSheet from "../../components/direct/chat/UserFilesSheet";
 import { userInfo } from "../../data/user/UserInfo";
 
@@ -13,15 +14,33 @@ const Chat = () => {
   const inputMessageRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [isUserFilesSheetOpen, setIsUserFilesSheetOpen] = useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = matchMedia("(max-width: 950px)");
+    const handleMediaQueryChange = () => {
+      setIsMobile(mediaQuery.matches);
+    };
+
+    mediaQuery.addListener(handleMediaQueryChange);
+    handleMediaQueryChange();
+
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
+
   let { currentRoomId } = useParams();
   currentRoomId = parseInt(currentRoomId, 10);
-  const messagesEndRef = useRef(null);
 
-  const scrollChatToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
+  function scrollToBottom() {
+    var scrollableDiv = document.getElementById("chat-messages");
+    scrollableDiv.scroll({
+      top: scrollableDiv.scrollHeight,
       behavior: "smooth",
     });
-  };
+  }
+
   const handleSendMessage = (event) => {
     event.preventDefault(); // Prevent default form submission behavior
     if (inputText !== "") {
@@ -43,26 +62,24 @@ const Chat = () => {
       setUserMessage("");
       setInputText("");
     }
-    scrollChatToBottom();
+    scrollToBottom();
     inputMessageRef.current.focus();
   };
 
-  useEffect(() => {
-    scrollChatToBottom();
-  }, []);
+  // Listen for incoming messages from the server
+  const handleRecieveMessage = (username, message) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        text: message,
+        sender: username,
+      },
+    ]);
+    scrollToBottom();
+  };
 
   useEffect(() => {
-    // Listen for incoming messages from the server
-    const handleRecieveMessage = (username, message) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          text: message,
-          sender: username,
-        },
-      ]);
-      scrollChatToBottom();
-    };
+    scrollToBottom();
 
     socket.on("recieve-message", handleRecieveMessage);
 
@@ -70,7 +87,7 @@ const Chat = () => {
       // Clean up the event listener when the component unmounts
       socket.off("recieve-message", handleRecieveMessage);
     };
-  }, []);
+  }, [handleSendMessage, handleRecieveMessage]);
 
   const openUserFilesSheet = () => {
     setIsUserFilesSheetOpen(true);
@@ -82,41 +99,40 @@ const Chat = () => {
 
   return (
     <section id="chat">
-      <Headroom>
-        <CustomTopNavbar
-          navbarPrevPage="/direct/inbox"
-          navbarCover={userInfo.pfp}
-          navbarTitle="jason.fiyo"
-          navbarFirstIcon="fa fa-phone"
-          navbarSecondIcon="fa fa-video"
-        />
-      </Headroom>
       <UserFilesSheet
         openUserFilesSheet={openUserFilesSheet}
         isUserFilesSheetOpen={isUserFilesSheetOpen}
         setIsUserFilesSheetOpen={setIsUserFilesSheetOpen}
       />
+      {!isMobile ? <Inbox /> : null}
       <div className="chat-area">
-        <div className="chat-details" onClick={closeUserFilesSheet}>
-          <div className="chat-details--pfp">
-            <LazyLoadImage src={userInfo.pfp} alt="chat-pfp" />
+        <CustomTopNavbar
+          navbarCover={userInfo.pfp}
+          navbarTitle="jason.fiyo"
+          navbarFirstIcon="fa fa-phone"
+          navbarSecondIcon="fa fa-video"
+          setBorder={true}
+        />
+        <div className="chat-messages" id="chat-messages" onClick={closeUserFilesSheet}>
+          <div className="chat-details" onClick={closeUserFilesSheet}>
+            <div className="chat-details--pfp">
+              <LazyLoadImage src={userInfo.pfp} alt="chat-pfp" />
+            </div>
+            <div className="chat-details--name">Jason Barody</div>
+            <div className="chat-details--username">Flexiyo • jason.fiyo</div>
+            <div className="chat-details--button">
+              <button
+                className="fm-primary-btn-inverse"
+                style={{
+                  borderRadius: ".3rem",
+                  padding: ".5rem .7rem",
+                }}
+              >
+                View Profile
+              </button>
+            </div>
+            <div className="chat-details--first-time">Yesterday 10:15pm</div>
           </div>
-          <div className="chat-details--name">Jason Barody</div>
-          <div className="chat-details--username">Flexiyo • jason.fiyo</div>
-          <div className="chat-details--button">
-            <button
-              className="fm-primary-btn-inverse"
-              style={{
-                borderRadius: ".3rem",
-                padding: ".5rem .7rem",
-              }}
-            >
-              View Profile
-            </button>
-          </div>
-          <div className="chat-details--first-time">Yesterday 10:15pm</div>
-        </div>
-        <div className="chat-messages" onClick={closeUserFilesSheet}>
           {messages.map((message, index) => (
             <div
               key={index}
@@ -139,7 +155,6 @@ const Chat = () => {
               <span msg-type="text">{userMessage}</span>
             </div>
           )}
-          <div ref={messagesEndRef}></div>
         </div>
         <div className="chat-messenger">
           <form className="chat-messenger-box" onSubmit={handleSendMessage}>

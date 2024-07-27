@@ -12,31 +12,31 @@ const Stories = () => {
     },
     {
       id: 2,
-      username: "me.23get",
+      username: "kin.tista",
       pfp: "https://i.pravatar.cc/300",
       backThumb: "https://picsum.photos/200/300",
     },
     {
       id: 3,
-      username: "me.23get",
+      username: "hehe.letsgetit",
       pfp: "https://i.pravatar.cc/300",
       backThumb: "https://picsum.photos/200/300",
     },
     {
       id: 4,
-      username: "me.23get",
+      username: "wow.itsyou",
       pfp: "https://i.pravatar.cc/300",
       backThumb: "https://picsum.photos/200/300",
     },
     {
       id: 5,
-      username: "me.23get",
+      username: "uh.itsme",
       pfp: "https://i.pravatar.cc/300",
       backThumb: "https://picsum.photos/200/300",
     },
     {
       id: 6,
-      username: "me.23get",
+      username: "lol.korat",
       pfp: "https://i.pravatar.cc/300",
       backThumb: "https://picsum.photos/200/300",
     },
@@ -53,8 +53,9 @@ const Stories = () => {
         <img
           className="stories-list--story-pfp"
           src={story.pfp}
-          alt={story.username}
+          alt={`${story.username}'s Story`}
         />
+        <span className="stories-list--story-username">{story.username}</span>
       </div>
     ));
   };
