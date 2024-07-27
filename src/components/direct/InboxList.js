@@ -107,6 +107,7 @@ const InboxList = () => {
       style={isMobile ? { maxWidth: "100%" } : { maxWidth: "20rem" }}
     >
       <CustomTopNavbar
+        navbarPrevPage={isMobile ? "/" : null}
         navbarTitle="demo_.person"
         navbarSecondIcon="fal fa-pen-to-square"
       />

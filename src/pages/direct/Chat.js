@@ -107,6 +107,7 @@ const Chat = () => {
       {!isMobile ? <InboxList /> : null}
       <div className="chat-area">
         <CustomTopNavbar
+          navbarPrevPage={isMobile ? "/direct/inbox" : null}
           navbarCover={userInfo.pfp}
           navbarTitle="jason.fiyo"
           navbarFirstIcon="fa fa-phone"
@@ -170,9 +171,9 @@ const Chat = () => {
                 onChange={(e) => setInputText(e.target.value)}
               />
             </div>
-            <div className="chat-messenger--right" onClick={handleSendMessage}>
-              <i type="submit" className="fa fa-paper-plane"></i>
-            </div>
+            <button className="chat-messenger--right" type="submit" onClick={handleSendMessage} disabled={inputText ? false : true}>
+              <i className="fa fa-paper-plane"></i>
+            </button>
           </form>
         </div>
       </div>

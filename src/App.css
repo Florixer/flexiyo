@@ -2159,13 +2159,20 @@ b {
   padding: 0.5rem;
   width: 5rem;
   height: auto;
+  border: none;
+  outline: none;
   border-radius: 2rem;
   background-color: #5408ff;
   font-size: 1.5rem;
   cursor: pointer;
 }
 
-.chat-messenger--right:active {
+.chat-messenger--right:disabled {
+  background-color: #4c24ac;
+  cursor: auto;
+}
+
+.chat-messenger--right:focus {
   background-color: #4300db;
 }
 
