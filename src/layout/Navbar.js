@@ -2,6 +2,7 @@ import React from "react";
 import matchMedia from "matchmedia";
 import BottomNavbar from "./items/BottomNavbar";
 import SideNavbar from "./items/SideNavbar";
+import HomeNavbar from "./items/HomeNavbar";
 
 const Navbar = () => {
   const [isMobile, setIsMobile] = React.useState(false);
@@ -24,7 +25,7 @@ const Navbar = () => {
     <>
       {isMobile ? (
         <>
-          {" "}
+          <HomeNavbar />
           <BottomNavbar />
         </>
       ) : (

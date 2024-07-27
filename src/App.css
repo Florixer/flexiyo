@@ -413,10 +413,8 @@ b {
   margin: 0.7rem;
 }
 
-.side-nav-icon svg,
-.side-nav-icon i {
+.side-nav-icon svg {
   font-size: 1.3rem;
-  padding: 0 0.5rem;
 }
 
 /*--------------------------------------------------------------
@@ -510,6 +508,14 @@ b {
 
 .clips-icon-link:not(.active) .clips-icon #clipsPathNotActive {
   display: block;
+}
+
+.stories-icon-link:not(.active) .stories-icon path {
+  fill-rule: evenodd;
+}
+
+.music-icon-link:not(.active) .music-icon path {
+  fill: none;
 }
 
 .user-profile-icon-link:not(.active) .user-profile-icon img {
@@ -2017,7 +2023,7 @@ b {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: calc(100% - 20rem);
   /* overflow-y: scroll; */
   height: 100vh;
 }

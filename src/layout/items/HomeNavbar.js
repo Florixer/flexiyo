@@ -35,7 +35,7 @@ const HomeNavbar = () => {
                 />
               </Link>
             </div>
-          ) :null}
+          ) : null}
         </div>
         <div className="right">
           <div className="auth-user">
@@ -125,7 +125,7 @@ const HomeNavbar = () => {
             <i className="top-nav-icon">
               <Link to="/notifications">
                 <svg
-                  className="notificationss-icon"
+                  className="notifications-icon"
                   title="Notifications"
                   width="800px"
                   height="800px"
@@ -179,8 +179,8 @@ const HomeNavbar = () => {
                 <svg
                   className="chat-icon"
                   title="Chat with your mates"
-                  fill="#fff"
-                  role="img"
+                  width="800px"
+                  height="800px"
                   viewBox="0 0 24 24"
                 >
                   <g fill="none" stroke="#ffffff" stroke-width="1.5">
