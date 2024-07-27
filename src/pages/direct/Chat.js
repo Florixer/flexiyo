@@ -163,17 +163,14 @@ const Chat = () => {
         </div>
         <div className="chat-messenger">
           <form className="chat-messenger-box" onSubmit={handleSendMessage}>
-            <button
-              className="chat-messenger--left"
-              onClick={openUserFilesSheet}
-              disabled
-            >
+            <div className="chat-messenger--left">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="30"
                 height="30"
                 fill="none"
                 viewBox="0 0 24 24"
+                onClick={openUserFilesSheet}
               >
                 <path
                   fill="currentColor"
@@ -182,7 +179,7 @@ const Chat = () => {
                   clip-rule="evenodd"
                 ></path>
               </svg>
-            </button>
+            </div>
             <div className="chat-messenger--center">
               <input
                 ref={inputMessageRef}
@@ -192,15 +189,14 @@ const Chat = () => {
                 onChange={(e) => setInputText(e.target.value)}
               />
             </div>
-            {inputText ? (
-              <button
-                className="chat-messenger--right"
-                type="submit"
-                onClick={handleSendMessage}
-              >
-                <i className="fa fa-paper-plane"></i>
-              </button>
-            ) : null}
+            <button
+              className="chat-messenger--right"
+              type="submit"
+              onClick={handleSendMessage}
+              disabled={!inputText}
+            >
+              <i type="submit" className="fa fa-paper-plane"></i>
+            </button>
           </form>
         </div>
       </div>

@@ -2120,23 +2120,19 @@ b {
 }
 
 .chat-messenger--left {
-  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.5rem .2rem;
-  padding: 0.5rem;
+  margin: 1rem .5rem;
   width: 3.3rem;
   height: 2.5rem;
   background: none;
   border: none;
   border-radius: 50%;
-  cursor: pointer;
 }
 
-.chat-messenger--left:disabled {
-  color: #686868;
-  cursor: auto;
+.chat-messenger--left svg {
+  cursor: pointer;
 }
 
 .chat-messenger--center {
@@ -2148,7 +2144,7 @@ b {
 }
 
 .chat-messenger--center input {
-  margin: 0 0.3rem 0 3.5rem;
+  margin: 0 .3rem 0 0;
   width: 100%;
   height: 100%;
   border: none;
@@ -2171,6 +2167,14 @@ b {
   background-color: #5408ff;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+.chat-messenger--right:focus {
+  background-color: #4003ce;
+}
+
+.chat-messenger--right:disabled {
+  cursor: auto;
 }
 
 /*--------------------------------------------------------------
