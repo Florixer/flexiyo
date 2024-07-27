@@ -114,7 +114,11 @@ const Chat = () => {
           navbarSecondIcon="fa fa-video"
           setBorder={true}
         />
-        <div className="chat-messages" id="chat-messages" onClick={closeUserFilesSheet}>
+        <div
+          className="chat-messages"
+          id="chat-messages"
+          onClick={closeUserFilesSheet}
+        >
           <div className="chat-details" onClick={closeUserFilesSheet}>
             <div className="chat-details--pfp">
               <LazyLoadImage src={userInfo.pfp} alt="chat-pfp" />
@@ -159,9 +163,26 @@ const Chat = () => {
         </div>
         <div className="chat-messenger">
           <form className="chat-messenger-box" onSubmit={handleSendMessage}>
-            <div className="chat-messenger--left" onClick={openUserFilesSheet}>
-              <i className="fa fa-paperclip"></i>
-            </div>
+            <button
+              className="chat-messenger--left"
+              onClick={openUserFilesSheet}
+              disabled
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                  d="M9 7a5 5 0 0 1 10 0v8a7 7 0 1 1-14 0V9a1 1 0 0 1 2 0v6a5 5 0 0 0 10 0V7a3 3 0 1 0-6 0v8a1 1 0 1 0 2 0V9a1 1 0 1 1 2 0v6a3 3 0 1 1-6 0z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
             <div className="chat-messenger--center">
               <input
                 ref={inputMessageRef}
@@ -171,9 +192,15 @@ const Chat = () => {
                 onChange={(e) => setInputText(e.target.value)}
               />
             </div>
-            <button className="chat-messenger--right" type="submit" onClick={handleSendMessage} disabled={inputText ? false : true}>
-              <i className="fa fa-paper-plane"></i>
-            </button>
+            {inputText ? (
+              <button
+                className="chat-messenger--right"
+                type="submit"
+                onClick={handleSendMessage}
+              >
+                <i className="fa fa-paper-plane"></i>
+              </button>
+            ) : null}
           </form>
         </div>
       </div>
