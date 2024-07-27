@@ -1,4 +1,5 @@
 import React from "react";
+import Headroom from "react-headroom";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 
 const Notifications = () => {
@@ -121,12 +122,14 @@ const Notifications = () => {
   };
   return (
     <section id="notifications">
+      <Headroom>
       <CustomTopNavbar
         navbarPrevPage="/"
         navbarTitle="Notifications"
         navbarFirstIcon="fa fa-plus"
         navbarSecondIcon="fa fa-gear"
       />
+      </Headroom>
       <div className="notifications-list">{renderNotifications()}</div>
     </section>
   );

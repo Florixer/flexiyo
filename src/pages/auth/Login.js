@@ -40,11 +40,11 @@ const Login = () => {
     },
     validationSchema: LoginSchema,
     onSubmit: (values) => {
-      loginUser(values);
+      handleLoginUser(values);
     },
   });
 
-  const loginUser = async (values) => {
+  const handleLoginUser = async (values) => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_FMAPI_BASEURL}/users/login`,
@@ -202,6 +202,7 @@ const Login = () => {
                 type="submit"
                 variant="contained"
                 style={{ borderRadius: "2rem", padding: ".5rem 1.5rem" }}
+                onClick={formik.handleSubmit}
               >
                 Login
               </Button>

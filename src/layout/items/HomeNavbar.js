@@ -35,9 +35,7 @@ const HomeNavbar = () => {
                 />
               </Link>
             </div>
-          ) : (
-            <b style={{ fontSize: "1.2rem", letterSpacing: "3px" }}>Flexiyo</b>
-          )}
+          ) :null}
         </div>
         <div className="right">
           <div className="auth-user">
@@ -127,8 +125,8 @@ const HomeNavbar = () => {
             <i className="top-nav-icon">
               <Link to="/notifications">
                 <svg
-                  className="notification-icon"
-                  title="Notification Alert!"
+                  className="notificationss-icon"
+                  title="Notifications"
                   width="800px"
                   height="800px"
                   viewBox="0 0 24 24"
