@@ -26,7 +26,7 @@ const CustomTopNavbar = ({
             alt="navbar-cover"
           />
         ) : null}
-        <span className="custom-top-navbar--left-username">{navbarTitle}</span>
+        <b className="custom-top-navbar--left-username">{navbarTitle}</b>
       </div>
       <div className="custom-top-navbar--right">
         <div className="custom-top-navbar--right-icon">

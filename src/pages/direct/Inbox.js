@@ -1,125 +1,88 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Headroom from "react-headroom";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import CustomTopNavbar from "../../layout/items/CustomTopNavbar";
-import { userInfo } from "../../data/user/UserInfo";
+import React from "react";
+import matchMedia from "matchmedia";
+import InboxList from "../../components/direct/InboxList";
 
 const Inbox = () => {
-  const [searchMagnifyIcon, setsearchMagnifyIcon] = useState({
-    stroke: "var(--fm-primary-text-muted)",
-  });
+  const [isMobile, setIsMobile] = React.useState(false);
 
-  const [searchText, setSearchText] = useState("");
+  React.useEffect(() => {
+    const mediaQuery = matchMedia("(max-width: 950px)");
+    const handleMediaQueryChange = () => {
+      setIsMobile(mediaQuery.matches);
+    };
 
-  const handleSearchChange = (event) => {
-    setSearchText(event.target.value);
-  };
+    mediaQuery.addListener(handleMediaQueryChange);
+    handleMediaQueryChange();
 
-  const searchBarFocus = () => {
-    setsearchMagnifyIcon({
-      stroke: "var(--fm-primary-text)",
-    });
-  };
-
-  const searchBarNoFocus = () => {
-    setsearchMagnifyIcon({
-      stroke: "var(--fm-primary-text-muted)",
-    });
-  };
-
-  const inboxItems = {
-    inbox: {
-      items: [
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/300",
-          last_msg: "1 new message",
-        },
-      ],
-    },
-  };
-
-  const renderInbox = () => {
-    return inboxItems.inbox.items.map((chat) => (
-      <Link to={`/direct/t/${chat.id}`}>
-        <div className="inbox-item" key={chat.id}>
-          <LazyLoadImage
-            alt="chat-cover"
-            className="inbox-item--cover"
-            src={chat.cover}
-          />
-          <div className="inbox-item-main">
-            <label className="inbox-item--title">{chat.title}</label>
-            <span className="inbox-item--last-msg">{chat.last_msg}</span>
-          </div>
-        </div>
-      </Link>
-    ));
-  };
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
 
   return (
-    <section id="inbox">
-      <CustomTopNavbar
-        navbarPrevPage={"/"}
-        navbarTitle="demo_.person"
-        navbarSecondIcon="fal fa-pen-to-square"
-      />
-      <div className="inbox-container">
-        <div className="inbox-list">
-          <b className="inbox-list--heading">Messages</b>
-          {renderInbox()}
-        </div>
-      </div>
+    <section
+      id="inbox"
+      style={{
+        display: "flex",
+        borderRight: ".01rem solid var(--fm-primary-border)",
+      }}
+    >
+      {isMobile ? (
+        <InboxList />
+      ) : (
+        <>
+          <InboxList />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              height: "100vh",
+              width: "100%",
+            }}
+          >
+            <svg
+              class="chat-icon"
+              title="Chat with your mates"
+              fill="#fff"
+              role="img"
+              viewBox="0 0 24 24"
+              style={{
+                width: "7rem",
+                height: "7rem",
+                padding: "1.5rem",
+                border: ".2rem solid var(--fm-primary-text)",
+                borderRadius: "50%",
+              }}
+            >
+              <g fill="none" stroke="#ffffff" stroke-width="1.5">
+                <path d="M20 12c0-3.771 0-5.657-1.172-6.828C17.657 4 15.771 4 12 4C8.229 4 6.343 4 5.172 5.172C4 6.343 4 8.229 4 12v6c0 .943 0 1.414.293 1.707C4.586 20 5.057 20 6 20h6c3.771 0 5.657 0 6.828-1.172C20 17.657 20 15.771 20 12z"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 10h6m-6 4h3"
+                ></path>
+              </g>
+            </svg>
+            <br />
+            <p style={{ color: "var(--fm-primary-text-muted)" }}>
+              Send a message to start a chat.
+            </p>
+            <button
+              style={{
+                padding: ".5rem .7rem",
+                fontSize: ".7rem",
+                border: "none",
+                borderRadius: ".3rem",
+                backgroundColor: "#0095f6",
+              }}
+            >
+              Send Message
+            </button>
+          </div>
+        </>
+      )}
     </section>
   );
 };

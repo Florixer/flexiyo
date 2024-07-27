@@ -4,7 +4,7 @@ import { socket, socketUser } from "../../data/user/SocketService";
 import matchMedia from "matchmedia";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import CustomTopNavbar from "../../layout/items/CustomTopNavbar";
-import Inbox from "../direct/Inbox";
+import InboxList from "../../components/direct/InboxList";
 import UserFilesSheet from "../../components/direct/chat/UserFilesSheet";
 import { userInfo } from "../../data/user/UserInfo";
 
@@ -104,7 +104,7 @@ const Chat = () => {
         isUserFilesSheetOpen={isUserFilesSheetOpen}
         setIsUserFilesSheetOpen={setIsUserFilesSheetOpen}
       />
-      {!isMobile ? <Inbox /> : null}
+      {!isMobile ? <InboxList /> : null}
       <div className="chat-area">
         <CustomTopNavbar
           navbarCover={userInfo.pfp}
