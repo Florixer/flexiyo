@@ -19,7 +19,7 @@ const HomeNavbar = () => {
       mediaQuery.removeListener(handleMediaQueryChange);
     };
   }, []);
-
+  
   return (
     <Headroom>
       <header id="header" className="home-navbar">
