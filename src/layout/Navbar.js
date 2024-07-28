@@ -25,7 +25,6 @@ const Navbar = () => {
     <>
       {isMobile ? (
         <>
-          <HomeNavbar />
           <BottomNavbar />
         </>
       ) : (
