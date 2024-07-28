@@ -2516,6 +2516,12 @@ b {
   flex-direction: column;
 }
 
+@media screen and (max-width: 950px){
+  .chat-area {
+    width: 100%;
+  }
+}
+
 @media screen and (max-width: 600px) {
   #main {
     padding: 0 0 var(--fm-mobile-bottom-navbar-height) 0;
