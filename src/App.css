@@ -1777,6 +1777,11 @@ b {
 /*--------------------------------------------------------------
   # STORIES
   --------------------------------------------------------------*/
+#stories {
+  display: flex;
+  flex-direction: column;
+}
+
 .stories-list {
   display: flex;
   background-color: var(--fm-body-bg-color);
@@ -1841,6 +1846,10 @@ b {
   align-items: center;
 }
 
+#notifications .custom-top-navbar {
+  width: 100vw;
+}
+
 /* #NOTIFICATIONS - Notifications List */
 .notifications-list {
   display: flex;
@@ -1855,10 +1864,9 @@ b {
   justify-content: flex-start;
   color: var(--fm-primary-text);
   cursor: pointer;
-  /* padding: 1rem 0 1rem 0; */
   align-items: center;
   text-align: left;
-  max-width: 23rem;
+  max-width: 500px;
   width: 100%;
   height: 4rem;
   margin: 0.5rem 0;
@@ -1880,7 +1888,6 @@ b {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 20rem;
   width: 100%;
 }
 

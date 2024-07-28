@@ -163,7 +163,7 @@ export default function SideNavbar() {
                 strokeLinejoin="round"
               />
               <path
-              fill="#fff"
+                fill="#fff"
                 fillRule="evenodd"
                 clipRule="evenodd"
                 d="M29 14.0664L41.8834 17.1215V9.01339L29 6V14.0664Z"

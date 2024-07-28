@@ -1,8 +1,25 @@
 import React from "react";
+import matchMedia from "matchmedia";
 import Headroom from "react-headroom";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 
 const Stories = () => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = matchMedia("(max-width: 600px)");
+    const handleMediaQueryChange = () => {
+      setIsMobile(mediaQuery.matches);
+    };
+
+    mediaQuery.addListener(handleMediaQueryChange);
+    handleMediaQueryChange();
+
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
+
   const storiesList = [
     {
       id: 1,
@@ -61,15 +78,32 @@ const Stories = () => {
   };
   return (
     <section id="stories">
-      <Headroom>
-        <CustomTopNavbar
-          navbarPrevPage="/"
-          navbarTitle="Stories"
-          navbarFirstIcon="fa fa-plus"
-          navbarSecondIcon="fa fa-gear"
-        />
-      </Headroom>
+      {isMobile ? (
+        <Headroom>
+          <CustomTopNavbar
+            navbarPrevPage="/"
+            navbarTitle="Stories"
+            navbarFirstIcon="fa fa-plus"
+            navbarSecondIcon="fa fa-gear"
+            setBorder
+          />
+        </Headroom>
+      ) : null}
       <div className="stories-list">{renderStories()}</div>
+      <div className="new-story">
+        <div className="new-story--scratch">
+          <span className="new-story--scratch-icon">
+            <i className="fa fa-plus"></i>
+          </span>
+          <span className="new-story--scratch-title">Create a New Story from Scratch</span>
+        </div>
+        <div className="new-story--templates">
+          <div className="new-story--templates-item"></div>
+          <div className="new-story--templates-item"></div>
+          <div className="new-story--templates-item"></div>
+          <div className="new-story--templates-item"></div>
+        </div>
+      </div>
     </section>
   );
 };
