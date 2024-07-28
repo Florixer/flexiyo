@@ -2056,7 +2056,7 @@ b {
 .chat-messages {
   display: flex;
   width: 100%;
-  height: calc(100vh - 9rem );
+  height: calc(100vh - 8rem );
   flex-direction: column;
   overflow-y: scroll;
 }

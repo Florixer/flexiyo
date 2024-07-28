@@ -119,7 +119,7 @@ const Chat = () => {
           id="chat-messages"
           onClick={closeUserFilesSheet}
         >
-            {/*<div className="chat-details" onClick={closeUserFilesSheet}>
+            <div className="chat-details" onClick={closeUserFilesSheet}>
             <div className="chat-details--pfp">
               <LazyLoadImage src={userInfo.pfp} alt="chat-pfp" />
             </div>
@@ -137,7 +137,7 @@ const Chat = () => {
               </button>
             </div>
             <div className="chat-details--first-time">Yesterday 10:15pm</div>
-          </div> */}
+          </div>
           {messages.map((message, index) => (
             <div
               key={index}
