@@ -518,6 +518,15 @@ b {
   fill: none;
 }
 
+.notifications-icon-link:not(.active) .notifications-icon path {
+  stroke: none;
+}
+.chat-icon-link:not(.active) .chat-icon g,
+.chat-icon-link:not(.active) .chat-icon path {
+  fill: none;
+  stroke: #ffffff;
+}
+
 .user-profile-icon-link:not(.active) .user-profile-icon img {
   outline: none;
 }
@@ -527,13 +536,12 @@ b {
   --------------------------------------------------------------*/
 .custom-top-navbar {
   display: flex;
-  width: 100%;
   align-items: center;
-  height: var(--fm-header-height);
   color: var(--fm-primary-text);
   font-size: 85%;
   background-color: var(--fm-body-bg-color);
   width: 100%;
+  height: var(--fm-header-height);
   transition: top 0.4s ease-in-out;
   z-index: 1;
 }
@@ -1152,6 +1160,14 @@ b {
 /*--------------------------------------------------------------
   # Create
   --------------------------------------------------------------*/
+#create {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
 .create-container {
   display: flex;
   justify-content: center;
@@ -1160,6 +1176,7 @@ b {
   width: 100%;
   max-height: 1500px;
   height: calc(100vh - 7rem);
+  border: var(--fm-primary-border) 0.1rem solid;
 }
 
 /* #CREATE - Content Viewport */
@@ -1168,9 +1185,8 @@ b {
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-height: calc(100vh / 2 - 5rem);
   height: 100%;
-  border-bottom: var(--fm-primary-border) 0.1rem solid;
+  border-right: var(--fm-primary-border) 0.1rem solid;
 }
 
 /* #CREATE - Content Selection */
@@ -1182,6 +1198,7 @@ b {
   width: 100%;
   max-height: calc(100vh / 2 - 2rem);
   height: 100%;
+  overflow: hidden;
 }
 
 .file-type--selector {
@@ -1216,7 +1233,7 @@ b {
 .create-content-selection--container {
   height: 100%;
   width: 100vw;
-  overflow: scroll;
+  overflow-y: scroll;
   scroll-behavior: smooth;
 }
 
@@ -1818,7 +1835,8 @@ b {
   --------------------------------------------------------------*/
 #notifications {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* #NOTIFICATIONS - Notifications List */
@@ -1827,7 +1845,6 @@ b {
   flex-direction: column;
   background-color: var(--fm-body-bg-color);
   color: var(--fm-primary-text);
-  margin: 1rem 0;
 }
 
 .notification {
@@ -1836,19 +1853,23 @@ b {
   justify-content: flex-start;
   color: var(--fm-primary-text);
   cursor: pointer;
-  padding: 1rem 0 1rem 0;
+  /* padding: 1rem 0 1rem 0; */
   align-items: center;
   text-align: left;
   max-width: 23rem;
   width: 100%;
   height: 4rem;
   margin: 0.5rem 0;
+  border-radius: 0.5rem;
 }
 
-.notification-icon {
-  margin: 0 1rem;
-  font-size: 1rem;
-  padding: 1rem;
+.notification:hover {
+  background-color: var(--fm-primary-bg-color);
+}
+
+.notification-cover img {
+  margin: 0.5rem;
+  width: 3rem;
   border: 0.01rem solid var(--fm-primary-border);
   border-radius: 50%;
 }
@@ -1895,7 +1916,7 @@ b {
 
 #chat {
   display: flex;
-  border-right: .01rem solid var(--fm-primary-border);
+  border-right: 0.01rem solid var(--fm-primary-border);
 }
 
 .inbox-container {
@@ -2056,7 +2077,7 @@ b {
 .chat-messages {
   display: flex;
   width: 100%;
-  height: calc(100vh - 8.5rem );
+  height: calc(100vh - 8.5rem);
   flex-direction: column;
   overflow-y: scroll;
 }
@@ -2127,7 +2148,7 @@ b {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1rem .5rem;
+  margin: 1rem 0.5rem;
   width: 3.3rem;
   height: 2.5rem;
   background: none;
@@ -2148,7 +2169,7 @@ b {
 }
 
 .chat-messenger--center input {
-  margin: 0 .3rem 0 0;
+  margin: 0 0.3rem 0 0;
   width: 100%;
   height: 100%;
   border: none;
@@ -2514,9 +2535,14 @@ b {
   flex-direction: column;
 }
 
-@media screen and (max-width: 950px){
+@media screen and (max-width: 950px) {
   .chat-area {
     width: 100%;
+  }
+
+  .create-container--content-viewport {
+    border-bottom: var(--fm-primary-border) 0.1rem solid;
+    height: 100%;
   }
 }
 

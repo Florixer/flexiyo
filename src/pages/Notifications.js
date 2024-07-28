@@ -1,13 +1,30 @@
 import React from "react";
+import matchMedia from "matchmedia";
 import Headroom from "react-headroom";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 
 const Notifications = () => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = matchMedia("(max-width: 600px)");
+    const handleMediaQueryChange = () => {
+      setIsMobile(mediaQuery.matches);
+    };
+
+    mediaQuery.addListener(handleMediaQueryChange);
+    handleMediaQueryChange();
+
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
+
   const notificationsList = [
     {
       id: 1,
       type: "success",
-      icon: "fal fa-check",
+      cover: "https://i.pravatar.cc/30",
       title: "Congratulations! Your account has been created.",
       actions: [
         {
@@ -20,7 +37,7 @@ const Notifications = () => {
     {
       id: 1,
       type: "normal",
-      icon: "fal fa-user-plus",
+      cover: "https://i.pravatar.cc/25",
       title: "@username has requested to follow you.",
       actions: [
         {
@@ -37,7 +54,7 @@ const Notifications = () => {
     {
       id: 1,
       type: "normal",
-      icon: "fal fa-user-plus",
+      cover: "https://i.pravatar.cc/20",
       title: "@username has requested to follow you.",
       actions: [
         {
@@ -54,7 +71,7 @@ const Notifications = () => {
     {
       id: 1,
       type: "normal",
-      icon: "fal fa-user-plus",
+      cover: "https://i.pravatar.cc/15",
       title: "@username has requested to follow you.",
       actions: [
         {
@@ -71,7 +88,7 @@ const Notifications = () => {
     {
       id: 1,
       type: "normal",
-      icon: "fal fa-user-plus",
+      cover: "https://i.pravatar.cc/10",
       title: "@username has requested to follow you.",
       actions: [
         {
@@ -88,8 +105,9 @@ const Notifications = () => {
     {
       id: 1,
       type: "normal",
-      icon: "fal fa-user-plus",
-      title: "@username, @hesman and 28 others have liked your comment : Oo Good Idea!...",
+      cover: "https://i.pravatar.cc/5",
+      title:
+        "@username, @hesman and 28 others have liked your comment : Oo Good Idea!...",
       time: "2h",
       actions: [
         {
@@ -104,22 +122,35 @@ const Notifications = () => {
     return notificationsList.map((notification) => {
       return (
         <div className="notification">
-          <div className="notification-icon">
-            <i className={notification.icon}></i>
+          <div className="notification-cover">
+            <img src={notification.cover} />
           </div>
           <div className="notification-body">
             <div className="notification-body--title">
               {notification.title} &nbsp;
-              <span className="notification-body--time">{notification.time}</span>
+              <span className="notification-body--time">
+                {notification.time}
+              </span>
             </div>
             <div className="notification-body--actions">
-              {notification.actions ? notification.actions.map((action) => {
-                return (
-                  <button type="button" className="notification-body--actions-btn" style={{ color: action.text === "Deny" ? "var(--fm-primary-text-muted)" : "var(--fm-primary-link)" }}>
-                    {action.text}
-                  </button>
-                );
-              }) : null}
+              {notification.actions
+                ? notification.actions.map((action) => {
+                    return (
+                      <button
+                        type="button"
+                        className="notification-body--actions-btn"
+                        style={{
+                          color:
+                            action.text === "Deny"
+                              ? "var(--fm-primary-text-muted)"
+                              : "var(--fm-primary-link)",
+                        }}
+                      >
+                        {action.text}
+                      </button>
+                    );
+                  })
+                : null}
             </div>
           </div>
         </div>
@@ -128,7 +159,18 @@ const Notifications = () => {
   };
   return (
     <section id="notifications">
-      <div className="notifications-list">{renderNotifications()}</div>
+      {isMobile ? <Headroom>
+        <CustomTopNavbar
+          navbarPrevPage={"/"}
+          navbarTitle="Notifications"
+          navbarFirstIcon="fa fa-plus"
+          navbarSecondIcon="fa fa-bell"
+          setBorder
+        />
+      </Headroom> : null}
+      <div className="notifications-list">
+        {renderNotifications()}
+        </div>
     </section>
   );
 };
