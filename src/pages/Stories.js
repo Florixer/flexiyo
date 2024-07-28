@@ -57,6 +57,18 @@ const Stories = () => {
       pfp: "https://i.pravatar.cc/300",
       backThumb: "https://picsum.photos/200/300",
     },
+    {
+      id: 7,
+      username: "lomta.sis",
+      pfp: "https://i.pravatar.cc/300",
+      backThumb: "https://picsum.photos/200/300",
+    },
+    {
+      id: 7,
+      username: "rizzy.pet",
+      pfp: "https://i.pravatar.cc/300",
+      backThumb: "https://picsum.photos/200/300",
+    },
   ];
 
   const renderStories = () => {
@@ -90,19 +102,16 @@ const Stories = () => {
         </Headroom>
       ) : null}
       <div className="stories-list">{renderStories()}</div>
-      <div className="new-story">
-        <div className="new-story--scratch">
-          <span className="new-story--scratch-icon">
-            <i className="fa fa-plus"></i>
-          </span>
-          <span className="new-story--scratch-title">Create a New Story from Scratch</span>
+      <div class="story-templates">
+        <div class="story-templates--item story-templates--scratch">
+          <span class="story-templates--scratch-bg"></span>
+          <i className="fa fa-plus story-templates--scratch-icon"></i>
+          <span className="story-templates--scratch-text">Create a Story from Scratch</span>
         </div>
-        <div className="new-story--templates">
-          <div className="new-story--templates-item"></div>
-          <div className="new-story--templates-item"></div>
-          <div className="new-story--templates-item"></div>
-          <div className="new-story--templates-item"></div>
-        </div>
+        <div class="story-templates--item">STORY SAMPLE</div>
+        <div class="story-templates--item">STORY SAMPLE</div>
+        <div class="story-templates--item">STORY SAMPLE</div>
+        <div class="story-templates--item">STORY SAMPLE</div>
       </div>
     </section>
   );
