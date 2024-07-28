@@ -301,6 +301,7 @@ const Music = () => {
           navbarTitle="Music"
           navbarFirstIcon="fa fa-list-music"
           navbarSecondIcon="fa fa-gear"
+          setBorder
         />
       </Headroom>
       <div className="music-container">
@@ -357,7 +358,6 @@ const Music = () => {
                 onClick={openSpeechModal}
               ></i>
               <button
-                type="button"
                 className="fm-primary-btn"
                 style={{
                   display: "flex",
@@ -367,8 +367,8 @@ const Music = () => {
                   borderLeft: ".1rem solid var(--fm-secondary-bg-color)",
                 }}
                 onClick={(event) => {
-                  setSearchText("");
                   event.preventDefault();
+                  setSearchText("");
                 }}
               >
                 <i

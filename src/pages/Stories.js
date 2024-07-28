@@ -64,7 +64,7 @@ const Stories = () => {
       backThumb: "https://picsum.photos/200/300",
     },
     {
-      id: 7,
+      id: 8,
       username: "rizzy.pet",
       pfp: "https://i.pravatar.cc/300",
       backThumb: "https://picsum.photos/200/300",
@@ -108,6 +108,8 @@ const Stories = () => {
           <i className="fa fa-plus story-templates--scratch-icon"></i>
           <span className="story-templates--scratch-text">Create a Story from Scratch</span>
         </div>
+        <div class="story-templates--item">STORY SAMPLE</div>
+        <div class="story-templates--item">STORY SAMPLE</div>
         <div class="story-templates--item">STORY SAMPLE</div>
         <div class="story-templates--item">STORY SAMPLE</div>
         <div class="story-templates--item">STORY SAMPLE</div>
