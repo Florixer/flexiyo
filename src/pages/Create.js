@@ -23,21 +23,11 @@ const Create = () => {
 
   return (
     <section id="create">
-      {isMobile ? (
-        <Headroom>
-          <CustomTopNavbar
-            navbarPrevPage={"/"}
-            navbarTitle="Create"
-            navbarFirstIcon="fa fa-plus"
-            navbarSecondIcon="fa fa-gear"
-            setBorder
-          />
-        </Headroom>
-      ) : null}
       <div
         className="create-container"
         style={{ flexDirection: isMobile ? "column" : "row" }}
       >
+        
         <ContentViewport />
         <ContentSelection />
       </div>

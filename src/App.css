@@ -1164,6 +1164,7 @@ b {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 100%;
   height: 100vh;
 }
@@ -1175,7 +1176,7 @@ b {
   max-width: 1200px;
   width: 100%;
   max-height: 1500px;
-  height: calc(100vh - 7rem);
+  height: 100%;
   border: var(--fm-primary-border) 0.1rem solid;
 }
 
@@ -1213,6 +1214,7 @@ b {
   border-radius: 1rem;
   background-color: var(--fm-primary-bg-color);
   overflow: hidden;
+  cursor: pointer;
 }
 
 .file-type--selector-item {
@@ -2542,7 +2544,7 @@ b {
 
   .create-container--content-viewport {
     border-bottom: var(--fm-primary-border) 0.1rem solid;
-    height: 100%;
+    height: 50%;
   }
 }
 
