@@ -104,7 +104,6 @@ const Stories = () => {
       <div className="stories-list">{renderStories()}</div>
       <div class="story-templates">
         <div class="story-templates--item story-templates--scratch">
-          <span class="story-templates--scratch-bg"></span>
           <i className="fa fa-plus story-templates--scratch-icon"></i>
           <span className="story-templates--scratch-text">Create a Story from Scratch</span>
         </div>
