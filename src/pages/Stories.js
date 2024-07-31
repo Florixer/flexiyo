@@ -113,6 +113,8 @@ const Stories = () => {
         <div class="story-templates--item">STORY SAMPLE</div>
         <div class="story-templates--item">STORY SAMPLE</div>
         <div class="story-templates--item">STORY SAMPLE</div>
+        <div class="story-templates--item">STORY SAMPLE</div>
+        <div class="story-templates--item">STORY SAMPLE</div>
       </div>
     </section>
   );
