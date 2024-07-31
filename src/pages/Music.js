@@ -17,6 +17,7 @@ const Music = () => {
   const {
     topTracks,
     setTopTracks,
+    currentTrack,
     isSpeechModalOpen,
     setIsSpeechModalOpen,
     isNetworkConnected,
@@ -294,17 +295,17 @@ const Music = () => {
 
   return (
     <section id="music">
-      <Headroom>
-        <CustomTopNavbar
-          navbarPrevPage="/"
-          navbarCover={spotifyLogo}
-          navbarTitle="Music"
-          navbarFirstIcon="fa fa-list-music"
-          navbarSecondIcon="fa fa-gear"
-          setBorder
-        />
-      </Headroom>
       <div className="music-container">
+        <Headroom>
+          <CustomTopNavbar
+            navbarPrevPage="/"
+            navbarCover={spotifyLogo}
+            navbarTitle="Music"
+            navbarFirstIcon="fa fa-list-music"
+            navbarSecondIcon="fa fa-gear"
+            setBorder
+          />
+        </Headroom>
         <div className="search-container">
           <form id="searchTracksForm" className="search-box">
             <div
@@ -480,8 +481,8 @@ const Music = () => {
             {!speechTranscript && !speechListening
               ? "Didn't Catch, Speak again"
               : !speechTranscript
-                ? `Play "${topTracks[0].name}"`
-                : speechTranscript}
+              ? `Play "${topTracks[0].name}"`
+              : speechTranscript}
             <br />
             <br />
             {!speechTranscript && !speechListening ? (
@@ -500,6 +501,11 @@ const Music = () => {
             ) : null}
           </div>
         </Modal>
+      </div>
+      <div className="music-lyrics">
+        <div className="music-lyrics--wrapper">
+          {currentTrack.lyrics && currentTrack.lyrics.lyrics}
+        </div>
       </div>
     </section>
   );

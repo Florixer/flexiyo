@@ -30,10 +30,11 @@ const useMusicUtility = () => {
           artists: cachedTrackData.artists,
           image: cachedTrackData.image,
           link: cachedTrackData.link,
+          lyrics: cachedTrackData.lyrics,
         });
         setIsAudioLoading(false);
       } else {
-        const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
+        const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}?lyrics=true`);
         const resultData = data.data[0];
         const trackData = {
           id: resultData.id,
@@ -46,18 +47,19 @@ const useMusicUtility = () => {
             contentQuality === "low"
               ? resultData.image[0].url
               : contentQuality === "normal"
-                ? resultData.image[1].url
-                : contentQuality === "high"
-                  ? resultData.image[2].url
-                  : resultData.image[1].url,
+              ? resultData.image[1].url
+              : contentQuality === "high"
+              ? resultData.image[2].url
+              : resultData.image[1].url,
           link:
             contentQuality === "low"
               ? resultData.downloadUrl[1].url
               : contentQuality === "normal"
-                ? resultData.downloadUrl[3].url
-                : contentQuality === "high"
-                  ? resultData.downloadUrl[4].url
-                  : resultData.downloadUrl[3].url,
+              ? resultData.downloadUrl[3].url
+              : contentQuality === "high"
+              ? resultData.downloadUrl[4].url
+              : resultData.downloadUrl[3].url,
+          lyrics: resultData.lyrics,
         };
         setCurrentTrack(trackData);
         cacheTrackData(trackData);
