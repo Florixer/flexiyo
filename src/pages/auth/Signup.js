@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import PhoneSignInBtn from "../../features/phoneemail/PhoneSignInBtn";
-import EmailSignInBtn from "../../features/phoneemail/EmailSignInBtn";
 import {
   Container,
   Alert,
