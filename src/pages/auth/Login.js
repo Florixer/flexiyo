@@ -55,6 +55,7 @@ const Login = () => {
       );
       // Handle login success
       console.log(response.data);
+      window.location = "/";
     } catch (error) {
       // Handle login failure
       console.error(error.message);
