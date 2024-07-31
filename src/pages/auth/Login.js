@@ -47,7 +47,7 @@ const Login = () => {
   const handleLoginUser = async (values) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_FMAPI_BASEURL}/users/login`,
+        `${process.env.REACT_APP_FMAPI_BASEURL}/users/login_account`,
         {
           emailOrUsername: values.emailOrUsername,
           password: values.password,
