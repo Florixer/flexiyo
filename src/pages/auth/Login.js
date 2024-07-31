@@ -54,11 +54,10 @@ const Login = () => {
         },
       );
       // Handle login success
-      console.log(response.data);
-      window.location = "/";
+      alert(response.data.message);
     } catch (error) {
       // Handle login failure
-      console.error(error.message);
+      alert(error.message);
     }
   };
 
