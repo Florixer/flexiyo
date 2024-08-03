@@ -1477,25 +1477,28 @@ b {
 
 .music-container {
   max-width: 600px;
+  height: 100vh;
+  overflow-y: scroll;
   width: 100%;
 }
 
 .music-lyrics {
   display: flex;
   align-items: center;
-  flex-direction: column;
+  justify-content: center;
   max-width: 600px;
   width: 100%;
-  height: 90vh;
+  height: 100vh;
+  font-size: 1rem;
 }
 
 .music-lyrics--wrapper {
   max-height: 30rem;
-  height: 100%;
+  height: 90%;
   width: 80%;
-  background-color: #69af87;
-  margin: 5rem 0 0 0;
-  overflow-y: scroll;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: var(--fm-secondary-bg-color);
   overflow-x: hidden;
 }
 
@@ -1682,7 +1685,8 @@ b {
   bottom: 0;
   display: flex;
   justify-content: center;
-  max-width: 600px;
+  align-items: center;
+  max-width: 550px;
   width: 100%;
   transition: 0.2s all;
   backdrop-filter: blur(2px);
@@ -2649,6 +2653,19 @@ b {
   .story-templates--scratch-text {
     font-size: 1.3rem;
     padding: 0 1rem 0 0;
+  }
+
+  .music-player {
+    max-width: 600px;
+  }
+
+  .music-container {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .music-lyrics {
+    display: none;
   }
 }
 

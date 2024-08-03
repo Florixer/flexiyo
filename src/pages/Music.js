@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Capacitor } from "@capacitor/core";
 import axios from "axios";
 import Modal from "react-modal";
@@ -34,6 +34,22 @@ const Music = () => {
   const [modalDownloadData, setModalDownloadData] = useState("");
   const [isDownlodModalOpen, setIsDownloadModalOpen] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
+
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = matchMedia("(max-width: 600px)");
+    const handleMediaQueryChange = () => {
+      setIsMobile(mediaQuery.matches);
+    };
+
+    mediaQuery.addListener(handleMediaQueryChange);
+    handleMediaQueryChange();
+
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
 
   const saavnApiBaseUrl = "https://saavn.dev/api";
 
@@ -281,6 +297,18 @@ const Music = () => {
     }
   };
 
+  const currentTrackLyrics = currentTrack.lyrics
+    ? currentTrack.lyrics.lyrics.replace("<br>", "<br/>")
+    : null;
+
+  const lyricsWrapperRef = useRef(null);
+
+  useEffect(() => {
+    if (lyricsWrapperRef.current) {
+      lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
+    }
+  }, [currentTrackLyrics]);
+
   const renderTracks = () => {
     return tracks.map((track, index) => (
       <TrackItem
@@ -296,16 +324,18 @@ const Music = () => {
   return (
     <section id="music">
       <div className="music-container">
-        <Headroom>
-          <CustomTopNavbar
-            navbarPrevPage="/"
-            navbarCover={spotifyLogo}
-            navbarTitle="Music"
-            navbarFirstIcon="fa fa-list-music"
-            navbarSecondIcon="fa fa-gear"
-            setBorder
-          />
-        </Headroom>
+        {isMobile ? (
+          <Headroom>
+            <CustomTopNavbar
+              navbarPrevPage="/"
+              navbarCover={spotifyLogo}
+              navbarTitle="Music"
+              navbarFirstIcon="fa fa-list-music"
+              navbarSecondIcon="fa fa-gear"
+              setBorder
+            />
+          </Headroom>
+        ) : null}
         <div className="search-container">
           <form id="searchTracksForm" className="search-box">
             <div
@@ -388,13 +418,13 @@ const Music = () => {
         >
           {printError}
         </div>
-        {/*<button
+        <button
           className="fm-primary-btn"
           style={{ padding: ".5rem", marginLeft: "1rem" }}
           onClick={deleteCachedAudioData}
         >
           Clear Cached Data
-        </button>*/}
+        </button>
         <div className="render-tracks">{renderTracks()}</div>
         <Modal
           isOpen={isDownlodModalOpen}
@@ -503,8 +533,102 @@ const Music = () => {
         </Modal>
       </div>
       <div className="music-lyrics">
-        <div className="music-lyrics--wrapper">
-          {currentTrack.lyrics && currentTrack.lyrics.lyrics}
+        <div
+          className="music-lyrics--wrapper"
+          ref={lyricsWrapperRef}
+          style={{ display: currentTrackLyrics ? "block" : "none" }}
+        ></div>
+        <div
+          style={{
+            display: currentTrackLyrics ? "none" : "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            height: "100vh",
+            width: "100%",
+          }}
+        >
+          <svg
+              className="music-icon"
+              title="Play Music"
+              width="35px"
+              height="35px"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{
+                width: "7rem",
+                height: "7rem",
+                padding: "1.5rem",
+                border: ".2rem solid var(--fm-primary-text)",
+                borderRadius: "50%",
+              }}
+            >
+              <path
+                d="M29 6V35"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M15 36.04C15 33.2565 17.2565 31 20.04 31H29V36.96C29 39.7435 26.7435 42 23.96 42H20.04C17.2565 42 15 39.7435 15 36.96V36.04Z"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinejoin="round"
+              />
+              <path
+                fill="#fff"
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M29 14.0664L41.8834 17.1215V9.01339L29 6V14.0664Z"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 8H20"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 16H20"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 24H16"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          <br />
+          <p style={{ color: "var(--fm-primary-text-muted)" }}>
+            Play a track to feel the vibe.
+          </p>
+          <button
+            style={{
+              padding: ".5rem .7rem",
+              fontSize: ".7rem",
+              border: "none",
+              borderRadius: ".3rem",
+              backgroundColor: "#0095f6",
+            }}
+          >
+            Play the first track
+          </button>
         </div>
       </div>
     </section>
