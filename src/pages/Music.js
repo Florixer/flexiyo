@@ -3,6 +3,7 @@ import { Capacitor } from "@capacitor/core";
 import axios from "axios";
 import Modal from "react-modal";
 import Headroom from "react-headroom";
+import matchMedia from "matchmedia";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import TrackItem from "../components/music/TrackItem";
 import MusicContext from "../context/music/MusicContext";
@@ -626,6 +627,7 @@ const Music = () => {
               borderRadius: ".3rem",
               backgroundColor: "#0095f6",
             }}
+            onClick={() => getTrack(topTracks[0].id)}
           >
             Play the first track
           </button>

@@ -131,10 +131,10 @@ const MusicPlayer = () => {
                 contentQuality === "low"
                   ? "50x50"
                   : contentQuality === "normal"
-                    ? "150x150"
-                    : contentQuality === "high"
-                      ? "500x500"
-                      : "150x150",
+                  ? "150x150"
+                  : contentQuality === "high"
+                  ? "500x500"
+                  : "150x150",
               type: "image/jpg",
             },
           ],
@@ -260,6 +260,16 @@ const MusicPlayer = () => {
     };
   }, [handleTouchMove, handleTouchEnd]);
 
+  useEffect(() => {
+    // Stop playing audio on space bar press
+    document.addEventListener("keydown", (event) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        handleTogglePlay();
+      }
+    });
+  }, []);
+
   return currentTrack.id ? (
     <div className="music-player">
       <div className="music-player-box">
@@ -270,19 +280,19 @@ const MusicPlayer = () => {
               contentQuality === "low"
                 ? 50
                 : contentQuality === "normal"
-                  ? 150
-                  : contentQuality === "high"
-                    ? 500
-                    : 150
+                ? 150
+                : contentQuality === "high"
+                ? 500
+                : 150
             }
             height={
               contentQuality === "low"
                 ? 50
                 : contentQuality === "normal"
-                  ? 150
-                  : contentQuality === "high"
-                    ? 500
-                    : 150
+                ? 150
+                : contentQuality === "high"
+                ? 500
+                : 150
             }
             alt="player-image"
           />
