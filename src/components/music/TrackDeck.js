@@ -9,7 +9,6 @@ const TrackDeck = () => {
     currentTrack,
     topTracks,
     isSpeechModalOpen,
-    contentQuality,
     audioRef,
     isAudioLoading,
     setIsAudioLoading,

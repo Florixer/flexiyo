@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import axios from "axios";
 import { Capacitor } from "@capacitor/core";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import MusicContext from "../../context/music/MusicContext";
 
@@ -16,7 +15,6 @@ const MusicPlayer = () => {
     currentTrack,
     topTracks,
     isSpeechModalOpen,
-    contentQuality,
     audioRef,
     isAudioLoading,
     setIsAudioLoading,
@@ -129,14 +127,7 @@ const MusicPlayer = () => {
           artwork: [
             {
               src: currentTrackImage,
-              sizes:
-                contentQuality === "low"
-                  ? "50x50"
-                  : contentQuality === "normal"
-                  ? "150x150"
-                  : contentQuality === "high"
-                  ? "500x500"
-                  : "150x150",
+              sizes: "500x500",
               type: "image/jpg",
             },
           ],
@@ -266,26 +257,8 @@ const MusicPlayer = () => {
     <div className="track-player">
       <div className="track-player-box">
         <div className="track-player--image">
-          <LazyLoadImage
+          <img
             src={currentTrackImage}
-            width={
-              contentQuality === "low"
-                ? 50
-                : contentQuality === "normal"
-                ? 150
-                : contentQuality === "high"
-                ? 500
-                : 150
-            }
-            height={
-              contentQuality === "low"
-                ? 50
-                : contentQuality === "normal"
-                ? 150
-                : contentQuality === "high"
-                ? 500
-                : 150
-            }
             alt="player-image"
           />
         </div>
