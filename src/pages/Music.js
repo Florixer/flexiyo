@@ -40,7 +40,7 @@ const Music = () => {
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
-    const mediaQuery = matchMedia("(max-width: 600px)");
+    const mediaQuery = matchMedia("(max-width: 950px)");
     const handleMediaQueryChange = () => {
       setIsMobile(mediaQuery.matches);
     };
@@ -522,99 +522,105 @@ const Music = () => {
           </div>
         </Modal>
       </div>
-            {currentTrack.id ? <TrackDeck /> : <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          height: "100vh",
-          width: "100%",
-        }}
-      >
-        <svg
-          className="music-icon"
-          title="Play Music"
-          width="35px"
-          height="35px"
-          viewBox="0 0 48 48"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{
-            width: "7rem",
-            height: "7rem",
-            padding: "1.5rem",
-            border: ".2rem solid var(--fm-primary-text)",
-            borderRadius: "50%",
-          }}
-        >
-          <path
-            d="M29 6V35"
-            fill="#fff"
-            stroke="#ffffff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M15 36.04C15 33.2565 17.2565 31 20.04 31H29V36.96C29 39.7435 26.7435 42 23.96 42H20.04C17.2565 42 15 39.7435 15 36.96V36.04Z"
-            fill="#fff"
-            stroke="#ffffff"
-            strokeWidth="3"
-            strokeLinejoin="round"
-          />
-          <path
-            fill="#fff"
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M29 14.0664L41.8834 17.1215V9.01339L29 6V14.0664Z"
-            stroke="#ffffff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M6 8H20"
-            fill="#fff"
-            stroke="#ffffff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M6 16H20"
-            fill="#fff"
-            stroke="#ffffff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M6 24H16"
-            fill="#fff"
-            stroke="#ffffff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <br />
-        <p style={{ color: "var(--fm-primary-text-muted)" }}>
-          Play a track to feel the vibe.
-        </p>
-        <button
-          style={{
-            padding: ".5rem .7rem",
-            fontSize: ".7rem",
-            border: "none",
-            borderRadius: ".3rem",
-            backgroundColor: "#0095f6",
-          }}
-          onClick={() => getTrack(tracks[0].id)}
-        >
-          Play the first track
-        </button>
-      </div> }
+      {!isMobile ? (
+        currentTrack.id ? (
+          <TrackDeck />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              height: "100vh",
+              width: "100%",
+            }}
+          >
+            <svg
+              className="music-icon"
+              title="Play Music"
+              width="35px"
+              height="35px"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{
+                width: "7rem",
+                height: "7rem",
+                padding: "1.5rem",
+                border: ".2rem solid var(--fm-primary-text)",
+                borderRadius: "50%",
+              }}
+            >
+              <path
+                d="M29 6V35"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M15 36.04C15 33.2565 17.2565 31 20.04 31H29V36.96C29 39.7435 26.7435 42 23.96 42H20.04C17.2565 42 15 39.7435 15 36.96V36.04Z"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinejoin="round"
+              />
+              <path
+                fill="none"
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M29 14.0664L41.8834 17.1215V9.01339L29 6V14.0664Z"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 8H20"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 16H20"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 24H16"
+                fill="#fff"
+                stroke="#ffffff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <br />
+            <p style={{ color: "var(--fm-primary-text-muted)" }}>
+              Play a track to feel the vibe.
+            </p>
+            <button
+              style={{
+                padding: ".5rem .7rem",
+                fontSize: ".7rem",
+                border: "none",
+                borderRadius: ".3rem",
+                backgroundColor: "#0095f6",
+              }}
+              onClick={() => getTrack(tracks[0].id)}
+            >
+              Play the first track
+            </button>
+          </div>
+        )
+      ) : null}
     </section>
   );
 };
