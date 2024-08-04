@@ -271,9 +271,9 @@ const MusicPlayer = () => {
   }, []);
 
   return currentTrack.id ? (
-    <div className="music-player">
-      <div className="music-player-box">
-        <div className="music-player--image">
+    <div className="track-player">
+      <div className="track-player-box">
+        <div className="track-player--image">
           <LazyLoadImage
             src={currentTrackImage}
             width={
@@ -297,9 +297,9 @@ const MusicPlayer = () => {
             alt="player-image"
           />
         </div>
-        <div className="music-player--details">
-          <span className="music-player--details-name">{currentTrackName}</span>
-          <span className="music-player--details-artists">
+        <div className="track-player--details">
+          <span className="track-player--details-name">{currentTrackName}</span>
+          <span className="track-player--details-artists">
             {currentTrackArtists}
           </span>
           <div
@@ -346,13 +346,13 @@ const MusicPlayer = () => {
           </div>
         </div>
         {currentTrackLink ? (
-          <div className="music-player--controls">
+          <div className="track-player--controls">
             <span
-              className="music-player--controls-item"
+              className="track-player--controls-item"
               onClick={handleTogglePlay}
             >
               {isAudioLoading && (
-                <div className="music-player--controls-preloader"></div>
+                <div className="track-player--controls-preloader"></div>
               )}
               {isPlaying && !isAudioLoading ? (
                 <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
@@ -365,7 +365,7 @@ const MusicPlayer = () => {
               )}
             </span>
             <span
-              className="music-player--controls-item"
+              className="track-player--controls-item"
               onClick={handleNextTrack}
             >
               <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
@@ -374,8 +374,8 @@ const MusicPlayer = () => {
             </span>
           </div>
         ) : (
-          <div className="music-player--controls">
-            <span className="music-player--controls-item">
+          <div className="track-player--controls">
+            <span className="track-player--controls-item">
               <svg
                 role="img"
                 aria-hidden="true"
@@ -385,7 +385,7 @@ const MusicPlayer = () => {
                 <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
               </svg>
             </span>
-            <span className="music-player--controls-item">
+            <span className="track-player--controls-item">
               <svg
                 role="img"
                 aria-hidden="true"

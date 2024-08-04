@@ -522,7 +522,7 @@ const Music = () => {
           </div>
         </Modal>
       </div>
-            {currentTrack.id ? <TrackDeck /> : <div
+            {!currentTrack.id ? <TrackDeck /> : <div
         style={{
           display: "flex",
           justifyContent: "center",

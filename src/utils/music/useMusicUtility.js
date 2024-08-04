@@ -1,14 +1,9 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
-import {
-  Filesystem as CapacitorFilesystem,
-  Directory,
-} from "@capacitor/filesystem";
-import { Capacitor } from "@capacitor/core";
 import MusicContext from "../../context/music/MusicContext";
 
 const useMusicUtility = () => {
-  const { setCurrentTrack, setIsAudioLoading, contentQuality } =
+  const { currentTrack, setCurrentTrack, setIsAudioLoading, contentQuality } =
     useContext(MusicContext);
 
   const saavnApiBaseUrl = "https://saavn.dev/api";
@@ -30,12 +25,11 @@ const useMusicUtility = () => {
           artists: cachedTrackData.artists,
           image: cachedTrackData.image,
           link: cachedTrackData.link,
-          lyrics: cachedTrackData.lyrics,
+          hasLyrics: cachedTrackData.hasLyrics,
         });
         setIsAudioLoading(false);
       } else {
-        const { data } = await
-        axios.get(`${saavnApiBaseUrl}/songs/${trackId}?lyrics=true || false`);
+        const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
         const resultData = data.data[0];
         const trackData = {
           id: resultData.id,
@@ -60,20 +54,19 @@ const useMusicUtility = () => {
               : contentQuality === "high"
               ? resultData.downloadUrl[4].url
               : resultData.downloadUrl[3].url,
-          lyrics: resultData.lyrics && resultData.lyrics.lyrics,
+          hasLyrics: resultData.hasLyrics,
         };
         setCurrentTrack(trackData);
         cacheTrackData(trackData);
+        setIsAudioLoading(false);
       }
-      setIsAudioLoading(false);
     } catch (error) {
       console.error("Error fetching track:", error);
       setIsAudioLoading(false);
     }
   };
 
-  const cacheTrackData = async (trackData, audioBlob) => {
-    // Cache the track data in localStorage
+  const cacheTrackData = async (trackData) => {
     const cachedTracks = JSON.parse(
       localStorage.getItem("cachedTracks") || "{}",
     );

@@ -14,7 +14,7 @@ import Create from "./pages/Create";
 import Clips from "./pages/Clips";
 import Profile from "./pages/Profile";
 import Music from "./pages/Music";
-import MusicPlayer from "./components/music/MusicPlayer";
+import TrackPlayer from "./components/music/TrackPlayer";
 import DirectInbox from "./pages/direct/Inbox";
 import DirectChat from "./pages/direct/Chat";
 import DirectChatNotification from "./components/direct/chat/ChatNotification";
@@ -56,7 +56,7 @@ const App = () => {
           <CreateProvider>
             <Navbar />
             <DirectChatNotification />
-            <MusicPlayer />
+            <TrackPlayer />
             <Routes>
               <Route path="*" element={<NotFound404 />} />
               <Route index exact path="/" element={<Home />}></Route>
