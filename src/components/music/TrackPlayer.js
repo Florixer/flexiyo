@@ -173,25 +173,6 @@ const MusicPlayer = () => {
     audio.currentTime = (newPosition / 100) * audio.duration;
   };
 
-  const handleProgressBarMouseDown = () => {
-    setIsDragging(true);
-  };
-
-  const handleProgressBarMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleProgressBarDrag = (e) => {
-    if (isDragging) {
-      const audio = audioRef.current;
-      const progressBar = progressBarRef.current;
-      const newPosition =
-        (e.nativeEvent.offsetX / progressBar.clientWidth) * 100;
-      setAudioProgress(newPosition);
-      audio.currentTime = (newPosition / 100) * audio.duration;
-    }
-  };
-
   const handleTouchStart = (e) => {
     setIsDragging(true);
     setTouchStartPosition(e.touches[0].clientX);
@@ -270,9 +251,6 @@ const MusicPlayer = () => {
           <div
             ref={progressBarRef}
             onClick={handleProgressBarClick}
-            onMouseDown={handleProgressBarMouseDown}
-            onMouseMove={handleProgressBarDrag}
-            onMouseUp={handleProgressBarMouseUp}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}

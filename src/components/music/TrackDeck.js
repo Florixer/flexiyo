@@ -137,25 +137,6 @@ const TrackDeck = () => {
     audio.currentTime = (newPosition / 100) * audio.duration;
   };
 
-  const handleProgressBarMouseDown = () => {
-    setIsDragging(true);
-  };
-
-  const handleProgressBarMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleProgressBarDrag = (e) => {
-    if (isDragging) {
-      const audio = audioRef.current;
-      const progressBar = progressBarRef.current;
-      const newPosition =
-        (e.nativeEvent.offsetX / progressBar.clientWidth) * 100;
-      setAudioProgress(newPosition);
-      audio.currentTime = (newPosition / 100) * audio.duration;
-    }
-  };
-
   const handleTouchStart = (e) => {
     setIsDragging(true);
     setTouchStartPosition(e.touches[0].clientX);
@@ -217,6 +198,21 @@ const TrackDeck = () => {
     };
   }, [handleTouchMove, handleTouchEnd]);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    document.addEventListener("keydown", (event) => {
+      if (event.code === "ArrowRight") {
+        setAudioProgress(audioProgress + 5);
+        audio.currentTime = audio.currentTime + 5;
+      } else if (event.code === "Space") {
+        handleTogglePlay();
+      } else if (event.code === "ArrowLeft") {
+        setAudioProgress(audioProgress - 5);
+        audio.currentTime = audio.currentTime - 5;
+      }
+    });
+  }, []);
+
   return (
     <div className="track-deck">
       <div className="track-deck--cover">
@@ -234,9 +230,6 @@ const TrackDeck = () => {
       <div
         ref={progressBarRef}
         onClick={handleProgressBarClick}
-        onMouseDown={handleProgressBarMouseDown}
-        onMouseMove={handleProgressBarDrag}
-        onMouseUp={handleProgressBarMouseUp}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
