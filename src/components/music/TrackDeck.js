@@ -43,6 +43,21 @@ const TrackDeck = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
   const [nextTrackId, setNextTrackId] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = matchMedia("(max-width: 950px)");
+    const handleMediaQueryChange = () => {
+      setIsMobile(mediaQuery.matches);
+    };
+
+    mediaQuery.addListener(handleMediaQueryChange);
+    handleMediaQueryChange();
+
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
 
   const progressBarRef = useRef(null);
 
@@ -276,10 +291,10 @@ const TrackDeck = () => {
         <span
           className="track-deck--controls-item"
           style={{
-            width: "2rem",
-            height: "2rem",
+            width: isMobile ? "3rem" : "2rem",
+            height: isMobile ? "3rem" : "2rem",
             backgroundColor: "#ffffff",
-            padding: ".5rem",
+            padding: isMobile ? ".7rem" : ".5rem",
           }}
           onClick={handleTogglePlay}
         >
