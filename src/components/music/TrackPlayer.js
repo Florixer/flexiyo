@@ -313,19 +313,19 @@ const MusicPlayer = () => {
             onTouchEnd={handleTouchEnd}
             style={{
               width: "90%",
-              height: "5px",
+              height: "4px",
               backgroundColor: "#4e4e4e",
               borderRadius: "5px",
-              marginTop: "6px",
+              margin: "6px 0",
               position: "relative",
               cursor: "pointer",
             }}
           >
             <div
               style={{
-                height: "6px",
-                borderRadius: "6px",
-                backgroundColor: "#1DB954",
+                height: "4px",
+                borderRadius: "4px",
+                backgroundColor: "#fff",
                 width: `${progress}%`,
               }}
             ></div>
@@ -335,8 +335,8 @@ const MusicPlayer = () => {
                 top: "-3px",
                 left: `${progress}%`,
                 transform: "translateX(-50%)",
-                width: "12px",
-                height: "12px",
+                width: "10px",
+                height: "10px",
                 borderRadius: "50%",
                 backgroundColor: "#fff",
                 boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
@@ -345,7 +345,7 @@ const MusicPlayer = () => {
             ></div>
           </div>
         </div>
-        {currentTrackLink ? (
+        {currentTrackLink && (
           <div className="track-player--controls">
             <span
               className="track-player--controls-item"
@@ -369,29 +369,6 @@ const MusicPlayer = () => {
               onClick={handleNextTrack}
             >
               <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
-              </svg>
-            </span>
-          </div>
-        ) : (
-          <div className="track-player--controls">
-            <span className="track-player--controls-item">
-              <svg
-                role="img"
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                style={{ fill: "#737373" }}
-              >
-                <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
-              </svg>
-            </span>
-            <span className="track-player--controls-item">
-              <svg
-                role="img"
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                style={{ fill: "#737373" }}
-              >
                 <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
               </svg>
             </span>
