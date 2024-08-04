@@ -15,22 +15,24 @@ const MusicPlayer = () => {
   const {
     currentTrack,
     topTracks,
-    isAudioLoading,
-    setIsAudioLoading,
     isSpeechModalOpen,
     contentQuality,
+    audioRef,
+    isAudioLoading,
+    setIsAudioLoading,
+    isAudioPlaying,
+    setIsAudioPlaying,
+    audioProgress,
+    setAudioProgress,
     isNetworkConnected,
   } = useContext(MusicContext);
   const { getTrack } = useMusicUtility();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
   const [nextTrackId, setNextTrackId] = useState(null);
 
   const progressBarRef = useRef(null);
-  const audioRef = useRef(new Audio());
-  const saavnApiBaseUrl = "https://saavn.dev/api";
+  const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
 
   const {
     id: currentTrackId,
@@ -43,12 +45,12 @@ const MusicPlayer = () => {
 
   const handleTogglePlay = useCallback(() => {
     const audio = audioRef.current;
-    if (audio.paused) {
+    if (audio.paused && !isAudioPlaying) {
       audio.play();
-      setIsPlaying(true);
+      setIsAudioPlaying(true);
     } else {
       audio.pause();
-      setIsPlaying(false);
+      setIsAudioPlaying(false);
     }
   }, []);
 
@@ -61,7 +63,7 @@ const MusicPlayer = () => {
             Math.floor(Math.random() * Object.keys(topTracks).length)
           ];
       audio.pause();
-      setIsPlaying(false);
+      setIsAudioPlaying(false);
       setIsAudioLoading(true);
       await getTrack(trackIdToFetch);
     } catch (error) {
@@ -86,7 +88,7 @@ const MusicPlayer = () => {
     const handleTimeUpdate = () => {
       if (!isDragging) {
         const newPosition = (audio.currentTime / audio.duration) * 100;
-        setProgress(newPosition);
+        setAudioProgress(newPosition);
       }
     };
 
@@ -107,11 +109,11 @@ const MusicPlayer = () => {
     const audio = audioRef.current;
     if (isSpeechModalOpen) {
       audio.pause();
-      setIsPlaying(false);
+      setIsAudioPlaying(false);
     }
     return () => {
       audio.play();
-      setIsPlaying(true);
+      setIsAudioPlaying(true);
     };
   }, [isSpeechModalOpen]);
 
@@ -148,7 +150,7 @@ const MusicPlayer = () => {
 
         navigator.mediaSession.setActionHandler("stop", () => {
           audio.pause();
-          setIsPlaying(false);
+          setIsAudioPlaying(false);
         });
       }
     }
@@ -161,10 +163,10 @@ const MusicPlayer = () => {
           const audio = audioRef.current;
           audio.src = currentTrackLink;
           await audio.play();
-          setIsPlaying(true);
+          setIsAudioPlaying(true);
         } catch (error) {
           console.error("Error playing audio:", error);
-          setIsPlaying(false);
+          setIsAudioPlaying(false);
         }
       }
     };
@@ -176,7 +178,7 @@ const MusicPlayer = () => {
     const audio = audioRef.current;
     const progressBar = progressBarRef.current;
     const newPosition = (e.nativeEvent.offsetX / progressBar.clientWidth) * 100;
-    setProgress(newPosition);
+    setAudioProgress(newPosition);
     audio.currentTime = (newPosition / 100) * audio.duration;
   };
 
@@ -194,7 +196,7 @@ const MusicPlayer = () => {
       const progressBar = progressBarRef.current;
       const newPosition =
         (e.nativeEvent.offsetX / progressBar.clientWidth) * 100;
-      setProgress(newPosition);
+      setAudioProgress(newPosition);
       audio.currentTime = (newPosition / 100) * audio.duration;
     }
   };
@@ -217,7 +219,7 @@ const MusicPlayer = () => {
 
         const clampedPosition = Math.max(0, Math.min(100, newPosition));
 
-        setProgress(clampedPosition);
+        setAudioProgress(clampedPosition);
         audio.currentTime = (clampedPosition / 100) * audio.duration;
 
         if (
@@ -235,11 +237,11 @@ const MusicPlayer = () => {
     if (isDragging) {
       const audio = audioRef.current;
       setIsDragging(false);
-      if (isPlaying) {
+      if (isAudioPlaying) {
         audio.play();
       }
     }
-  }, [isDragging, isPlaying]);
+  }, [isDragging, isAudioPlaying]);
 
   useEffect(() => {
     const handleGlobalTouchMove = (e) => {
@@ -259,16 +261,6 @@ const MusicPlayer = () => {
       document.removeEventListener("touchend", handleGlobalTouchEnd);
     };
   }, [handleTouchMove, handleTouchEnd]);
-
-  useEffect(() => {
-    // Stop playing audio on space bar press
-    document.addEventListener("keydown", (event) => {
-      if (event.code === "Space") {
-        event.preventDefault();
-        handleTogglePlay();
-      }
-    });
-  }, []);
 
   return currentTrack.id ? (
     <div className="track-player">
@@ -326,14 +318,14 @@ const MusicPlayer = () => {
                 height: "4px",
                 borderRadius: "4px",
                 backgroundColor: "#fff",
-                width: `${progress}%`,
+                width: `${audioProgress}%`,
               }}
             ></div>
             <div
               style={{
                 position: "absolute",
                 top: "-3px",
-                left: `${progress}%`,
+                left: `${audioProgress}%`,
                 transform: "translateX(-50%)",
                 width: "10px",
                 height: "10px",
@@ -354,7 +346,7 @@ const MusicPlayer = () => {
               {isAudioLoading && (
                 <div className="track-player--controls-preloader"></div>
               )}
-              {isPlaying && !isAudioLoading ? (
+              {isAudioPlaying && !isAudioLoading ? (
                 <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
                   <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
                 </svg>

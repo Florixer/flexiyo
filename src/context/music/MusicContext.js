@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useRef } from "react";
 import { Capacitor } from "@capacitor/core";
 import { Network as CapacitorNetwork } from "@capacitor/network";
 import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
@@ -10,8 +10,11 @@ export const MusicProvider = ({ children }) => {
   const [contentQuality, setContentQuality] = useState("low");
   const [topTracks, setTopTracks] = useState({});
   const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
   const [isSpeechModalOpen, setIsSpeechModalOpen] = useState(false);
   const [isNetworkConnected, setIsNetworkConnected] = useState(false);
+  const audioRef = useRef(new Audio());
 
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
@@ -48,8 +51,13 @@ export const MusicProvider = ({ children }) => {
         setCurrentTrack,
         topTracks,
         setTopTracks,
+        audioRef,
         isAudioLoading,
         setIsAudioLoading,
+        isAudioPlaying,
+        setIsAudioPlaying,
+        audioProgress,
+        setAudioProgress,
         isSpeechModalOpen,
         setIsSpeechModalOpen,
         contentQuality,
