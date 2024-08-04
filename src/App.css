@@ -2761,6 +2761,11 @@ b {
     max-width: 100vw;
     width: 100%;
   }
+
+  .track-deck--controls-item {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
 }
 
 @media screen and (max-width: 600px) {
