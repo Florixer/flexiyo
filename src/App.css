@@ -1482,17 +1482,7 @@ b {
   width: 100%;
 }
 
-.music-lyrics {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 600px;
-  width: 100%;
-  height: 100vh;
-  font-size: 1.3rem;
-}
-
-.music-lyrics--wrapper {
+.track-deck--lyrics {
   max-height: 30rem;
   height: 90%;
   width: 80%;
@@ -1500,6 +1490,7 @@ b {
   border-radius: 1rem;
   background-color: var(--fm-secondary-bg-color);
   overflow-x: hidden;
+  font-size: 1.3rem;
 }
 
 /* #MUSIC - Track Item */
@@ -2664,7 +2655,7 @@ b {
     overflow: hidden;
   }
 
-  .music-lyrics {
+  .track-deck--lyrics {
     display: none;
   }
 }
