@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
-import { Capacitor } from "@capacitor/core";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Modal from "react-modal";
 import Headroom from "react-headroom";
 import matchMedia from "matchmedia";
+import Sheet from "react-modal-sheet";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import TrackItem from "../components/music/TrackItem";
 import TrackDeck from "../components/music/TrackDeck";
@@ -22,6 +22,8 @@ const Music = () => {
     currentTrack,
     isSpeechModalOpen,
     setIsSpeechModalOpen,
+    isTrackDeckSheetOpen,
+    setIsTrackDeckSheetOpen,
     isNetworkConnected,
   } = useContext(MusicContext);
   const location = useLocation();
@@ -53,7 +55,7 @@ const Music = () => {
     };
   }, []);
 
-  const saavnApiBaseUrl = "https://saavn.dev/api";
+  const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
 
   const getTopTracks = async () => {
     setApiLoading(true);
@@ -624,12 +626,12 @@ const Music = () => {
         <Sheet
           className="track-deck--sheet"
           detent="content-height"
-          isOpen={is}
-          onClose={() => setIsUserFilesSheetOpen(false)}
+          isOpen={isTrackDeckSheetOpen}
+          onClose={() => setIsTrackDeckSheetOpen(false)}
         >
           <Sheet.Container className="track-deck--sheet-container">
             <Sheet.Header />
-            <Sheet.Content>
+            <Sheet.Content className="track-deck--sheet-content">
               <TrackDeck />
             </Sheet.Content>
           </Sheet.Container>
