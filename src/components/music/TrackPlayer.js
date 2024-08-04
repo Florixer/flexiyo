@@ -9,6 +9,7 @@ import axios from "axios";
 import { Capacitor } from "@capacitor/core";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import MusicContext from "../../context/music/MusicContext";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const MusicPlayer = () => {
   const {
@@ -238,10 +239,7 @@ const MusicPlayer = () => {
     <div className="track-player">
       <div className="track-player-box">
         <div className="track-player--image">
-          <img
-            src={currentTrackImage}
-            alt="player-image"
-          />
+          <LazyLoadImage src={currentTrackImage} alt="player-image" />
         </div>
         <div className="track-player--details">
           <span className="track-player--details-name">{currentTrackName}</span>
@@ -268,7 +266,7 @@ const MusicPlayer = () => {
               style={{
                 height: "4px",
                 borderRadius: "4px",
-                backgroundColor: "#fff",
+                backgroundColor: "#1ED760",
                 width: `${audioProgress}%`,
               }}
             ></div>

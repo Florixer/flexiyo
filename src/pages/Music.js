@@ -130,7 +130,7 @@ const Music = () => {
     WebSpeechRecognition.startListening();
     setTimeout(() => {
       closeSpeechModal();
-    }, 7000);
+    }, 10000);
   };
 
   const stopSpeechRecognition = () => {
@@ -620,7 +620,21 @@ const Music = () => {
             </button>
           </div>
         )
-      ) : null}
+      ) : (
+        <Sheet
+          className="track-deck--sheet"
+          detent="content-height"
+          isOpen={is}
+          onClose={() => setIsUserFilesSheetOpen(false)}
+        >
+          <Sheet.Container className="track-deck--sheet-container">
+            <Sheet.Header />
+            <Sheet.Content>
+              <TrackDeck />
+            </Sheet.Content>
+          </Sheet.Container>
+        </Sheet>
+      )}
     </section>
   );
 };

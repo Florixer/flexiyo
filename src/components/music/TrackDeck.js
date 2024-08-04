@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState, useCallback, useRef } from "react";
-import { Capacitor } from "@capacitor/core";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import axios from "axios";
@@ -216,8 +216,9 @@ const TrackDeck = () => {
   return (
     <div className="track-deck">
       <div className="track-deck--cover">
-        <img
-          src={`${currentTrack.image.replace("50x50" || "150x150", "500x500")}`}
+        <LazyLoadImage
+          src={`${currentTrack.image.replace("150x150", "500x500")}`}
+          alt="player-image"
           // src="https://c.saavncdn.com/286/WMG_190295851286-English-2017-150x150.jpg"
         />
       </div>
