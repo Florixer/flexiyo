@@ -34,7 +34,8 @@ const useMusicUtility = () => {
         });
         setIsAudioLoading(false);
       } else {
-        const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}?lyrics=true`);
+        const { data } = await
+        axios.get(`${saavnApiBaseUrl}/songs/${trackId}?lyrics=true || false`);
         const resultData = data.data[0];
         const trackData = {
           id: resultData.id,
@@ -59,7 +60,7 @@ const useMusicUtility = () => {
               : contentQuality === "high"
               ? resultData.downloadUrl[4].url
               : resultData.downloadUrl[3].url,
-          lyrics: resultData.lyrics,
+          lyrics: resultData.lyrics && resultData.lyrics.lyrics,
         };
         setCurrentTrack(trackData);
         cacheTrackData(trackData);

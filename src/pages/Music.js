@@ -299,7 +299,7 @@ const Music = () => {
   };
 
   const currentTrackLyrics = currentTrack.lyrics
-    ? currentTrack.lyrics.lyrics.replace("<br>", "<br/>")
+    ? currentTrack.lyrics.replace("<br>", "<br/>")
     : null;
 
   const lyricsWrapperRef = useRef(null);
@@ -627,7 +627,7 @@ const Music = () => {
               borderRadius: ".3rem",
               backgroundColor: "#0095f6",
             }}
-            onClick={() => getTrack(topTracks[0].id)}
+            onClick={() => getTrack(tracks[0].id)}
           >
             Play the first track
           </button>
