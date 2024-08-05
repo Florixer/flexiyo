@@ -636,12 +636,15 @@ const Music = () => {
         )
       ) : (
         <Modal
-          className={`track-deck--modal ${isTrackDeckModalOpen ? "open" : ""}`}
+          className="track-deck--modal"
           style={trackDeckModalStyles}
           isOpen={isTrackDeckModalOpen}
           onRequestClose={() => setIsTrackDeckModalOpen(false)}
-          contentLabel=""
         >
+          <div className="track-deck--modal-header">
+            <i className="fal fa-times" onClick={() => setIsTrackDeckModalOpen(false)} />
+            <i className="fal fa-gear"/>
+          </div>
           <TrackDeck />
         </Modal>
       )}

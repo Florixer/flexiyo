@@ -2754,6 +2754,15 @@ b {
     z-index: 1;
   }
 
+  .track-deck--modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.5rem 2rem;
+    font-size: 2rem;
+  }
+
   .track-deck {
     max-width: 100vw;
     width: 100%;
