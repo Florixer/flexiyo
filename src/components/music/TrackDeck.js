@@ -212,7 +212,7 @@ const TrackDeck = () => {
             width: isMobile ? "4rem" : "3rem",
             height: isMobile ? "4rem" : "3rem",
             backgroundColor: "#ffffff",
-            padding: ".8rem",
+            padding: isMobile ? "1.2rem" : ".8rem",
           }}
           onClick={handleToggleAudioPlay}
         >
