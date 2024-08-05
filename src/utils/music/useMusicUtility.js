@@ -34,6 +34,9 @@ const useMusicUtility = () => {
           link: cachedTrackData.link,
           hasLyrics: cachedTrackData.hasLyrics,
         });
+        if (cachedTrackData.link) {
+          handleToggleAudioPlay();
+        }
         setIsAudioLoading(false);
       } else {
         const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
@@ -66,6 +69,9 @@ const useMusicUtility = () => {
         setCurrentTrack(trackData);
         cacheTrackData(trackData);
         setIsAudioLoading(false);
+        if (trackData.link) {
+          handleToggleAudioPlay();
+        }
       }
     } catch (error) {
       console.error("Error fetching track:", error);
@@ -158,11 +164,11 @@ const useMusicUtility = () => {
         });
       }
     }
-  }, [currentTrack.id, handleToggleAudioPlay]);
+  }, [currentTrack, handleToggleAudioPlay]);
 
   useEffect(() => {
     const playAudio = async () => {
-      if (currentTrack.link) {
+      if (currentTrack.link && !isAudioPlaying) {
         try {
           const audio = audioRef.current;
           audio.src = currentTrack.link;
@@ -174,7 +180,6 @@ const useMusicUtility = () => {
         }
       }
     };
-
     playAudio();
   }, [currentTrack.link]);
 
