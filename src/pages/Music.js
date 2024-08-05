@@ -22,8 +22,8 @@ const Music = () => {
     currentTrack,
     isSpeechModalOpen,
     setIsSpeechModalOpen,
-    isTrackDeckSheetOpen,
-    setIsTrackDeckSheetOpen,
+    isTrackDeckModalOpen,
+    setIsTrackDeckModalOpen,
     isNetworkConnected,
   } = useContext(MusicContext);
   const location = useLocation();
@@ -209,6 +209,18 @@ const Music = () => {
       backgroundColor: "var(--fm-secondary-bg-color)",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       padding: "2rem",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.4)",
+      zIndex: "1",
+    },
+  };
+
+  const trackDeckModalStyles = {
+    content: {
+      inset: "0",
+      padding: "0",
+      zIndex: "1"
     },
     overlay: {
       backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -623,19 +635,15 @@ const Music = () => {
           </div>
         )
       ) : (
-        <Sheet
-          className="track-deck--sheet"
-          detent="content-height"
-          isOpen={isTrackDeckSheetOpen}
-          onClose={() => setIsTrackDeckSheetOpen(false)}
+        <Modal
+          className={`track-deck--modal ${isTrackDeckModalOpen ? "open" : ""}`}
+          style={trackDeckModalStyles}
+          isOpen={isTrackDeckModalOpen}
+          onRequestClose={() => setIsTrackDeckModalOpen(false)}
+          contentLabel=""
         >
-          <Sheet.Container className="track-deck--sheet-container">
-            <Sheet.Header />
-            <Sheet.Content className="track-deck--sheet-content">
-              <TrackDeck />
-            </Sheet.Content>
-          </Sheet.Container>
-        </Sheet>
+          <TrackDeck />
+        </Modal>
       )}
     </section>
   );

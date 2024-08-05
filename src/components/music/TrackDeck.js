@@ -63,11 +63,6 @@ const TrackDeck = () => {
 
   const {
     id: currentTrackId,
-    image: currentTrackImage,
-    name: currentTrackName,
-    album: currentTrackAlbum,
-    artists: currentTrackArtists,
-    link: currentTrackLink,
   } = currentTrack;
 
   const handleTogglePlay = useCallback(() => {
@@ -219,7 +214,7 @@ const TrackDeck = () => {
       if (event.code === "ArrowRight") {
         setAudioProgress(audioProgress + 5);
         audio.currentTime = audio.currentTime + 5;
-      } else if (event.code === "Space") {
+      } else if (event.ctrlKey && event.code === "Space") {
         handleTogglePlay();
       } else if (event.code === "ArrowLeft") {
         setAudioProgress(audioProgress - 5);
@@ -298,7 +293,7 @@ const TrackDeck = () => {
           }}
           onClick={handleTogglePlay}
         >
-          {isAudioPlaying && !isAudioLoading ? (
+          {isAudioPlaying ? (
             <svg
               role="img"
               aria-hidden="true"

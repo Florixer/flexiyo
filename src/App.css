@@ -1533,6 +1533,7 @@ b {
   align-items: center;
   width: 100%;
   height: 100%;
+  justify-content: space-evenly;
   margin: 1.5rem 0;
 }
 
@@ -1544,7 +1545,6 @@ b {
   text-align: center;
   width: 1.3rem;
   height: 1.3rem;
-  margin: 0 1rem;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -2725,6 +2725,7 @@ b {
 
   .track-player {
     max-width: 600px;
+    z-index: 0;
   }
 
   .music-container {
@@ -2732,39 +2733,43 @@ b {
     overflow: hidden;
   }
 
-  .track-deck--sheet {
+  .track-deck--modal {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 650px;
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    background-color: var(--fm-primary-bg-color);
     margin: 0 0 0 4rem;
-    padding: 2rem;
-    overflow-y: scroll;
+    overflow-y: hidden;
     font-family: "SpotifyMedium";
-  }
-  
-  .track-deck--sheet-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--fm-primary-bg-color) !important;
-  }
-  
-  .track-deck--sheet-content {
-    height: 100%;
+    z-index: 1;
   }
 
   .track-deck {
     max-width: 100vw;
     width: 100%;
+    padding: 1.5rem;
+  }
+
+  .track-deck--cover {
+    width: 100%;
+  }
+
+  .track-deck--details {
+    width: 95%;
+  }
+
+  .track-deck--lyrics {
+    background-color: var(--fm-secondary-bg-color);
   }
 
   .track-deck--controls-item {
     width: 2rem;
-    height: 2rem ;
+    height: 2rem;
   }
 }
 
@@ -2794,7 +2799,8 @@ b {
   .track-player {
     bottom: var(--fm-mobile-bottom-navbar-height);
   }
-  .track-deck--sheet {
+
+  .track-deck--modal {
     width: 100vw;
     margin: 0;
   }

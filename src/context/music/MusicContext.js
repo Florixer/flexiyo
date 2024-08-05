@@ -13,7 +13,7 @@ export const MusicProvider = ({ children }) => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [isSpeechModalOpen, setIsSpeechModalOpen] = useState(false);
-  const [isTrackDeckSheetOpen, setIsTrackDeckSheetOpen] = useState(false);
+  const [isTrackDeckModalOpen, setIsTrackDeckModalOpen] = useState(false);
   const [isNetworkConnected, setIsNetworkConnected] = useState(false);
   const audioRef = useRef(new Audio());
 
@@ -61,8 +61,8 @@ export const MusicProvider = ({ children }) => {
         setAudioProgress,
         isSpeechModalOpen,
         setIsSpeechModalOpen,
-        isTrackDeckSheetOpen,
-        setIsTrackDeckSheetOpen,
+        isTrackDeckModalOpen,
+        setIsTrackDeckModalOpen,
         contentQuality,
         setContentQuality,
         isNetworkConnected,

@@ -23,7 +23,7 @@ const MusicPlayer = () => {
     setIsAudioPlaying,
     audioProgress,
     setAudioProgress,
-    setIsTrackDeckSheetOpen,
+    setIsTrackDeckModalOpen,
     isNetworkConnected,
   } = useContext(MusicContext);
   const { getTrack } = useMusicUtility();
@@ -239,10 +239,16 @@ const MusicPlayer = () => {
   return currentTrack.id ? (
     <div className="track-player">
       <div className="track-player-box">
-        <div className="track-player--image" onClick={() => setIsTrackDeckSheetOpen(true)}>
+        <div
+          className="track-player--image"
+          onClick={() => setIsTrackDeckModalOpen(true)}
+        >
           <LazyLoadImage src={currentTrackImage} alt="player-image" />
         </div>
-        <div className="track-player--details" onClick={() => setIsTrackDeckSheetOpen(true)}>
+        <div
+          className="track-player--details"
+          onClick={() => setIsTrackDeckModalOpen(true)}
+        >
           <span className="track-player--details-name">{currentTrackName}</span>
           <span className="track-player--details-artists">
             {currentTrackArtists}
