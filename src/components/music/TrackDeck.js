@@ -209,10 +209,10 @@ const TrackDeck = () => {
         <span
           className="track-deck--controls-item"
           style={{
-            width: isMobile ? "3rem" : "2rem",
-            height: isMobile ? "3rem" : "2rem",
+            width: isMobile ? "4rem" : "3rem",
+            height: isMobile ? "4rem" : "3rem",
             backgroundColor: "#ffffff",
-            padding: isMobile ? ".7rem" : ".5rem",
+            padding: isMobile ? "1rem" : ".8rem",
           }}
           onClick={handleToggleAudioPlay}
         >
