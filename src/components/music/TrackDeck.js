@@ -4,19 +4,13 @@ import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import axios from "axios";
 const TrackDeck = () => {
-  const { getTrack } = useMusicUtility();
+  const { handleToggleAudioPlay, handleNextAudioTrack } = useMusicUtility();
   const {
     currentTrack,
-    topTracks,
-    isSpeechModalOpen,
     audioRef,
-    isAudioLoading,
-    setIsAudioLoading,
     isAudioPlaying,
-    setIsAudioPlaying,
     audioProgress,
     setAudioProgress,
-    isNetworkConnected,
   } = useContext(MusicContext);
   const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
 
@@ -25,6 +19,7 @@ const TrackDeck = () => {
   let currentTrackLyrics;
 
   const getTrackLyrics = async () => {
+    lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
     const { data } = await axios.get(
       `${saavnApiBaseUrl}/songs/${currentTrack.id}/lyrics`,
     );
@@ -36,13 +31,12 @@ const TrackDeck = () => {
     if (currentTrack.hasLyrics) {
       getTrackLyrics();
     } else {
-      lyricsWrapperRef.current.innerHTML = "Couldn't load lyrics for the song.";
+      lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
     }
-  }, [currentTrack.id]);
+  }, [currentTrack]);
 
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
-  const [nextTrackId, setNextTrackId] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -61,49 +55,6 @@ const TrackDeck = () => {
 
   const progressBarRef = useRef(null);
 
-  const {
-    id: currentTrackId,
-  } = currentTrack;
-
-  const handleTogglePlay = useCallback(() => {
-    const audio = audioRef.current;
-    if (audio.paused && !isAudioPlaying) {
-      audio.play();
-      setIsAudioPlaying(true);
-    } else {
-      audio.pause();
-      setIsAudioPlaying(false);
-    }
-  }, []);
-
-  const handleNextTrack = useCallback(async () => {
-    const audio = audioRef.current;
-    try {
-      const trackIdToFetch = isNetworkConnected
-        ? await getSuggestedTrackId()
-        : Object.keys(topTracks)[
-            Math.floor(Math.random() * Object.keys(topTracks).length)
-          ];
-      audio.pause();
-      setIsAudioPlaying(false);
-      setIsAudioLoading(true);
-      await getTrack(trackIdToFetch);
-    } catch (error) {
-      console.error("Error handling next track:", error);
-    } finally {
-      setIsAudioLoading(false);
-    }
-  }, [getTrack, isNetworkConnected, topTracks]);
-
-  const getSuggestedTrackId = async () => {
-    const { data } = await axios.get(
-      `${saavnApiBaseUrl}/songs/${currentTrackId}/suggestions`,
-      { params: { limit: 5 } },
-    );
-    const suggestedTrackId = data.data[Math.floor(Math.random() * 5)].id;
-    return suggestedTrackId;
-  };
-
   useEffect(() => {
     const audio = audioRef.current;
 
@@ -115,7 +66,7 @@ const TrackDeck = () => {
     };
 
     const handleEnded = () => {
-      handleNextTrack();
+      handleNextAudioTrack();
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
@@ -125,19 +76,7 @@ const TrackDeck = () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [handleNextTrack, isDragging]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (isSpeechModalOpen) {
-      audio.pause();
-      setIsAudioPlaying(false);
-    }
-    return () => {
-      audio.play();
-      setIsAudioPlaying(true);
-    };
-  }, [isSpeechModalOpen]);
+  }, [handleNextAudioTrack, isDragging]);
 
   const handleProgressBarClick = (e) => {
     const audio = audioRef.current;
@@ -208,28 +147,12 @@ const TrackDeck = () => {
     };
   }, [handleTouchMove, handleTouchEnd]);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    document.addEventListener("keydown", (event) => {
-      if (event.code === "ArrowRight") {
-        setAudioProgress(audioProgress + 5);
-        audio.currentTime = audio.currentTime + 5;
-      } else if (event.ctrlKey && event.code === "Space") {
-        handleTogglePlay();
-      } else if (event.code === "ArrowLeft") {
-        setAudioProgress(audioProgress - 5);
-        audio.currentTime = audio.currentTime - 5;
-      }
-    });
-  }, []);
-
   return (
     <div className="track-deck">
       <div className="track-deck--cover">
         <LazyLoadImage
           src={`${currentTrack.image.replace("150x150", "500x500")}`}
           alt="player-image"
-          // src="https://c.saavncdn.com/286/WMG_190295851286-English-2017-150x150.jpg"
         />
       </div>
       <div className="track-deck--details">
@@ -291,7 +214,7 @@ const TrackDeck = () => {
             backgroundColor: "#ffffff",
             padding: isMobile ? ".7rem" : ".5rem",
           }}
-          onClick={handleTogglePlay}
+          onClick={handleToggleAudioPlay}
         >
           {isAudioPlaying ? (
             <svg
@@ -313,7 +236,10 @@ const TrackDeck = () => {
             </svg>
           )}
         </span>
-        <span className="track-deck--controls-item" onClick={handleNextTrack}>
+        <span
+          className="track-deck--controls-item"
+          onClick={handleNextAudioTrack}
+        >
           <svg role="img" aria-hidden="true" viewBox="0 0 16 16" fill="#ffffff">
             <path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
           </svg>

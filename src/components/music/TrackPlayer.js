@@ -5,8 +5,6 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import axios from "axios";
-import { Capacitor } from "@capacitor/core";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import MusicContext from "../../context/music/MusicContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -14,73 +12,18 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 const MusicPlayer = () => {
   const {
     currentTrack,
-    topTracks,
-    isSpeechModalOpen,
     audioRef,
     isAudioLoading,
-    setIsAudioLoading,
     isAudioPlaying,
-    setIsAudioPlaying,
     audioProgress,
     setAudioProgress,
     setIsTrackDeckModalOpen,
-    isNetworkConnected,
   } = useContext(MusicContext);
-  const { getTrack } = useMusicUtility();
+  const { handleToggleAudioPlay, handleNextAudioTrack } = useMusicUtility();
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
-  const [nextTrackId, setNextTrackId] = useState(null);
 
   const progressBarRef = useRef(null);
-  const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
-
-  const {
-    id: currentTrackId,
-    image: currentTrackImage,
-    name: currentTrackName,
-    album: currentTrackAlbum,
-    artists: currentTrackArtists,
-    link: currentTrackLink,
-  } = currentTrack;
-
-  const handleTogglePlay = useCallback(() => {
-    const audio = audioRef.current;
-    if (audio.paused && !isAudioPlaying) {
-      audio.play();
-      setIsAudioPlaying(true);
-    } else {
-      audio.pause();
-      setIsAudioPlaying(false);
-    }
-  }, []);
-
-  const handleNextTrack = useCallback(async () => {
-    const audio = audioRef.current;
-    try {
-      const trackIdToFetch = isNetworkConnected
-        ? await getSuggestedTrackId()
-        : Object.keys(topTracks)[
-            Math.floor(Math.random() * Object.keys(topTracks).length)
-          ];
-      audio.pause();
-      setIsAudioPlaying(false);
-      setIsAudioLoading(true);
-      await getTrack(trackIdToFetch);
-    } catch (error) {
-      console.error("Error handling next track:", error);
-    } finally {
-      setIsAudioLoading(false);
-    }
-  }, [getTrack, isNetworkConnected, topTracks]);
-
-  const getSuggestedTrackId = async () => {
-    const { data } = await axios.get(
-      `${saavnApiBaseUrl}/songs/${currentTrackId}/suggestions`,
-      { params: { limit: 5 } },
-    );
-    const suggestedTrackId = data.data[Math.floor(Math.random() * 5)].id;
-    return suggestedTrackId;
-  };
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -93,7 +36,7 @@ const MusicPlayer = () => {
     };
 
     const handleEnded = () => {
-      handleNextTrack();
+      handleNextAudioTrack();
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
@@ -103,69 +46,7 @@ const MusicPlayer = () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [handleNextTrack, isDragging]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (isSpeechModalOpen) {
-      audio.pause();
-      setIsAudioPlaying(false);
-    }
-    return () => {
-      audio.play();
-      setIsAudioPlaying(true);
-    };
-  }, [isSpeechModalOpen]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-
-    if (!Capacitor.isNativePlatform() && currentTrack.id) {
-      if ("mediaSession" in navigator) {
-        navigator.mediaSession.metadata = new window.MediaMetadata({
-          title: currentTrackName,
-          artist: currentTrackArtists,
-          album: currentTrackAlbum,
-          artwork: [
-            {
-              src: currentTrackImage,
-              sizes: "500x500",
-              type: "image/jpg",
-            },
-          ],
-        });
-
-        navigator.mediaSession.setActionHandler("play", handleTogglePlay);
-
-        navigator.mediaSession.setActionHandler("pause", handleTogglePlay);
-
-        navigator.mediaSession.setActionHandler("nexttrack", handleNextTrack);
-
-        navigator.mediaSession.setActionHandler("stop", () => {
-          audio.pause();
-          setIsAudioPlaying(false);
-        });
-      }
-    }
-  }, [currentTrackId, handleTogglePlay]);
-
-  useEffect(() => {
-    const playAudio = async () => {
-      if (currentTrackLink) {
-        try {
-          const audio = audioRef.current;
-          audio.src = currentTrackLink;
-          await audio.play();
-          setIsAudioPlaying(true);
-        } catch (error) {
-          console.error("Error playing audio:", error);
-          setIsAudioPlaying(false);
-        }
-      }
-    };
-
-    playAudio();
-  }, [currentTrackLink]);
+  }, [handleNextAudioTrack, isDragging]);
 
   const handleProgressBarClick = (e) => {
     const audio = audioRef.current;
@@ -236,6 +117,21 @@ const MusicPlayer = () => {
     };
   }, [handleTouchMove, handleTouchEnd]);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    document.addEventListener("keydown", (event) => {
+      if (event.code === "ArrowRight") {
+        setAudioProgress(audioProgress + 5);
+        audio.currentTime = audio.currentTime + 5;
+      } else if (event.ctrlKey && event.code === "Space") {
+        handleToggleAudioPlay();
+      } else if (event.code === "ArrowLeft") {
+        setAudioProgress(audioProgress - 5);
+        audio.currentTime = audio.currentTime - 5;
+      }
+    });
+  }, []);
+
   return currentTrack.id ? (
     <div className="track-player">
       <div className="track-player-box">
@@ -243,15 +139,15 @@ const MusicPlayer = () => {
           className="track-player--image"
           onClick={() => setIsTrackDeckModalOpen(true)}
         >
-          <LazyLoadImage src={currentTrackImage} alt="player-image" />
+          <LazyLoadImage src={currentTrack.image} alt="player-image" />
         </div>
         <div
           className="track-player--details"
           onClick={() => setIsTrackDeckModalOpen(true)}
         >
-          <span className="track-player--details-name">{currentTrackName}</span>
+          <span className="track-player--details-name">{currentTrack.name}</span>
           <span className="track-player--details-artists">
-            {currentTrackArtists}
+            {currentTrack.artists}
           </span>
           <div
             ref={progressBarRef}
@@ -293,11 +189,11 @@ const MusicPlayer = () => {
             ></div>
           </div>
         </div>
-        {currentTrackLink && (
+        {currentTrack.link && (
           <div className="track-player--controls">
             <span
               className="track-player--controls-item"
-              onClick={handleTogglePlay}
+              onClick={handleToggleAudioPlay}
             >
               {isAudioLoading && (
                 <div className="track-player--controls-preloader"></div>
@@ -314,7 +210,7 @@ const MusicPlayer = () => {
             </span>
             <span
               className="track-player--controls-item"
-              onClick={handleNextTrack}
+              onClick={handleNextAudioTrack}
             >
               <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
                 <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>

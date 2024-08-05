@@ -1,12 +1,19 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useCallback } from "react";
 import axios from "axios";
 import MusicContext from "../../context/music/MusicContext";
 
 const useMusicUtility = () => {
-  const { currentTrack, setCurrentTrack, setIsAudioLoading, contentQuality } =
-    useContext(MusicContext);
+  const {
+    currentTrack,
+    setCurrentTrack,
+    setIsAudioLoading,
+    contentQuality,
+    audioRef,
+    isAudioPlaying,
+    setIsAudioPlaying,
+  } = useContext(MusicContext);
 
-  const saavnApiBaseUrl = "https://saavn.dev/api";
+  const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
 
   const getTrack = async (trackId) => {
     setIsAudioLoading(true);
@@ -83,7 +90,100 @@ const useMusicUtility = () => {
     }
   };
 
-  return { getTrack, deleteCachedAudioData };
+  const handleToggleAudioPlay = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio.paused && !isAudioPlaying) {
+      audio.play();
+      setIsAudioPlaying(true);
+    } else {
+      audio.pause();
+      setIsAudioPlaying(false);
+    }
+  }, []);
+
+  const handleNextAudioTrack = useCallback(async () => {
+    const audio = audioRef.current;
+    try {
+      const trackIdToFetch = await getSuggestedTrackId();
+      audio.pause();
+      setIsAudioPlaying(false);
+      setIsAudioLoading(true);
+      await getTrack(trackIdToFetch);
+    } catch (error) {
+      console.error("Error handling next track:", error);
+    } finally {
+      setIsAudioLoading(false);
+    }
+  }, [getTrack]);
+
+  const getSuggestedTrackId = async () => {
+    const { data } = await axios.get(
+      `${saavnApiBaseUrl}/songs/${currentTrack.id}/suggestions`,
+      { params: { limit: 5 } },
+    );
+    const suggestedTrackId = data.data[Math.floor(Math.random() * 5)].id;
+    return suggestedTrackId;
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (currentTrack.id) {
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.metadata = new window.MediaMetadata({
+          title: currentTrack.name,
+          artist: currentTrack.artists,
+          album: currentTrack.album,
+          artwork: [
+            {
+              src: currentTrack.image,
+              sizes: "500x500",
+              type: "image/jpg",
+            },
+          ],
+        });
+
+        navigator.mediaSession.setActionHandler("play", handleToggleAudioPlay);
+
+        navigator.mediaSession.setActionHandler("pause", handleToggleAudioPlay);
+
+        navigator.mediaSession.setActionHandler(
+          "nexttrack",
+          handleNextAudioTrack,
+        );
+
+        navigator.mediaSession.setActionHandler("stop", () => {
+          audio.pause();
+          setIsAudioPlaying(false);
+        });
+      }
+    }
+  }, [currentTrack.id, handleToggleAudioPlay]);
+
+  useEffect(() => {
+    const playAudio = async () => {
+      if (currentTrack.link) {
+        try {
+          const audio = audioRef.current;
+          audio.src = currentTrack.link;
+          await audio.play();
+          setIsAudioPlaying(true);
+        } catch (error) {
+          console.error("Error playing audio:", error);
+          setIsAudioPlaying(false);
+        }
+      }
+    };
+
+    playAudio();
+  }, [currentTrack.link]);
+
+  return {
+    getTrack,
+    deleteCachedAudioData,
+    handleToggleAudioPlay,
+    handleNextAudioTrack,
+  };
 };
 
 export default useMusicUtility;
