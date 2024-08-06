@@ -7,7 +7,7 @@ const MusicContext = createContext(null);
 
 export const MusicProvider = ({ children }) => {
   const [currentTrack, setCurrentTrack] = useState({});
-  const [contentQuality, setContentQuality] = useState("normal");
+  const [contentQuality, setContentQuality] = useState("low");
   const [topTracks, setTopTracks] = useState({});
   const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
