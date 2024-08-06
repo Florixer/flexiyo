@@ -14,6 +14,7 @@ const MusicPlayer = () => {
     currentTrack,
     audioRef,
     isAudioLoading,
+    setIsAudioLoading,
     isAudioPlaying,
     setIsAudioPlaying,
     audioProgress,
@@ -141,6 +142,7 @@ const MusicPlayer = () => {
           audio.src = currentTrack.link;
           await audio.play();
           setIsAudioPlaying(true);
+          setIsAudioLoading(false);
         } catch (error) {
           console.error("Error playing audio:", error);
           setIsAudioPlaying(false);
