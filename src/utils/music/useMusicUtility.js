@@ -164,9 +164,9 @@ const useMusicUtility = () => {
 
   useEffect(() => {
     const playAudio = async () => {
-      if (currentTrack.link && !isAudioPlaying) {
+      const audio = audioRef.current;
+      if (currentTrack.link && !isAudioPlaying && audio.paused) {
         try {
-          const audio = audioRef.current;
           audio.src = currentTrack.link;
           await audio.play();
           setIsAudioPlaying(true);
