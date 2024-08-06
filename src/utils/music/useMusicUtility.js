@@ -33,9 +33,6 @@ const useMusicUtility = () => {
           link: cachedTrackData.link,
           hasLyrics: cachedTrackData.hasLyrics,
         });
-        if (cachedTrackData.link) {
-          handleToggleAudioPlay();
-        }
         setIsAudioLoading(false);
       } else {
         const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
@@ -92,15 +89,16 @@ const useMusicUtility = () => {
     }
   };
 
-  const handleToggleAudioPlay = useCallback(() => {
+  const handleAudioPlay = useCallback(() => {
     const audio = audioRef.current;
-    if (audio.paused && !isAudioPlaying) {
-      audio.play();
-      setIsAudioPlaying(true);
-    } else {
-      audio.pause();
-      setIsAudioPlaying(false);
-    }
+    audio.play();
+    setIsAudioPlaying(true);
+  }, []);
+
+  const handleAudioPause = useCallback(() => {
+    const audio = audioRef.current;
+    audio.pause();
+    setIsAudioPlaying(false);
   }, []);
 
   const handleNextAudioTrack = useCallback(async () => {
@@ -145,9 +143,9 @@ const useMusicUtility = () => {
           ],
         });
 
-        navigator.mediaSession.setActionHandler("play", handleToggleAudioPlay);
+        navigator.mediaSession.setActionHandler("play", handleAudioPlay);
 
-        navigator.mediaSession.setActionHandler("pause", handleToggleAudioPlay);
+        navigator.mediaSession.setActionHandler("pause", handleAudioPause);
 
         navigator.mediaSession.setActionHandler(
           "nexttrack",
@@ -160,12 +158,13 @@ const useMusicUtility = () => {
         });
       }
     }
-  }, [currentTrack, handleToggleAudioPlay]);
+  }, [currentTrack, handleAudioPlay, handleAudioPause, handleNextAudioTrack]);
 
   return {
     getTrack,
     deleteCachedAudioData,
-    handleToggleAudioPlay,
+    handleAudioPlay,
+    handleAudioPause,
     handleNextAudioTrack,
   };
 };

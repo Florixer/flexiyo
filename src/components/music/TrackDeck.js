@@ -4,7 +4,7 @@ import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import axios from "axios";
 const TrackDeck = () => {
-  const { handleToggleAudioPlay, handleNextAudioTrack } = useMusicUtility();
+  const { handleAudioPlay, handleAudioPause, handleNextAudioTrack } = useMusicUtility();
   const {
     currentTrack,
     audioRef,
@@ -215,14 +215,13 @@ const TrackDeck = () => {
             backgroundColor: "#ffffff",
             padding: isMobile ? "1.2rem" : ".8rem",
           }}
-          onClick={handleToggleAudioPlay}
         >
           {isAudioPlaying && !isAudioLoading && currentTrack.link ? (
-                <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+                <svg role="img" aria-hidden="true" viewBox="0 0 24 24" onClick={handleAudioPause}>
                   <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
                 </svg>
               ) : (
-                <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+                <svg role="img" aria-hidden="true" viewBox="0 0 24 24" onClick={handleAudioPlay}>
                   <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
                 </svg>
               )}
