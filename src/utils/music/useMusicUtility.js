@@ -17,7 +17,6 @@ const useMusicUtility = () => {
 
   const getTrack = async (trackId) => {
     setIsAudioLoading(true);
-
     try {
       const cachedTracks = JSON.parse(
         localStorage.getItem("cachedTracks") || "{}",
@@ -69,9 +68,6 @@ const useMusicUtility = () => {
         setCurrentTrack(trackData);
         cacheTrackData(trackData);
         setIsAudioLoading(false);
-        if (trackData.link) {
-          handleToggleAudioPlay();
-        }
       }
     } catch (error) {
       console.error("Error fetching track:", error);
