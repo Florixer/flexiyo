@@ -162,23 +162,6 @@ const useMusicUtility = () => {
     }
   }, [currentTrack, handleToggleAudioPlay]);
 
-  useEffect(() => {
-    const playAudio = async () => {
-      if (currentTrack.link && !isAudioPlaying) {
-        try {
-          const audio = audioRef.current;
-          audio.src = currentTrack.link;
-          await audio.play();
-          setIsAudioPlaying(true);
-        } catch (error) {
-          console.error("Error playing audio:", error);
-          setIsAudioPlaying(false);
-        }
-      }
-    };
-    playAudio();
-  }, [currentTrack.link]);
-
   return {
     getTrack,
     deleteCachedAudioData,

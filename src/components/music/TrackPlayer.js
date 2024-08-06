@@ -15,6 +15,7 @@ const MusicPlayer = () => {
     audioRef,
     isAudioLoading,
     isAudioPlaying,
+    setIsAudioPlaying,
     audioProgress,
     setAudioProgress,
     setIsTrackDeckModalOpen,
@@ -132,6 +133,23 @@ const MusicPlayer = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const playAudio = async () => {
+      if (currentTrack.link) {
+        try {
+          const audio = audioRef.current;
+          audio.src = currentTrack.link;
+          await audio.play();
+          setIsAudioPlaying(true);
+        } catch (error) {
+          console.error("Error playing audio:", error);
+          setIsAudioPlaying(false);
+        }
+      }
+    };
+    playAudio();
+  }, [currentTrack.link]);
+
   return currentTrack.id ? (
     <div className="track-player">
       <div className="track-player-box">
@@ -145,7 +163,9 @@ const MusicPlayer = () => {
           className="track-player--details"
           onClick={() => setIsTrackDeckModalOpen(true)}
         >
-          <span className="track-player--details-name">{currentTrack.name}</span>
+          <span className="track-player--details-name">
+            {currentTrack.name}
+          </span>
           <span className="track-player--details-artists">
             {currentTrack.artists}
           </span>
