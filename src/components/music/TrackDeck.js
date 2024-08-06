@@ -207,38 +207,37 @@ const TrackDeck = () => {
             <path d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H1.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h1.6z"></path>
           </svg>
         </span>
-          {isAudioPlaying && !isAudioLoading && currentTrack.link ? (
-             <span
-          className="track-deck--controls-item"
-          style={{
-            width: isMobile ? "4rem" : "3rem",
-            height: isMobile ? "4rem" : "3rem",
-            backgroundColor: "#ffffff",
-            padding: isMobile ? "1.2rem" : ".8rem",
-          }}
- onClick={handleAudioPause}
-        >
-                <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
-                </svg>
+        {isAudioPlaying && !isAudioLoading && currentTrack.link ? (
+          <span
+            className="track-deck--controls-item"
+            style={{
+              width: isMobile ? "4rem" : "3rem",
+              height: isMobile ? "4rem" : "3rem",
+              backgroundColor: "#ffffff",
+              padding: isMobile ? "1.2rem" : ".8rem",
+            }}
+            onClick={handleAudioPause}
+          >
+            <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
+            </svg>
           </span>
-              ) : (
-                 <span
-          className="track-deck--controls-item"
-          style={{
-            width: isMobile ? "4rem" : "3rem",
-            height: isMobile ? "4rem" : "3rem",
-            backgroundColor: "#ffffff",
-            padding: isMobile ? "1.2rem" : ".8rem",
-          }}
-onClick={handleAudioPlay}
-        >
-                <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
-                </svg>
+        ) : (
+          <span
+            className="track-deck--controls-item"
+            style={{
+              width: isMobile ? "4rem" : "3rem",
+              height: isMobile ? "4rem" : "3rem",
+              backgroundColor: "#ffffff",
+              padding: isMobile ? "1.2rem" : ".8rem",
+            }}
+            onClick={handleAudioPlay}
+          >
+            <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
+            </svg>
           </span>
-              )}
-        </span>
+        )}
         <span
           className="track-deck--controls-item"
           onClick={handleNextAudioTrack}
