@@ -1543,8 +1543,8 @@ b {
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -2783,8 +2783,8 @@ b {
   }
 
   .track-deck--controls-item {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
   }
 }
 
