@@ -4,12 +4,11 @@ import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import axios from "axios";
 const TrackDeck = () => {
-  const { handleNextAudioTrack } = useMusicUtility();
+  const { handleToggleAudioPlay, handleNextAudioTrack } = useMusicUtility();
   const {
     currentTrack,
     audioRef,
     isAudioPlaying,
-    setIsAudioPlaying,
     isAudioLoading,
     audioProgress,
     setAudioProgress,
@@ -148,17 +147,6 @@ const TrackDeck = () => {
       document.removeEventListener("touchend", handleGlobalTouchEnd);
     };
   }, [handleTouchMove, handleTouchEnd]);
-
-  const handleToggleAudioPlay = useCallback(() => {
-    const audio = audioRef.current;
-    if (audio.paused && !isAudioPlaying) {
-      audio.play();
-      setIsAudioPlaying(true);
-    } else {
-      audio.pause();
-      setIsAudioPlaying(false);
-    }
-  }, []);
 
   return (
     <div className="track-deck">
