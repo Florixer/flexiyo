@@ -4,7 +4,7 @@ import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import axios from "axios";
 const TrackDeck = () => {
-  const { handleAudioPlay, handleAudioPause, handleNextAudioTrack } = useMusicUtility();
+  const { getTrackLyrics, handleAudioPlay, handleAudioPause, handleNextAudioTrack } = useMusicUtility();
   const {
     currentTrack,
     audioRef,
@@ -13,20 +13,19 @@ const TrackDeck = () => {
     audioProgress,
     setAudioProgress,
   } = useContext(MusicContext);
-  const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
 
   const lyricsWrapperRef = useRef(null);
 
   let currentTrackLyrics;
 
-  const getTrackLyrics = async () => {
-    lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
-    const { data } = await axios.get(
-      `${saavnApiBaseUrl}/songs/${currentTrack.id}/lyrics`,
-    );
-    currentTrackLyrics = data.data.lyrics.replace("<br/>", "<br//>");
-    lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
-  };
+  // const getTrackLyrics = async () => {
+  //   lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
+  //   const { data } = await axios.get(
+  //     `${saavnApiBaseUrl}/songs/${currentTrack.id}/lyrics`,
+  //   );
+  //   currentTrackLyrics = data.data.lyrics.replace("<br/>", "<br//>");
+  //   lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
+  // };
 
   useEffect(() => {
     if (currentTrack.hasLyrics) {
