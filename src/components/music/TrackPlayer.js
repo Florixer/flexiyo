@@ -127,7 +127,11 @@ const MusicPlayer = () => {
         setAudioProgress(audioProgress + 5);
         audio.currentTime = audio.currentTime + 5;
       } else if (event.ctrlKey && event.code === "Space") {
-        // handleToggleAudioPlay();
+        if (audio.paused) {
+          handleAudioPlay();
+        } else {
+          handleAudioPause();
+        }
       } else if (event.code === "ArrowLeft") {
         setAudioProgress(audioProgress - 5);
         audio.currentTime = audio.currentTime - 5;
@@ -214,18 +218,26 @@ const MusicPlayer = () => {
         </div>
         {currentTrack.link && (
           <div className="track-player--controls">
-            <span
-              className="track-player--controls-item"
-            >
+            <span className="track-player--controls-item">
               {isAudioLoading && (
                 <div className="track-player--controls-preloader"></div>
               )}
               {isAudioPlaying && !isAudioLoading ? (
-                <svg role="img" aria-hidden="true" viewBox="0 0 24 24" onClick={handleAudioPause}>
+                <svg
+                  role="img"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  onClick={handleAudioPause}
+                >
                   <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
                 </svg>
               ) : (
-                <svg role="img" aria-hidden="true" viewBox="0 0 24 24" onClick={handleAudioPlay}>
+                <svg
+                  role="img"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  onClick={handleAudioPlay}
+                >
                   <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
                 </svg>
               )}
