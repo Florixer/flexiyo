@@ -23,6 +23,7 @@
     "firebase-tools": "^13.8.1",
     "formik": "^2.4.5",
     "matchmedia": "^0.1.2",
+    "musixmatch-api": "file:src/packages/musixmatch-api-js",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-grid-gallery": "^1.0.1",

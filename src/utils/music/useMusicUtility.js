@@ -80,10 +80,12 @@ const useMusicUtility = () => {
     localStorage.setItem("cachedTracks", JSON.stringify(cachedTracks));
   };
 
+  const port = window.location.port;
+
   const getTrackLyrics = async () => {
     try {
       const { data } = await axios.get(
-        "https://cors-anywhere.herokuapp.com/https://api.musixmatch.com/ws/1.1/track.search",
+        port ? "https://cors-anywhere.herokuapp.com/http://api.musixmatch.com/ws/1.1/matcher.lyrics.get" : "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
         {
           params: {
             q_track: currentTrack.name,
@@ -94,7 +96,8 @@ const useMusicUtility = () => {
           },
         },
       );
-      const mmTrackId = data.message.body.track_list[0].track.track_id
+      const mmTrackId = data.message.body.lyrics.lyrics_body
+      console.log(mmTrackId)
 
       
     } catch (error) {
