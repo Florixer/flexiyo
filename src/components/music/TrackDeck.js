@@ -4,7 +4,12 @@ import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import axios from "axios";
 const TrackDeck = () => {
-  const { fetchTrackLyrics, handleAudioPlay, handleAudioPause, handleNextAudioTrack } = useMusicUtility();
+  const {
+    getMmTrackLyrics,
+    handleAudioPlay,
+    handleAudioPause,
+    handleNextAudioTrack,
+  } = useMusicUtility();
   const {
     currentTrack,
     audioRef,
@@ -14,25 +19,31 @@ const TrackDeck = () => {
     setAudioProgress,
   } = useContext(MusicContext);
 
+  const saavnApiBaseUrl = "https://saavn.dev/api";
   const lyricsWrapperRef = useRef(null);
 
   let currentTrackLyrics;
 
-  // const getTrackLyrics = async () => {
-  //   lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
-  //   const { data } = await axios.get(
-  //     `${saavnApiBaseUrl}/songs/${currentTrack.id}/lyrics`,
-  //   );
-  //   currentTrackLyrics = data.data.lyrics.replace("<br/>", "<br//>");
-  //   lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
-  // };
+  const getTrackLyrics = async () => {
+    lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
+    const { data } = await axios.get(
+      `${saavnApiBaseUrl}/songs/${currentTrack.id}/lyrics`,
+    );
+    currentTrackLyrics = data.data.lyrics.replace("<br>", "<br/>");
+    lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
+  };
 
   useEffect(() => {
-    if (currentTrack) {
-      fetchTrackLyrics();
-    } else {
-      lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
-    }
+    const getTrackLyricsLocal = async () => {
+      if (currentTrack.hasLyrics) {
+        getTrackLyrics();
+      } else {
+        // lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
+        currentTrackLyrics = await getMmTrackLyrics();
+        lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
+      }
+    };
+    getTrackLyricsLocal();
   }, [currentTrack]);
 
   const [isDragging, setIsDragging] = useState(false);
@@ -251,6 +262,7 @@ const TrackDeck = () => {
         <div
           className="track-deck--lyrics-wrapper"
           ref={lyricsWrapperRef}
+          style={{whiteSpace: "pre-wrap"}}
         ></div>
       </div>
     </div>

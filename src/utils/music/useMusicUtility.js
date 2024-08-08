@@ -1,10 +1,6 @@
 import { useContext, useEffect, useCallback } from "react";
 import axios from "axios";
-import MusixMatchAPI from "musixmatch-api-js/dist/musixmatchAPI.bundle.js";
 import MusicContext from "../../context/music/MusicContext";
-
-
-const musixmatch = new MusixMatchAPI();
 
 const useMusicUtility = () => {
   const {
@@ -84,10 +80,16 @@ const useMusicUtility = () => {
     localStorage.setItem("cachedTracks", JSON.stringify(cachedTracks));
   };
 
-  const getTrackLyrics = async () => {
+  const getMmTrackLyrics = async () => {
+    let proxyUrl;
+    if(window.location.port === "3000"){
+    proxyUrl = "https://cors-anywhere.herokuapp.com/";
+    } else {
+     proxyUrl = "";
+    }
     try {
       const { data } = await axios.get(
-        "https://cors-anywhere.herokuapp.com/https://api.musixmatch.com/ws/1.1/track.search",
+        `${proxyUrl}https://api.musixmatch.com/ws/1.1/matcher.lyrics.get`,
         {
           params: {
             q_track: currentTrack.name,
@@ -98,9 +100,12 @@ const useMusicUtility = () => {
           },
         },
       );
-      const mmTrackId = data.message.body.track_list[0].track.track_id
-
-      
+      return (
+        data.message.body.lyrics.lyrics_body.replace(
+          /[*]+ This Lyrics is NOT for Commercial use [*]+\s*\(\d+\)/g,
+          "",
+        ) + "Lyrics powered by www.musixmatch.com"
+      );
     } catch (error) {
       console.log(error);
     }
@@ -188,7 +193,7 @@ const useMusicUtility = () => {
 
   return {
     getTrack,
-    getTrackLyrics,
+    getMmTrackLyrics,
     deleteCachedAudioData,
     handleAudioPlay,
     handleAudioPause,
