@@ -188,7 +188,7 @@ const useMusicUtility = () => {
 
   return {
     getTrack,
-    fetchTrackLyrics,
+    getTrackLyrics,
     deleteCachedAudioData,
     handleAudioPlay,
     handleAudioPause,
