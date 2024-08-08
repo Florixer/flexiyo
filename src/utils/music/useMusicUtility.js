@@ -81,12 +81,7 @@ const useMusicUtility = () => {
   };
 
   const getMmTrackLyrics = async () => {
-    let proxyUrl;
-    if(window.location.port === "3000"){
-    proxyUrl = "https://cors-anywhere.herokuapp.com/";
-    } else {
-     proxyUrl = "";
-    }
+    let proxyUrl =  "https://cors-anywhere.herokuapp.com/";
     try {
       const { data } = await axios.get(
         `${proxyUrl}https://api.musixmatch.com/ws/1.1/matcher.lyrics.get`,
