@@ -4,7 +4,7 @@ import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import axios from "axios";
 const TrackDeck = () => {
-  const { getTrackLyrics, handleAudioPlay, handleAudioPause, handleNextAudioTrack } = useMusicUtility();
+  const { fetchTrackLyrics, handleAudioPlay, handleAudioPause, handleNextAudioTrack } = useMusicUtility();
   const {
     currentTrack,
     audioRef,
@@ -28,8 +28,8 @@ const TrackDeck = () => {
   // };
 
   useEffect(() => {
-    if (currentTrack.hasLyrics) {
-      getTrackLyrics();
+    if (currentTrack) {
+      fetchTrackLyrics();
     } else {
       lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
     }

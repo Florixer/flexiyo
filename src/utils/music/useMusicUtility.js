@@ -1,6 +1,10 @@
 import { useContext, useEffect, useCallback } from "react";
 import axios from "axios";
+import MusixMatchAPI from "musixmatch-api-js/dist/musixmatchAPI.bundle.js";
 import MusicContext from "../../context/music/MusicContext";
+
+
+const musixmatch = new MusixMatchAPI();
 
 const useMusicUtility = () => {
   const {
@@ -13,7 +17,7 @@ const useMusicUtility = () => {
     setIsAudioPlaying,
   } = useContext(MusicContext);
 
-  const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
+  const saavnApiBaseUrl = "https://saavn.dev/api";
 
   const getTrack = async (trackId) => {
     setIsAudioLoading(true);
@@ -82,27 +86,15 @@ const useMusicUtility = () => {
 
   const port = window.location.port;
 
-  const getTrackLyrics = async () => {
-    try {
-      const { data } = await axios.get(
-        port ? "https://cors-anywhere.herokuapp.com/http://api.musixmatch.com/ws/1.1/matcher.lyrics.get" : "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
-        {
-          params: {
-            q_track: currentTrack.name,
-            q_artist: currentTrack.artists,
-            page_size: 1,
-            page: 1,
-            apikey: "81097b6282414a7745d28abff208a5d5",
-          },
-        },
-      );
-      const mmTrackId = data.message.body.lyrics.lyrics_body
-      console.log(mmTrackId)
-
-      
-    } catch (error) {
-      console.log(error);
-    }
+  const fetchTrackLyrics = async () => {
+      try {
+          const trackId = await musixmatch.searchTracks({trackQuery: currentTrack.name, page: 1});
+          console.log(trackId);
+          // const lyrics = await musixmatch.getTrackLyrics(trackId);
+          // console.log(lyrics);
+      } catch (error) {
+          console.error('Error fetching track lyrics:', error);
+      }  
   };
 
   const deleteCachedAudioData = async () => {
@@ -187,7 +179,7 @@ const useMusicUtility = () => {
 
   return {
     getTrack,
-    getTrackLyrics,
+    fetchTrackLyrics,
     deleteCachedAudioData,
     handleAudioPlay,
     handleAudioPause,
