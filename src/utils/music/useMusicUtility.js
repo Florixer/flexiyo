@@ -84,17 +84,26 @@ const useMusicUtility = () => {
     localStorage.setItem("cachedTracks", JSON.stringify(cachedTracks));
   };
 
-  const port = window.location.port;
+  const getTrackLyrics = async () => {
+    try {
+      const { data } = await axios.get(
+        "https://cors-anywhere.herokuapp.com/https://api.musixmatch.com/ws/1.1/track.search",
+        {
+          params: {
+            q_track: currentTrack.name,
+            q_artist: currentTrack.artists,
+            page_size: 1,
+            page: 1,
+            apikey: "81097b6282414a7745d28abff208a5d5",
+          },
+        },
+      );
+      const mmTrackId = data.message.body.track_list[0].track.track_id
 
-  const fetchTrackLyrics = async () => {
-      try {
-          const trackId = await musixmatch.searchTracks({trackQuery: currentTrack.name, page: 1});
-          console.log(trackId);
-          // const lyrics = await musixmatch.getTrackLyrics(trackId);
-          // console.log(lyrics);
-      } catch (error) {
-          console.error('Error fetching track lyrics:', error);
-      }  
+      
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const deleteCachedAudioData = async () => {
