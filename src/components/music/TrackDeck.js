@@ -4,12 +4,8 @@ import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import axios from "axios";
 const TrackDeck = () => {
-  const {
-    getMmTrackLyrics,
-    handleAudioPlay,
-    handleAudioPause,
-    handleNextAudioTrack,
-  } = useMusicUtility();
+  const { handleAudioPlay, handleAudioPause, handleNextAudioTrack } =
+    useMusicUtility();
   const {
     currentTrack,
     audioRef,
@@ -34,16 +30,14 @@ const TrackDeck = () => {
   };
 
   useEffect(() => {
-    const getTrackLyricsLocal = async () => {
+    const getTrackLyricsLocally = async () => {
       if (currentTrack.hasLyrics) {
         getTrackLyrics();
       } else {
-        // lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
-        currentTrackLyrics = await getMmTrackLyrics();
-        lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
+        lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
       }
     };
-    getTrackLyricsLocal();
+    getTrackLyricsLocally();
   }, [currentTrack]);
 
   const [isDragging, setIsDragging] = useState(false);
@@ -262,7 +256,7 @@ const TrackDeck = () => {
         <div
           className="track-deck--lyrics-wrapper"
           ref={lyricsWrapperRef}
-          style={{whiteSpace: "pre-wrap"}}
+          style={{ whiteSpace: "pre-wrap" }}
         ></div>
       </div>
     </div>
