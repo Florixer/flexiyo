@@ -2,14 +2,14 @@ import { useContext, useEffect, useState, useCallback, useRef } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
-import useMusixMatchAPI from "../../utils/music/useMusixMatchAPI";
 import axios from "axios";
 const TrackDeck = () => {
-  const { handleAudioPlay, handleAudioPause, handleNextAudioTrack } =
-    useMusicUtility();
-
-  const { getMatcherLyrics } = useMusixMatchAPI();
-
+  const {
+    getMmTrackLyrics,
+    handleAudioPlay,
+    handleAudioPause,
+    handleNextAudioTrack,
+  } = useMusicUtility();
   const {
     currentTrack,
     audioRef,
@@ -39,14 +39,12 @@ const TrackDeck = () => {
         getTrackLyrics();
       } else {
         // lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
-        const { data } = await getMatcherLyrics(currentTrack.name, currentTrack.artists);
-        console.log(data);
-        // currentTrackLyrics = data.lyrics.replace("<br>", "<br/>");
-        // lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
+        currentTrackLyrics = await getMmTrackLyrics();
+        lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
       }
     };
     getTrackLyricsLocal();
-  }, [currentTrack.id]);
+  }, [currentTrack]);
 
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
@@ -264,7 +262,7 @@ const TrackDeck = () => {
         <div
           className="track-deck--lyrics-wrapper"
           ref={lyricsWrapperRef}
-          style={{ whiteSpace: "pre-wrap" }}
+          style={{whiteSpace: "pre-wrap"}}
         ></div>
       </div>
     </div>

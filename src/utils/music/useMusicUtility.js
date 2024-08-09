@@ -1,7 +1,6 @@
 import { useContext, useEffect, useCallback } from "react";
 import axios from "axios";
 import MusicContext from "../../context/music/MusicContext";
-import useMusixMatchAPI from "./useMusixMatchAPI.js";
 
 const useMusicUtility = () => {
   const {
@@ -82,12 +81,7 @@ const useMusicUtility = () => {
   };
 
   const getMmTrackLyrics = async () => {
-    let proxyUrl;
-    if(window.location.port === "3000"){
-    proxyUrl = "https://cors-anywhere.herokuapp.com/";
-    } else {
-     proxyUrl = "";
-    }
+    let proxyUrl =  "https://cors-anywhere.herokuapp.com/";
     try {
       const { data } = await axios.get(
         `${proxyUrl}https://api.musixmatch.com/ws/1.1/matcher.lyrics.get`,
@@ -194,6 +188,7 @@ const useMusicUtility = () => {
 
   return {
     getTrack,
+    getMmTrackLyrics,
     deleteCachedAudioData,
     handleAudioPlay,
     handleAudioPause,
