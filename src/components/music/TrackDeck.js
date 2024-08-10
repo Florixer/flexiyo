@@ -34,7 +34,12 @@ const TrackDeck = () => {
       if (currentTrack.hasLyrics) {
         getTrackLyrics();
       } else {
-        lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
+        // lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
+        const { data } = await axios.get(
+          `https://lyrist.vercel.app/api/${currentTrack.name}/${currentTrack.artists}`,
+        )
+        currentTrackLyrics = data.lyrics;
+        lyricsWrapperRef.current.innerHTML = currentTrackLyrics;
       }
     };
     getTrackLyricsLocally();
