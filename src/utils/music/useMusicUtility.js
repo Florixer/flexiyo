@@ -72,6 +72,31 @@ const useMusicUtility = () => {
     }
   };
 
+  const getTrackLyrics = async () => {
+    let currentTrackLyrics;
+    if (currentTrack.hasLyrics) {
+      const { data } = await axios.get(
+        `${saavnApiBaseUrl}/songs/${currentTrack.id}/lyrics`,
+      );
+      currentTrackLyrics = data.data.lyrics.replace("<br>", "<br/>");
+      return currentTrackLyrics;
+    } else {
+      try {
+        const { data } = await axios.get(
+          `https://lyrist.vercel.app/api/${currentTrack.name}/${currentTrack.artists}`,
+        );
+        currentTrackLyrics = data.lyrics;
+        if (currentTrackLyrics) {
+          return currentTrackLyrics;
+        } else {
+          return null;
+        }
+      } catch (error) {
+        return null;
+      }
+    }
+  };
+
   const cacheTrackData = async (trackData) => {
     const cachedTracks = JSON.parse(
       localStorage.getItem("cachedTracks") || "{}",
@@ -162,6 +187,7 @@ const useMusicUtility = () => {
 
   return {
     getTrack,
+    getTrackLyrics,
     deleteCachedAudioData,
     handleAudioPlay,
     handleAudioPause,
