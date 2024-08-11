@@ -83,7 +83,7 @@ const useMusicUtility = () => {
     } else {
       try {
         const { data } = await axios.get(
-          `https://lyrist.vercel.app/api/${currentTrack.name}/${currentTrack.artists}`,
+          `https://lyrist.vercel.app/api/${currentTrack.name}/${currentTrack.artists.split(",")[0].trim()}`,
         );
         currentTrackLyrics = data.lyrics;
         if (currentTrackLyrics) {
