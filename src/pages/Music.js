@@ -20,14 +20,12 @@ const Music = () => {
     topTracks,
     setTopTracks,
     currentTrack,
-    isSpeechModalOpen,
-    setIsSpeechModalOpen,
     isTrackDeckModalOpen,
     setIsTrackDeckModalOpen,
-    isNetworkConnected,
   } = useContext(MusicContext);
   const location = useLocation();
-  const { getTrack, deleteCachedAudioData } = useMusicUtility();
+  const { getTrack, deleteCachedAudioData, handleAudioPause, handleAudioPlay } =
+    useMusicUtility();
   const [searchText, setSearchText] = useState();
   const [searchFieldActive, setSearchFieldActive] = useState(false);
   const [printError, setPrintError] = useState("");
@@ -37,8 +35,8 @@ const Music = () => {
   const [isDownloadLoading, setIsDownloadLoading] = useState(false);
   const [modalDownloadData, setModalDownloadData] = useState("");
   const [isDownlodModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [isSpeechModalOpen, setIsSpeechModalOpen] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
-
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
@@ -120,12 +118,14 @@ const Music = () => {
   const openSpeechModal = () => {
     setIsSpeechModalOpen(true);
     startSpeechRecognition();
+    handleAudioPause();
   };
 
   // Function to close speech modal and resume audio
   const closeSpeechModal = () => {
     setIsSpeechModalOpen(false);
     stopSpeechRecognition();
+    handleAudioPlay();
   };
 
   const startSpeechRecognition = () => {
@@ -220,7 +220,7 @@ const Music = () => {
     content: {
       inset: "0",
       padding: "0",
-      zIndex: "1"
+      zIndex: "1",
     },
     overlay: {
       backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -642,8 +642,11 @@ const Music = () => {
           onRequestClose={() => setIsTrackDeckModalOpen(false)}
         >
           <div className="track-deck--modal-header">
-            <i className="fal fa-times" onClick={() => setIsTrackDeckModalOpen(false)} />
-            <i className="fal fa-gear"/>
+            <i
+              className="fal fa-times"
+              onClick={() => setIsTrackDeckModalOpen(false)}
+            />
+            <i className="fal fa-gear" />
           </div>
           <TrackDeck />
         </Modal>
