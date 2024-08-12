@@ -2,6 +2,7 @@ import "./App.css";
 import React, { useEffect } from "react";
 import { App as CapacitorApp } from "@capacitor/app";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./utils/ProtectedRoute";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 // React Components
 import AuthLogin from "./pages/auth/Login";
@@ -59,26 +60,82 @@ const App = () => {
             <TrackPlayer />
             <Routes>
               <Route path="*" element={<NotFound404 />} />
-              <Route index exact path="/" element={<Home />}></Route>
               <Route exact path="/auth/login" element={<AuthLogin />}></Route>
               <Route exact path="/auth/signup" element={<AuthSignup />}></Route>
+              <Route
+                index
+                exact
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route exact path="/search" element={<Search />}></Route>
               <Route exact path="/music" element={<Music />}></Route>
-              <Route exact path="/stories" element={<Stories />}></Route>
-              <Route exact path="/notifications" element={<Notifications />}></Route>
+              <Route
+                exact
+                path="/stories"
+                element={
+                  <ProtectedRoute>
+                    <Stories />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                exact
+                path="/notifications"
+                element={
+                  <ProtectedRoute>
+                    <Notifications />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route
                 exact
                 path="/direct/inbox"
-                element={<DirectInbox />}
+                element={
+                  <ProtectedRoute>
+                    <DirectInbox />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 exact
                 path="direct/t/:currentRoomId"
-                element={<DirectChat />}
+                element={
+                  <ProtectedRoute>
+                    <DirectChat />
+                  </ProtectedRoute>
+                }
               ></Route>
-              <Route exact path="/create" element={<Create />}></Route>
-              <Route exact path="/clips" element={<Clips />}></Route>
-              <Route path="/profile" element={<Profile />}></Route>
+              <Route
+                exact
+                path="/create"
+                element={
+                  <ProtectedRoute>
+                    <Create />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                exact
+                path="/clips"
+                element={
+                  <ProtectedRoute>
+                    <Clips />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              ></Route>
             </Routes>
           </CreateProvider>
         </MusicProvider>

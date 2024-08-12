@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   Container,
@@ -881,6 +882,16 @@ const Signup = () => {
               </Button>
             </Container>
           </form>
+          <br />
+          <br />
+          Already have an account? &nbsp;
+          <Link
+            href="/auth/login"
+            variant="body1"
+            sx={{ alignSelf: "center" }}
+          >
+            Login
+          </Link>
         </Container>
       </div>
     </section>

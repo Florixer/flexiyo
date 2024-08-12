@@ -208,6 +208,17 @@ const Login = () => {
               </Button>
             </Container>
           </form>
+          <br />
+          <br />
+          <br />
+          Don't have an account? &nbsp;
+          <Link
+            href="/auth/signup"
+            variant="body1"
+            sx={{ alignSelf: "center", textDecoration: "none" }}
+          >
+            Sign Up
+          </Link>
         </Container>
       </div>
     </section>

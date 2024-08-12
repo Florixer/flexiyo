@@ -152,7 +152,7 @@ const TrackDeck = () => {
     <div className="track-deck">
       <div className="track-deck--cover">
         <LazyLoadImage
-          src={`${currentTrack.image.replace("150x150", "500x500")}`}
+          src={`${currentTrack.image.replace(/(50x50|150x150)/, "500x500")}`}
           alt="player-image"
         />
       </div>
