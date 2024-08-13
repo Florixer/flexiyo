@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Container, Typography, TextField, Button, Link } from "@mui/material";
 import TypewriterComponent from "typewriter-effect";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import UserContext from "../../context/user/UserContext";
 import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
   document.title = "Flexiyo | Login";
-
+  const { isUserAuthenticated, setIsUserAuthenticated } =
+    useContext(UserContext);
   const [isMobile, setIsMobile] = useState(false);
   const [alertText, setAlertText] = useState("");
   const [isForgotPasswordClicked, setIsForgotPasswordClicked] = useState(false);
@@ -44,20 +47,27 @@ const Login = () => {
     },
   });
 
+  useEffect(() => {
+    if (isUserAuthenticated) {
+      <Navigate to="/" state={{ from: "/auth/login" }} replace />;
+    }
+  }, []);
+
   const handleLoginUser = async (values) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_FMAPI_BASEURL}/users/login_account`,
+        `${"http://localhost:4000"}/users/login_account`,
         {
           emailOrUsername: values.emailOrUsername,
           password: values.password,
         },
       );
-      // Handle login success
-      alert(response.data.message);
+      setIsUserAuthenticated(true);
+      console.log(response.data.message);
     } catch (error) {
       // Handle login failure
       alert(error.message);
+      setIsUserAuthenticated(false);
     }
   };
 
