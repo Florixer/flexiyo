@@ -38,7 +38,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (!socket) return;
-
+    // scrollToBottom();
     const handleRecieveMessage = (username, message) => {
       console.log("Received message:", username, message);
       setMessages((prevMessages) => [
@@ -52,7 +52,6 @@ const Chat = () => {
     };
 
     socket.on("recieve-message", handleRecieveMessage);
-    scrollToBottom();
     return () => {
       socket.off("recieve-message", handleRecieveMessage);
     };
