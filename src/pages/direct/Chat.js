@@ -1,22 +1,25 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { socket, socketUser } from "../../data/user/SocketService";
+import useSocketService from "../../hooks/user/useSocketService";
 import matchMedia from "matchmedia";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import CustomTopNavbar from "../../layout/items/CustomTopNavbar";
 import InboxList from "../../components/direct/InboxList";
 import UserFilesSheet from "../../components/direct/chat/UserFilesSheet";
-import { userInfo } from "../../data/user/UserInfo";
+import UserContext from "../../context/user/UserContext";
+import demoPersonPfp from "../../assets/media/img/demo-person.jpg";
 
 const Chat = () => {
+  const { socket, socketUser } = useSocketService();
+  const { userInfo } = useContext(UserContext);
   const [userMessage, setUserMessage] = useState("");
   const [inputText, setInputText] = useState("");
   const inputMessageRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [isUserFilesSheetOpen, setIsUserFilesSheetOpen] = useState(false);
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const mediaQuery = matchMedia("(max-width: 950px)");
     const handleMediaQueryChange = () => {
       setIsMobile(mediaQuery.matches);
@@ -30,34 +33,57 @@ const Chat = () => {
     };
   }, []);
 
-  let { currentRoomId } = useParams();
-  currentRoomId = parseInt(currentRoomId, 10);
+  const { currentRoomId } = useParams();
+  const roomId = parseInt(currentRoomId, 10);
 
-  function scrollToBottom() {
-    var scrollableDiv = document.getElementById("chat-messages");
-    scrollableDiv.scroll({
-      top: scrollableDiv.scrollHeight,
-      behavior: "smooth",
-    });
-  }
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleRecieveMessage = (username, message) => {
+      console.log("Received message:", username, message);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          text: message,
+          sender: username,
+        },
+      ]);
+      scrollToBottom();
+    };
+
+    socket.on("recieve-message", handleRecieveMessage);
+    scrollToBottom();
+    return () => {
+      socket.off("recieve-message", handleRecieveMessage);
+    };
+  }, [socket]);
+
+  const scrollToBottom = () => {
+    const scrollableDiv = document.getElementById("chat-messages");
+    if (scrollableDiv) {
+      scrollableDiv.scroll({
+        top: scrollableDiv.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const handleSendMessage = (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
     if (inputText !== "") {
-      // Check if inputText is not empty
       setMessages([
         ...messages,
         {
           text: inputText,
-          sender: socketUser.username,
+          sender: userInfo.username,
         },
       ]);
       socket.emit(
         "send-message",
-        currentRoomId,
+        roomId,
         socketUser.id,
-        socketUser.username,
-        inputText,
+        userInfo.username,
+        inputText
       );
       setUserMessage("");
       setInputText("");
@@ -65,29 +91,6 @@ const Chat = () => {
     scrollToBottom();
     inputMessageRef.current.focus();
   };
-
-  // Listen for incoming messages from the server
-  const handleRecieveMessage = (username, message) => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        text: message,
-        sender: username,
-      },
-    ]);
-    scrollToBottom();
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-
-    socket.on("recieve-message", handleRecieveMessage);
-
-    return () => {
-      // Clean up the event listener when the component unmounts
-      socket.off("recieve-message", handleRecieveMessage);
-    };
-  }, [handleSendMessage, handleRecieveMessage]);
 
   const openUserFilesSheet = () => {
     setIsUserFilesSheetOpen(true);
@@ -108,7 +111,7 @@ const Chat = () => {
       <div className="chat-area">
         <CustomTopNavbar
           navbarPrevPage={isMobile ? "/direct/inbox" : null}
-          navbarCover={userInfo.pfp}
+          navbarCover={demoPersonPfp}
           navbarTitle="jason.fiyo"
           navbarFirstIcon="fa fa-phone"
           navbarSecondIcon="fa fa-video"
@@ -119,9 +122,9 @@ const Chat = () => {
           id="chat-messages"
           onClick={closeUserFilesSheet}
         >
-            <div className="chat-details" onClick={closeUserFilesSheet}>
+          <div className="chat-details" onClick={closeUserFilesSheet}>
             <div className="chat-details--pfp">
-              <LazyLoadImage src={userInfo.pfp} alt="chat-pfp" />
+              <LazyLoadImage src={demoPersonPfp} alt="chat-pfp" />
             </div>
             <div className="chat-details--name">Jason Barody</div>
             <div className="chat-details--username">Flexiyo • jason.fiyo</div>
@@ -142,12 +145,12 @@ const Chat = () => {
             <div
               key={index}
               className={`chat-message--${
-                message.sender !== socketUser.username ? "other" : "self"
+                message.sender !== userInfo.username ? "other" : "self"
               }`}
             >
-              {message.sender !== socketUser.username ? (
+              {message.sender !== userInfo.username ? (
                 <LazyLoadImage
-                  src={userInfo.pfp}
+                  src={demoPersonPfp}
                   className="chat-message--other-pfp"
                   alt="user-pfp"
                 />
@@ -174,9 +177,9 @@ const Chat = () => {
               >
                 <path
                   fill="currentColor"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M9 7a5 5 0 0 1 10 0v8a7 7 0 1 1-14 0V9a1 1 0 0 1 2 0v6a5 5 0 0 0 10 0V7a3 3 0 1 0-6 0v8a1 1 0 1 0 2 0V9a1 1 0 1 1 2 0v6a3 3 0 1 1-6 0z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 ></path>
               </svg>
             </div>
@@ -192,10 +195,9 @@ const Chat = () => {
             <button
               className="chat-messenger--right"
               type="submit"
-              onClick={handleSendMessage}
               disabled={!inputText}
             >
-              <i type="submit" className="fa fa-paper-plane"></i>
+              <i className="fa fa-paper-plane"></i>
             </button>
           </form>
         </div>

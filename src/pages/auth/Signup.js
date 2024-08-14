@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import {
@@ -15,12 +15,15 @@ import {
 } from "@mui/material";
 import TypewriterComponent from "typewriter-effect";
 import { useFormik } from "formik";
-import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
 import * as Yup from "yup";
+import UserContext from "../../context/user/UserContext";
+import { useNavigate } from "react-router-dom";
+import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
 
 const Signup = () => {
   document.title = "Flexiyo | Sign Up";
-
+  const { isUserAuthenticated, setIsUserAuthenticated, setUserInfo } =
+    useContext(UserContext);
   const [isMobile, setIsMobile] = useState(false);
   const [userOtpValue, setUserOtpValue] = useState("");
   const [emailHelperText, setEmailHelperText] = useState("");
@@ -321,6 +324,13 @@ const Signup = () => {
     }
   };
 
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isUserAuthenticated) {
+      navigate("/", { state: { from: "/auth/login" }, replace: true });
+    }
+  }, [isUserAuthenticated, navigate]);
+
   const createUserAccount = async (e) => {
     e.preventDefault();
     try {
@@ -339,7 +349,8 @@ const Signup = () => {
         },
       );
       setAlertText(response.data.message);
-      window.location = "/";
+      setIsUserAuthenticated(true);
+      setUserInfo(response.data.userInfo);
     } catch (error) {
       setAlertText(error.message);
     }
@@ -885,11 +896,7 @@ const Signup = () => {
           <br />
           <br />
           Already have an account? &nbsp;
-          <Link
-            href="/auth/login"
-            variant="body1"
-            sx={{ alignSelf: "center" }}
-          >
+          <Link href="/auth/login" variant="body1" sx={{ alignSelf: "center" }}>
             Login
           </Link>
         </Container>

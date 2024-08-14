@@ -1,10 +1,17 @@
-import { useState, useEffect } from "react";
-import { socket, socketUser } from "../../../data/user/SocketService";
+import { useState, useEffect, useContext } from "react";
+import UserContext from "../../../context/user/UserContext";
+import useSocketService from "../../../hooks/user/useSocketService";
+
 const ChatNotification = () => {
+  const { userInfo } = useContext(UserContext);
+  const { socket, socketUser } = useSocketService();
   const [notification, setNotification] = useState(null);
+
   useEffect(() => {
-    // Listen for incoming messages from the server
+    if (!socket) return;
+
     const handleRecieveMessage = (username, message) => {
+      if (userInfo.username === username) return;
       setNotification({ title: username, content: message });
       setTimeout(() => {
         setNotification(null);
@@ -14,15 +21,15 @@ const ChatNotification = () => {
     socket.on("recieve-message", handleRecieveMessage);
 
     return () => {
-      // Clean up the event listener when the component unmounts
       socket.off("recieve-message", handleRecieveMessage);
     };
-  }, []);
+  }, [socket]);
+
   return (
     <div
-      className={`chat-notification ${notification !== null ? "active" : null}`}
+      className={`chat-notification ${notification ? "active" : ""}`}
     >
-      {notification !== null ? (
+      {notification && (
         <>
           <div className="chat-notification--pfp">
             <img src="https://i.pravatar.cc/300" alt="notification-pfp" />
@@ -34,9 +41,9 @@ const ChatNotification = () => {
             <span className="chat-notification--body-content">
               {notification.content}
             </span>
-          </div>{" "}
+          </div>
         </>
-      ) : null}
+      )}
     </div>
   );
 };

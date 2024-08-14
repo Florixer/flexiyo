@@ -1,13 +1,15 @@
-import React from "react";
+import { useState, useEffect, useContext } from "react";
 import matchMedia from "matchmedia";
 import BottomNavbar from "./items/BottomNavbar";
 import SideNavbar from "./items/SideNavbar";
 import HomeNavbar from "./items/HomeNavbar";
+import UserContext from "../context/user/UserContext";
 
 const Navbar = () => {
-  const [isMobile, setIsMobile] = React.useState(false);
+  const { isUserAuthenticated } = useContext(UserContext);
+  const [isMobile, setIsMobile] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const mediaQuery = matchMedia("(max-width: 600px)");
     const handleMediaQueryChange = () => {
       setIsMobile(mediaQuery.matches);
@@ -21,7 +23,7 @@ const Navbar = () => {
     };
   }, []);
 
-  return (
+  return isUserAuthenticated ? (
     <>
       {isMobile ? (
         <>
@@ -31,7 +33,7 @@ const Navbar = () => {
         <SideNavbar />
       )}
     </>
-  );
+  ) : null;
 };
 
 export default Navbar;

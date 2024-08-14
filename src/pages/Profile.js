@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import Headroom from "react-headroom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
-import { userInfo } from "../data/user/UserInfo";
+import UserContext from "../context/user/UserContext";
 export default function Profile() {
+  const { userInfo } = useContext(UserContext);
   const followBtnClick = (e) => {
     if (e.target.getAttribute("value") === "Follow") {
       e.target.classList.remove("user-card-btn--follow");

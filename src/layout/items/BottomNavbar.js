@@ -1,7 +1,8 @@
-import React from "react";
-import { userInfo } from "../../data/user/UserInfo";
+import React, { useContext } from "react";
+import UserContext from "../../context/user/UserContext";
 import { NavLink, useLocation } from "react-router-dom";
 export default function BottomNavbar() {
+  const { userInfo } = useContext(UserContext);
   const withoutBottomNavbarRoutes = ["/inbox", "/direct/t/"];
   // All the routes you want to exclude
   const { pathname } = useLocation();

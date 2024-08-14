@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import CustomTopNavbar from "../../layout/items/CustomTopNavbar";
 import matchMedia from "matchmedia";
-import { userInfo } from "../../data/user/UserInfo";
+import UserContext from "../../context/user/UserContext";
 
 const InboxList = () => {
+  const { userInfo } = useContext(UserContext);
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {

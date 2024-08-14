@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import UserContext from "../../context/user/UserContext";
 import logoImg from "../../assets/media/img/logo/flexomate_light.svg";
-import { userInfo } from "../../data/user/UserInfo";
+import defaultUserPfp from "../../assets/media/img/default-avatar.png";
 
 export default function SideNavbar() {
+  const { userInfo } = useContext(UserContext);
   return (
     <>
       <div id="left-side-navbar">
@@ -258,7 +260,7 @@ export default function SideNavbar() {
               <img
                 alt="User Profile"
                 className="user-profile-icon"
-                src={userInfo.pfp}
+                src={userInfo ? userInfo.pfp : defaultUserPfp}
               />
             </div>
           </NavLink>

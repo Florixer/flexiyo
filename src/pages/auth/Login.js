@@ -6,12 +6,12 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import UserContext from "../../context/user/UserContext";
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
-import { Navigate } from "react-router-dom";
 
 const Login = () => {
   document.title = "Flexiyo | Login";
-  const { isUserAuthenticated, setIsUserAuthenticated } =
+  const { isUserAuthenticated, setIsUserAuthenticated, setUserInfo } =
     useContext(UserContext);
   const [isMobile, setIsMobile] = useState(false);
   const [alertText, setAlertText] = useState("");
@@ -47,11 +47,12 @@ const Login = () => {
     },
   });
 
+  const navigate = useNavigate();
   useEffect(() => {
     if (isUserAuthenticated) {
-      <Navigate to="/" state={{ from: "/auth/login" }} replace />;
+      navigate("/", { state: { from: "/auth/login" }, replace: true });
     }
-  }, []);
+  }, [isUserAuthenticated, navigate]);
 
   const handleLoginUser = async (values) => {
     try {
@@ -63,9 +64,8 @@ const Login = () => {
         },
       );
       setIsUserAuthenticated(true);
-      console.log(response.data.message);
+      setUserInfo(response.data.user);
     } catch (error) {
-      // Handle login failure
       alert(error.message);
       setIsUserAuthenticated(false);
     }
