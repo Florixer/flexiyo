@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import UserContext from "../../context/user/UserContext";
 import { NavLink, useLocation } from "react-router-dom";
+import defaultUserPfp from "../../assets/media/img/default-avatar.png";
+
 export default function BottomNavbar() {
   const { userInfo } = useContext(UserContext);
   const withoutBottomNavbarRoutes = ["/inbox", "/direct/t/"];
@@ -122,7 +124,7 @@ export default function BottomNavbar() {
               <img
                 alt="User Profile"
                 className="user-profile-icon"
-                src={userInfo.pfp}
+                src={userInfo.pfp ? userInfo.pfp : defaultUserPfp}
               />
             </div>
           </NavLink>

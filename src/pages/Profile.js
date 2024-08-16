@@ -3,6 +3,8 @@ import Headroom from "react-headroom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import UserContext from "../context/user/UserContext";
+import defaultUserPfp from "../assets/media/img/default-avatar.png";
+
 export default function Profile() {
   const { userInfo } = useContext(UserContext);
   const followBtnClick = (e) => {
@@ -42,7 +44,7 @@ export default function Profile() {
         <div className="profile-user">
           <div className="user-card">
             <div className="user-card--avatar">
-              <LazyLoadImage src={userInfo.pfp} alt="Demo Person" />
+              <LazyLoadImage src={userInfo.pfp ? userInfo.pfp : defaultUserPfp} alt="Demo Person" />
             </div>
             <div className="user-card-connections">
               <div className="user-card-connections-items">

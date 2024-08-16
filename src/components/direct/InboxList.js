@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import CustomTopNavbar from "../../layout/items/CustomTopNavbar";
 import matchMedia from "matchmedia";
 import UserContext from "../../context/user/UserContext";
+import demoPersonPfp from "../../assets/media/img/demo-person.jpg";
 
 const InboxList = () => {
   const { userInfo } = useContext(UserContext);
@@ -29,63 +29,33 @@ const InboxList = () => {
         {
           id: 2963293620915324,
           title: "json.fiyo",
-          cover: "https://i.pravatar.cc/50",
+          cover: demoPersonPfp,
           last_msg: "1 new message",
         },
         {
           id: 2963293620915324,
           title: "json.fiyo",
-          cover: "https://i.pravatar.cc/45",
+          cover: demoPersonPfp,
           last_msg: "1 new message",
         },
         {
           id: 2963293620915324,
           title: "json.fiyo",
-          cover: "https://i.pravatar.cc/40",
+          cover: demoPersonPfp,
           last_msg: "1 new message",
         },
         {
           id: 2963293620915324,
           title: "json.fiyo",
-          cover: "https://i.pravatar.cc/35",
+          cover: demoPersonPfp,
           last_msg: "1 new message",
         },
         {
           id: 2963293620915324,
           title: "json.fiyo",
-          cover: "https://i.pravatar.cc/30",
+          cover: demoPersonPfp,
           last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/25",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/20",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/15",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/10",
-          last_msg: "1 new message",
-        },
-        {
-          id: 2963293620915324,
-          title: "json.fiyo",
-          cover: "https://i.pravatar.cc/5",
-          last_msg: "1 new message",
-        },
+        }
       ],
     },
   };
@@ -94,7 +64,7 @@ const InboxList = () => {
     return inboxItems.inbox.items.map((chat) => (
       <Link to={`/direct/t/${chat.id}`}>
         <div className="inbox-item" key={chat.id}>
-          <LazyLoadImage
+          <img
             alt="chat-cover"
             className="inbox-item--cover"
             src={chat.cover}

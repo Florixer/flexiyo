@@ -260,7 +260,7 @@ export default function SideNavbar() {
               <img
                 alt="User Profile"
                 className="user-profile-icon"
-                src={userInfo ? userInfo.pfp : defaultUserPfp}
+                src={userInfo.pfp ? userInfo.pfp : defaultUserPfp}
               />
             </div>
           </NavLink>
