@@ -125,7 +125,6 @@ const Music = () => {
   const closeSpeechModal = () => {
     setIsSpeechModalOpen(false);
     stopSpeechRecognition();
-    handleAudioPlay();
   };
 
   const startSpeechRecognition = () => {
