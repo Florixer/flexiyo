@@ -41,7 +41,7 @@
  "scripts": {
   "format": "npx prettier . --write",
   "deploy": "react-scripts build && firebase deploy --only hosting:flexiyo && npx cap sync android && date",
-  "push": "sh -c \"git add . && git commit -m \\\"$(date)\\\" && git push origin master && gh run list --repo florixer/flexiyo --limit 1 --json databaseId --jq '.[0].databaseId' | xargs -I {} gh run view {} --repo florixer/flexiyo --json status,conclusion --jq '.status, .conclusion' && sleep 1 && echo 'Logging information here'\"",
+  "push": "sh -c \"git add . && git commit -m \\\"$(date)\\\" && git push origin master && gh run list --repo florixer/flexiyo --limit 1 --json databaseId --jq '.[0].databaseId' | xargs -I {} gh run view {} --repo florixer/flexiyo --json status,conclusion --jq '.status, .conclusion' && sleep 4 && echo 'Logging information here'\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "firebase_build": "CI=false react-scripts build",
