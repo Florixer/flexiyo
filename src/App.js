@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 // React Components
-import AuthLogin from "./pages/auth/Login";
+// import AuthLogin from "./pages/auth/Login";
 import AuthSignup from "./pages/auth/Signup";
 import NotFound404 from "./pages/NotFound404";
 import Navbar from "./layout/Navbar";
@@ -62,7 +62,7 @@ const App = () => {
               <TrackPlayer />
               <Routes>
                 <Route path="*" element={<NotFound404 />} />
-                <Route exact path="/auth/login" element={<AuthLogin />}></Route>
+                {/* <Route exact path="/auth/login" element={<AuthLogin />}></Route> */}
                 <Route
                   exact
                   path="/auth/signup"
