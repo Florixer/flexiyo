@@ -38,10 +38,10 @@
     "typewriter-effect": "^2.21.0",
     "yup": "^1.4.0"
   },
-  "scripts": {
-    "format": "npx prettier . --write",
-    "deploy": "react-scripts build && firebase deploy --only hosting:flexiyo && npx cap sync android && date",
-    "push": "sh -c \"git add . && git commit -m \\\"$(date)\\\" && git push origin master && run_id=$(gh run list --repo florixer/flexiyo --limit 1 --json databaseId --jq '.[0].databaseId') && echo 'Run ID: $run_id' && gh run view $run_id --repo florixer/flexiyo --json status,conclusion --jq '.status, .conclusion' && sleep 3 && echo 'Logging information here ...'\"",
+ "scripts": {
+  "format": "npx prettier . --write",
+  "deploy": "react-scripts build && firebase deploy --only hosting:flexiyo && npx cap sync android && date",
+  "push": "sh -c \"git add . && git commit -m \\\"$(date)\\\" && git push origin master && run_id=$(gh run list --repo florixer/flexiyo --limit 1 --json databaseId --jq '.[0].databaseId') && echo 'Run ID: $run_id' && gh run view $run_id --repo florixer/flexiyo --json status,conclusion --jq '.status, .conclusion' && sleep 3 && echo 'Logging information here ...'\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "firebase_build": "CI=false react-scripts build",
