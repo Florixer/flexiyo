@@ -60,12 +60,11 @@ const Chat = () => {
   const scrollToBottom = () => {
     const scrollableDiv = document.getElementById("chat-messages");
     if (scrollableDiv) {
-      scrollableDiv.scroll({
-        top: scrollableDiv.scrollHeight,
-        behavior: "smooth",
+      requestAnimationFrame(() => {
+        scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
       });
     }
-  };
+  };  
 
   const handleSendMessage = (event) => {
     event.preventDefault();

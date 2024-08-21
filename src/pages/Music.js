@@ -179,6 +179,12 @@ const Music = () => {
     ) {
       searchTracks(speechTranscript);
       setSearchText(speechTranscript);
+      const searchTts = new Audio(
+        `https://www.google.com/speech-api/v1/synthesize?text=${encodeURIComponent(
+          speechTranscript,
+        )}&enc=mpeg&lang=hi-in&speed=.5&client=lr-language-tts&use_google_only_voices=1`,
+      );
+      searchTts.play();
       closeSpeechModal();
     }
   }, [speechListening, speechTranscript]);
@@ -515,7 +521,7 @@ const Music = () => {
             {!speechTranscript && !speechListening
               ? "Didn't Catch, Speak again"
               : !speechTranscript
-              ? `Play "${topTracks[0].name}"`
+              ? `Play "${topTracks[0] && topTracks[0].name}"`
               : speechTranscript}
             <br />
             <br />
