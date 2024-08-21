@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function NotFound404() {
+  document.title = "Flexiyo | Not Found 404";
+
   return (
     <section id="not-found-404">
       <div className="not-found">

@@ -4,6 +4,7 @@ import clip1 from "../assets/media/vid/clip.mp4";
 import clip2 from "../assets/media/vid/clip2.mp4";
 
 const Clips = () => {
+  document.title = "Flexiyo | Clips";
   const [isClipMuted, setIsClipMuted] = useState(true);
   const [isClipCommentsSheetOpen, setIsClipCommentsSheetOpen] = useState(false);
   const clipsObject = {

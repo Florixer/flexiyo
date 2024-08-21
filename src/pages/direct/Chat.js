@@ -10,6 +10,7 @@ import UserContext from "../../context/user/UserContext";
 import demoPersonPfp from "../../assets/media/img/demo-person.jpg";
 
 const Chat = () => {
+  document.title = "Flexiyo | @jason.fiyo - Chat"
   const { socket, socketUser } = useSocketService();
   const { userInfo } = useContext(UserContext);
   const [userMessage, setUserMessage] = useState("");

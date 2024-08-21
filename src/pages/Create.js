@@ -5,6 +5,8 @@ import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import ContentViewport from "../components/create/ContentViewport";
 import ContentSelection from "../components/create/ContentSelection";
 const Create = () => {
+  document.title = "Flexiyo | Create";
+
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {

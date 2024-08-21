@@ -896,7 +896,12 @@ const Signup = () => {
           <br />
           <br />
           Already have an account? &nbsp;
-          <Link href="/auth/login" variant="body1" sx={{ alignSelf: "center" }}>
+          <Link
+            to="/"
+            variant="body1"
+            style={{ color: "var(--fm-primary-link)" }}
+            sx={{ alignSelf: "center" }}
+          >
             Login
           </Link>
         </Container>

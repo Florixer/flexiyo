@@ -3,6 +3,8 @@ import matchMedia from "matchmedia";
 import InboxList from "../../components/direct/InboxList";
 
 const Inbox = () => {
+  document.title = "Flexiyo | Inbox";
+
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {

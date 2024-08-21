@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Container, Typography, TextField, Button, Link } from "@mui/material";
+import { Container, Typography, TextField, Button } from "@mui/material";
 import TypewriterComponent from "typewriter-effect";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import UserContext from "../../context/user/UserContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
 
 const Login = () => {
@@ -204,6 +204,7 @@ const Login = () => {
                 href="#"
                 variant="body1"
                 onClick={handleForgotPasswordClick}
+                style={{ color: "var(--fm-primary-link)" }}
                 sx={{ alignSelf: "center" }}
               >
                 Forgot password?
@@ -223,8 +224,9 @@ const Login = () => {
           <br />
           Don't have an account? &nbsp;
           <Link
-            href="/auth/signup"
+            to="/auth/signup"
             variant="body1"
+            style={{ color: "var(--fm-primary-link)" }}
             sx={{ alignSelf: "center", textDecoration: "none" }}
           >
             Sign Up
