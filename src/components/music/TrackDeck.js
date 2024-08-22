@@ -2,7 +2,6 @@ import { useContext, useEffect, useState, useCallback, useRef } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
-import axios from "axios";
 const TrackDeck = () => {
   const {
     getTrackLyrics,
@@ -19,22 +18,7 @@ const TrackDeck = () => {
     setAudioProgress,
   } = useContext(MusicContext);
 
-  const saavnApiBaseUrl = "https://saavn.dev/api";
   const lyricsWrapperRef = useRef(null);
-
-  useEffect(() => {
-    const getTrackLyricsLocally = async () => {
-      const lyrics = await getTrackLyrics();
-      if (lyrics === null) {
-        lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
-      } else if (lyrics === "loading") {
-        lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
-      } else {
-        lyricsWrapperRef.current.innerHTML = lyrics;
-      }
-    };
-    getTrackLyricsLocally();
-  }, [currentTrack]);
 
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
@@ -53,6 +37,20 @@ const TrackDeck = () => {
       mediaQuery.removeListener(handleMediaQueryChange);
     };
   }, []);
+
+  useEffect(() => {
+    const getTrackLyricsLocally = async () => {
+      const lyrics = await getTrackLyrics();
+      if (lyrics === null) {
+        lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
+      } else if (lyrics === "loading") {
+        lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
+      } else {
+        lyricsWrapperRef.current.innerHTML = lyrics;
+      }
+    };
+    getTrackLyricsLocally();
+  }, [currentTrack]);
 
   const progressBarRef = useRef(null);
 
@@ -248,7 +246,23 @@ const TrackDeck = () => {
         </span>
       </div>
       <div className="track-deck--lyrics">
-        <p>Lyrics</p>
+        <div className="track-deck--lyrics-header">
+          <label>Lyrics</label>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            onClick={() =>
+              navigator.clipboard.writeText(lyricsWrapperRef.current.innerText)
+            }
+          >
+            <path
+              stroke="#fff"
+              strokeWidth="2"
+              d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2m-6 4h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"
+            ></path>
+          </svg>
+        </div>
         <div
           className="track-deck--lyrics-wrapper"
           ref={lyricsWrapperRef}

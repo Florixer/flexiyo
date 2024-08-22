@@ -45,7 +45,7 @@ const App = () => {
     });
 
     const initializeApp = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       setAppLoading(false);
     };
 

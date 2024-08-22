@@ -1550,8 +1550,8 @@ b {
 }
 
 .track-deck--lyrics {
-  max-height: 30rem; /* Maximum height of the parent container */
-  min-height: 30rem; /* Minimum height of the parent container */
+  max-height: 30rem;
+  min-height: 30rem;
   height: 100%;
   width: 100%;
   padding: 1rem;
@@ -1561,17 +1561,35 @@ b {
   flex-direction: column;
 }
 
-.track-deck--lyrics p {
+.track-deck--lyrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 .8rem 0;
+}
+
+.track-deck--lyrics-header label {
   font-weight: bold;
   font-size: 1.5rem;
-  margin: 0 0 1rem 0;
+}
+
+.track-deck--lyrics-header svg {
+  width: 3rem;
+  padding: .7rem;
+  border-radius: .5rem;
+  cursor: pointer;
+}
+
+.track-deck--lyrics-header svg:hover {
+  background-color: var(--fm-tertiary-bg-color);
 }
 
 .track-deck--lyrics-wrapper {
-  max-height: 100%; /* Ensure it takes up the full height of the parent */
-  flex-grow: 1; /* Allow the wrapper to grow and take up available space */
+  max-height: 100%;
+  flex-grow: 1;
   font-size: 1.3rem;
-  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-y: auto;
 }
 
 
@@ -1667,7 +1685,7 @@ b {
 }
 
 .render-tracks {
-  margin: 0.5rem 0 0 0;
+  margin: 0.5rem 0 5rem 0;
 }
 
 .track-item {
