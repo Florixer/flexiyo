@@ -1,26 +1,31 @@
-import { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
+// Create UserContext
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
-  const [userInfo, setUserInfo] = useState(() => {
-    const savedUserInfo = Cookies.get("userInfo");
-    return savedUserInfo ? JSON.parse(savedUserInfo) : {};
-  });
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (Object.keys(userInfo).length !== 0) {
-      const { password, ...userInfoWithoutPassword } = userInfo;
+    const savedUserInfo = Cookies.get("userInfo");
+    if (savedUserInfo) {
+      setUserInfo(JSON.parse(savedUserInfo));
+      setIsUserAuthenticated(true);
+    }
+    setLoading(false);
+  }, []);
 
+  useEffect(() => {
+    if (userInfo) {
+      const { password, ...userInfoWithoutPassword } = userInfo;
       Cookies.set("userInfo", JSON.stringify(userInfoWithoutPassword), {
         expires: 3650,
       });
-      setIsUserAuthenticated(true);
     } else {
       Cookies.remove("userInfo");
-      setIsUserAuthenticated(false);
     }
   }, [userInfo]);
 
@@ -31,6 +36,7 @@ export const UserProvider = ({ children }) => {
         setIsUserAuthenticated,
         userInfo,
         setUserInfo,
+        loading,
       }}
     >
       {children}
