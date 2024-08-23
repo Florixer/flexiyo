@@ -10,7 +10,6 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
 
 const Login = () => {
-  document.title = "Flexiyo | Login";
   const { isUserAuthenticated, setIsUserAuthenticated, setUserInfo } =
     useContext(UserContext);
   const [isMobile, setIsMobile] = useState(false);

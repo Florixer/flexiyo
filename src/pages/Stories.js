@@ -4,7 +4,7 @@ import Headroom from "react-headroom";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 
 const Stories = () => {
-  document.title = "Flexiyo | Stories";
+  document.title = "Stories • Flexiyo";
 
   const [isMobile, setIsMobile] = React.useState(false);
 

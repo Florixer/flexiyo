@@ -4,7 +4,8 @@ import TodayPicks from "../components/home/TodayPicks";
 import Post from "../components/home/Post";
 import HomeNavbar from "../layout/items/HomeNavbar.js";
 export default function Home() {
-  document.title = "Flexiyo | Home"
+  document.title = "Flexiyo";
+
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {

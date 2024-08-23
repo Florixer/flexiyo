@@ -25,6 +25,7 @@ import UserContext, { UserProvider } from "./context/user/UserContext";
 import LoadingScreen from "./components/app/LoadingScreen";
 
 const App = () => {
+  document.title = "Flexiyo";
   const [appLoading, setAppLoading] = useState(true);
 
   useEffect(() => {

@@ -16,7 +16,7 @@ import WebSpeechRecognition, {
 import { useLocation } from "react-router-dom";
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
-  document.title = "Flexiyo | Music";
+  document.title = "Flexiyo Music";
 
   const {
     topTracks,

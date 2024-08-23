@@ -4,7 +4,7 @@ import Headroom from "react-headroom";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 
 const Notifications = () => {
-  document.title = "Flexiyo | Notifications";
+  document.title = "Notifications • Flexiyo";
 
   const [isMobile, setIsMobile] = React.useState(false);
 

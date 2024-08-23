@@ -6,9 +6,10 @@ import UserContext from "../context/user/UserContext";
 import defaultUserPfp from "../assets/media/img/default-avatar.png";
 
 export default function Profile() {
-  document.title = "Flexiyo | Profile";
-
   const { userInfo } = useContext(UserContext);
+
+  document.title = `@${userInfo.username} • Flexiyo`;
+
   const followBtnClick = (e) => {
     if (e.target.getAttribute("value") === "Follow") {
       e.target.classList.remove("user-card-btn--follow");
