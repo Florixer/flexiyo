@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState, useRef } from "react";
 import { Capacitor } from "@capacitor/core";
 import { Network as CapacitorNetwork } from "@capacitor/network";
-import logo from "../../assets/media/img/logo/flexomate_gradient.jpg";
 
 const MusicContext = createContext(null);
 

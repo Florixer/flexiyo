@@ -15,59 +15,63 @@ const useMusicUtility = () => {
 
   const saavnApiBaseUrl = "https://saavn.dev/api";
 
+  const getTrackData = async (trackId) => {
+    try {
+      const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
+      const resultData = data.data[0];
+      const trackData = {
+        id: resultData.id,
+        name: resultData.name,
+        album: resultData.album.name,
+        artists: resultData.artists.primary
+          .map((artist) => artist.name)
+          .join(", "),
+        image:
+          contentQuality === "low"
+            ? resultData.image[0].url
+            : contentQuality === "normal"
+            ? resultData.image[1].url
+            : contentQuality === "high"
+            ? resultData.image[2].url
+            : resultData.image[1].url,
+        link:
+          contentQuality === "low"
+            ? resultData.downloadUrl[1].url
+            : contentQuality === "normal"
+            ? resultData.downloadUrl[3].url
+            : contentQuality === "high"
+            ? resultData.downloadUrl[4].url
+            : resultData.downloadUrl[3].url,
+        hasLyrics: resultData.hasLyrics,
+      };
+      return trackData;
+    } catch (error) {
+      return null;
+    }
+  };
+
   const getTrack = async (trackId) => {
     setIsAudioLoading(true);
-    try {
-      const cachedTracks = JSON.parse(
-        localStorage.getItem("cachedTracks") || "{}",
-      );
+    const cachedTracks = JSON.parse(
+      localStorage.getItem("cachedTracks") || "{}",
+    );
 
-      if (cachedTracks[trackId]) {
-        const cachedTrackData = cachedTracks[trackId];
-        setCurrentTrack({
-          id: trackId,
-          name: cachedTrackData.name,
-          album: cachedTrackData.album,
-          artists: cachedTrackData.artists,
-          image: cachedTrackData.image,
-          link: cachedTrackData.link,
-          hasLyrics: cachedTrackData.hasLyrics,
-        });
-        setIsAudioLoading(false);
-      } else {
-        const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
-        const resultData = data.data[0];
-        const trackData = {
-          id: resultData.id,
-          name: resultData.name,
-          album: resultData.album.name,
-          artists: resultData.artists.primary
-            .map((artist) => artist.name)
-            .join(", "),
-          image:
-            contentQuality === "low"
-              ? resultData.image[0].url
-              : contentQuality === "normal"
-              ? resultData.image[1].url
-              : contentQuality === "high"
-              ? resultData.image[2].url
-              : resultData.image[1].url,
-          link:
-            contentQuality === "low"
-              ? resultData.downloadUrl[1].url
-              : contentQuality === "normal"
-              ? resultData.downloadUrl[3].url
-              : contentQuality === "high"
-              ? resultData.downloadUrl[4].url
-              : resultData.downloadUrl[3].url,
-          hasLyrics: resultData.hasLyrics,
-        };
-        setCurrentTrack(trackData);
-        cacheTrackData(trackData);
-        setIsAudioLoading(false);
-      }
-    } catch (error) {
-      console.error("Error fetching track:", error);
+    if (cachedTracks[trackId]) {
+      const cachedTrackData = cachedTracks[trackId];
+      setCurrentTrack({
+        id: trackId,
+        name: cachedTrackData.name,
+        album: cachedTrackData.album,
+        artists: cachedTrackData.artists,
+        image: cachedTrackData.image,
+        link: cachedTrackData.link,
+        hasLyrics: cachedTrackData.hasLyrics,
+      });
+      setIsAudioLoading(false);
+    } else {
+      const trackData = await getTrackData(trackId);
+      setCurrentTrack(trackData);
+      cacheTrackData(trackData);
       setIsAudioLoading(false);
     }
   };
@@ -202,6 +206,7 @@ const useMusicUtility = () => {
   }, [currentTrack, handleAudioPlay, handleAudioPause, handleNextAudioTrack]);
 
   return {
+    getTrackData,
     getTrack,
     getTrackLyrics,
     deleteCachedAudioData,

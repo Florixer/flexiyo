@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal";
 import Headroom from "react-headroom";
 import matchMedia from "matchmedia";
-import Sheet from "react-modal-sheet";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import TrackItem from "../components/music/TrackItem";
 import TrackDeck from "../components/music/TrackDeck";
@@ -13,20 +13,21 @@ import spotifyLogo from "../assets/media/img/logo/spotifyLogo.svg";
 import WebSpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import { useLocation } from "react-router-dom";
 Modal.setAppElement("#root"); // Set the root element for accessibility
 const Music = () => {
   document.title = "Flexiyo Music";
+  const location = useLocation();
 
   const {
+    audioRef,
     topTracks,
     setTopTracks,
     currentTrack,
+    setCurrentTrack,
     isTrackDeckModalOpen,
     setIsTrackDeckModalOpen,
   } = useContext(MusicContext);
-  const location = useLocation();
-  const { getTrack, deleteCachedAudioData, handleAudioPause, handleAudioPlay } =
+  const { getTrackData, getTrack, deleteCachedAudioData, handleAudioPause } =
     useMusicUtility();
   const [searchText, setSearchText] = useState();
   const [searchFieldActive, setSearchFieldActive] = useState(false);
@@ -54,6 +55,20 @@ const Music = () => {
       mediaQuery.removeListener(handleMediaQueryChange);
     };
   }, []);
+
+  useEffect(async () => {
+    const audio = audioRef.current;
+
+    const queryParams = new URLSearchParams(location.search);
+    const trackParam = queryParams.get("track");
+    if (trackParam) {
+      const trackData = await getTrackData(trackParam);
+
+      if (trackData) {
+        setCurrentTrack((({ link, ...rest }) => rest)(trackData));
+      }
+    }
+  }, [location]);
 
   const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
 

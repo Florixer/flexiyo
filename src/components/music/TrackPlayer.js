@@ -21,7 +21,7 @@ const MusicPlayer = () => {
     setAudioProgress,
     setIsTrackDeckModalOpen,
   } = useContext(MusicContext);
-  const { handleAudioPlay, handleAudioPause, handleNextAudioTrack } =
+  const { getTrack, handleAudioPlay, handleAudioPause, handleNextAudioTrack } =
     useMusicUtility();
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
@@ -217,42 +217,45 @@ const MusicPlayer = () => {
             ></div>
           </div>
         </div>
-        {currentTrack.link && (
-          <div className="track-player--controls">
-            <span className="track-player--controls-item">
-              {isAudioLoading && (
-                <div className="track-player--controls-preloader"></div>
-              )}
-              {isAudioPlaying && !isAudioLoading ? (
-                <svg
-                  role="img"
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  onClick={handleAudioPause}
-                >
-                  <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
-                </svg>
-              ) : (
-                <svg
-                  role="img"
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  onClick={handleAudioPlay}
-                >
-                  <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
-                </svg>
-              )}
-            </span>
-            <span
-              className="track-player--controls-item"
-              onClick={handleNextAudioTrack}
-            >
-              <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
+        <div className="track-player--controls">
+          <span className="track-player--controls-item">
+            {isAudioLoading && (
+              <div className="track-player--controls-preloader"></div>
+            )}
+            {isAudioPlaying && !isAudioLoading && currentTrack.link ? (
+              <svg
+                role="img"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                onClick={handleAudioPause}
+              >
+                <path d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
               </svg>
-            </span>
-          </div>
-        )}
+            ) : (
+              <svg
+                role="img"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                onClick={() => {
+                  handleAudioPlay();
+                  if (!currentTrack.link) {
+                    getTrack(currentTrack.id);
+                  }
+                }}
+              >
+                <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
+              </svg>
+            )}
+          </span>
+          <span
+            className="track-player--controls-item"
+            onClick={handleNextAudioTrack}
+          >
+            <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M17.7 3a.7.7 0 0 0-.7.7v6.805L5.05 3.606A.7.7 0 0 0 4 4.212v15.576a.7.7 0 0 0 1.05.606L17 13.495V20.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
+            </svg>
+          </span>
+        </div>
       </div>
     </div>
   ) : null;

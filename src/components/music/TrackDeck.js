@@ -4,6 +4,7 @@ import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 const TrackDeck = () => {
   const {
+    getTrack,
     getTrackLyrics,
     handleAudioPlay,
     handleAudioPause,
@@ -206,12 +207,12 @@ const TrackDeck = () => {
         <span
           className="track-deck--controls-item"
           style={{ width: "2rem", height: "2rem" }}
-          onClick={() => loopAudio ? setLoopAudio(false) : setLoopAudio(true)}
+          onClick={() => (loopAudio ? setLoopAudio(false) : setLoopAudio(true))}
         >
           <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
             <path
               fill="none"
-              stroke={loopAudio ? "#1ED760" : "#ffffff"} 
+              stroke={loopAudio ? "#1ED760" : "#ffffff"}
               strokeWidth="2"
               d="M3.5 13L3.29592 12.0476C2.62895 8.93509 5.00172 6 8.18494 6H19M19 6L16 9M19 6L16 3M20.5 11L20.7041 11.9524C21.3711 15.0649 18.9983 18 15.8151 18H5M5 18L8 15M5 18L8 21"
             />
@@ -241,7 +242,12 @@ const TrackDeck = () => {
               backgroundColor: "#ffffff",
               padding: isMobile ? "1.2rem" : ".8rem",
             }}
-            onClick={handleAudioPlay}
+            onClick={() => {
+              handleAudioPlay();
+              if (!currentTrack.link) {
+                getTrack(currentTrack.id);
+              }
+            }}
           >
             <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
               <path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path>
