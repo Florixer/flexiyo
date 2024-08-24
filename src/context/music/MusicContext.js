@@ -9,6 +9,7 @@ export const MusicProvider = ({ children }) => {
   const [currentTrack, setCurrentTrack] = useState({});
   const [contentQuality, setContentQuality] = useState("low");
   const [topTracks, setTopTracks] = useState({});
+  const [loopAudio, setLoopAudio] = useState(false);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
@@ -47,11 +48,13 @@ export const MusicProvider = ({ children }) => {
   return (
     <MusicContext.Provider
       value={{
+        audioRef,
         currentTrack,
         setCurrentTrack,
         topTracks,
         setTopTracks,
-        audioRef,
+        loopAudio,
+        setLoopAudio,
         isAudioLoading,
         setIsAudioLoading,
         isAudioPlaying,

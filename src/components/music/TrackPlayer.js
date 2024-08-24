@@ -39,7 +39,8 @@ const MusicPlayer = () => {
     };
 
     const handleEnded = () => {
-      handleNextAudioTrack();
+      handleNextAudioTrack("auto");
+      console.log("Ended");
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);

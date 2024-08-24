@@ -12,6 +12,8 @@ const TrackDeck = () => {
   const {
     currentTrack,
     audioRef,
+    loopAudio,
+    setLoopAudio,
     isAudioPlaying,
     isAudioLoading,
     audioProgress,
@@ -65,7 +67,8 @@ const TrackDeck = () => {
     };
 
     const handleEnded = () => {
-      handleNextAudioTrack();
+      handleNextAudioTrack("auto");
+      console.log("Ended");
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
@@ -200,9 +203,18 @@ const TrackDeck = () => {
         ></div>
       </div>
       <div className="track-deck--controls">
-        <span className="track-deck--controls-item">
-          <svg role="img" aria-hidden="true" fill="#353333" viewBox="0 0 16 16">
-            <path d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H1.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h1.6z"></path>
+        <span
+          className="track-deck--controls-item"
+          style={{ width: "2rem", height: "2rem" }}
+          onClick={() => loopAudio ? setLoopAudio(false) : setLoopAudio(true)}
+        >
+          <svg role="img" aria-hidden="true" viewBox="0 0 24 24">
+            <path
+              fill="none"
+              stroke={loopAudio ? "#1ED760" : "#ffffff"} 
+              strokeWidth="2"
+              d="M3.5 13L3.29592 12.0476C2.62895 8.93509 5.00172 6 8.18494 6H19M19 6L16 9M19 6L16 3M20.5 11L20.7041 11.9524C21.3711 15.0649 18.9983 18 15.8151 18H5M5 18L8 15M5 18L8 21"
+            />
           </svg>
         </span>
         {isAudioPlaying && !isAudioLoading && currentTrack.link ? (

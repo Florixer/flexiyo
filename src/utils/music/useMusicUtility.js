@@ -4,12 +4,12 @@ import MusicContext from "../../context/music/MusicContext";
 
 const useMusicUtility = () => {
   const {
+    audioRef,
     currentTrack,
     setCurrentTrack,
+    loopAudio,
     setIsAudioLoading,
     contentQuality,
-    audioRef,
-    isAudioPlaying,
     setIsAudioPlaying,
   } = useContext(MusicContext);
 
@@ -128,20 +128,34 @@ const useMusicUtility = () => {
     setIsAudioPlaying(false);
   }, []);
 
-  const handleNextAudioTrack = useCallback(async () => {
-    const audio = audioRef.current;
-    try {
-      const trackIdToFetch = await getSuggestedTrackId();
-      audio.pause();
-      setIsAudioPlaying(false);
-      setIsAudioLoading(true);
-      await getTrack(trackIdToFetch);
-    } catch (error) {
-      console.error("Error handling next track:", error);
-    } finally {
-      setIsAudioLoading(false);
-    }
-  }, [getTrack]);
+  const handleNextAudioTrack = useCallback(
+    async (callType) => {
+      const audio = audioRef.current;
+      try {
+        const trackIdToFetch = await getSuggestedTrackId();
+        if (loopAudio && callType === "auto") {
+          audio.currentTime = 0;
+          audio.play();
+          setIsAudioPlaying(true);
+          await getTrack(currentTrack.id);
+          return;
+        } else if ((!loopAudio && callType === "auto") || callType !== "auto") {
+          audio.currentTime = 0;
+          audio.pause();
+          setIsAudioPlaying(false);
+          setIsAudioLoading(true);
+          await getTrack(trackIdToFetch);
+        } else {
+          return null;
+        }
+      } catch (error) {
+        console.error("Error handling next track:", error);
+      } finally {
+        setIsAudioLoading(false);
+      }
+    },
+    [getTrack],
+  );
 
   const getSuggestedTrackId = async () => {
     const { data } = await axios.get(
