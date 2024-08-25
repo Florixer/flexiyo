@@ -1,4 +1,5 @@
 import { useContext, useEffect, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import MusicContext from "../../context/music/MusicContext";
 
@@ -12,6 +13,9 @@ const useMusicUtility = () => {
     contentQuality,
     setIsAudioPlaying,
   } = useContext(MusicContext);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const saavnApiBaseUrl = "https://saavn.dev/api";
 
@@ -55,6 +59,11 @@ const useMusicUtility = () => {
     const cachedTracks = JSON.parse(
       localStorage.getItem("cachedTracks") || "{}",
     );
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("track", trackId);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState(null, '', newUrl);
 
     if (cachedTracks[trackId]) {
       const cachedTrackData = cachedTracks[trackId];

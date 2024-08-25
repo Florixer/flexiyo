@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
+import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
 import Modal from "react-modal";
 import Headroom from "react-headroom";
@@ -13,13 +14,12 @@ import spotifyLogo from "../assets/media/img/logo/spotifyLogo.svg";
 import WebSpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-Modal.setAppElement("#root"); // Set the root element for accessibility
+Modal.setAppElement("#root");
 const Music = () => {
   document.title = "Flexiyo Music";
   const location = useLocation();
 
   const {
-    audioRef,
     topTracks,
     setTopTracks,
     currentTrack,
@@ -40,6 +40,7 @@ const Music = () => {
   const [isDownlodModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isSpeechModalOpen, setIsSpeechModalOpen] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [isShareMenuOpen, setIsShareMenuOpen] = useState(null);
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
@@ -56,19 +57,27 @@ const Music = () => {
     };
   }, []);
 
-  useEffect(async () => {
-    const audio = audioRef.current;
+  useEffect(() => {
+    const fetchTrackData = async () => {
+      const queryParams = new URLSearchParams(location.search);
+      const trackParam = queryParams.get("track");
 
-    const queryParams = new URLSearchParams(location.search);
-    const trackParam = queryParams.get("track");
-    if (trackParam) {
-      const trackData = await getTrackData(trackParam);
+      if (trackParam) {
+        try {
+          const trackData = await getTrackData(trackParam);
 
-      if (trackData) {
-        setCurrentTrack((({ link, ...rest }) => rest)(trackData));
+          if (trackData) {
+            const { link, ...rest } = trackData;
+            setCurrentTrack(rest);
+          }
+        } catch (error) {
+          console.error("Error fetching track data:", error);
+        }
       }
-    }
-  }, [location]);
+    };
+
+    fetchTrackData();
+  }, []);
 
   const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
 
@@ -668,7 +677,20 @@ const Music = () => {
               className="fal fa-times"
               onClick={() => setIsTrackDeckModalOpen(false)}
             />
-            <i className="fal fa-gear" />
+            <i
+              className="fal fa-share-alt"
+              onClick={(event) => setIsShareMenuOpen(event.currentTarget)}
+            />
+            <Menu
+              className="track-deck--modal-menu"
+              anchorEl={isShareMenuOpen}
+              open={isShareMenuOpen}
+              onClose={() => setIsShareMenuOpen(null)}
+            >
+              <MenuItem onClick={() => {setIsShareMenuOpen(null); navigator.clipboard.writeText(`https://flexiyo.web.app/music?track=${currentTrack.id}`);}}>
+                Copy Link
+              </MenuItem>
+            </Menu>
           </div>
           <TrackDeck />
         </Modal>

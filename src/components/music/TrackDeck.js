@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState, useCallback, useRef } from "react";
+import matchMedia from "matchmedia";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import MusicContext from "../../context/music/MusicContext";
 import useMusicUtility from "../../utils/music/useMusicUtility";
@@ -69,7 +70,6 @@ const TrackDeck = () => {
 
     const handleEnded = () => {
       handleNextAudioTrack("auto");
-      console.log("Ended");
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
