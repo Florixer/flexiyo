@@ -59,12 +59,12 @@ const Chat = () => {
   }, [socket]);
 
   const scrollToBottom = () => {
-    const scrollableDiv = document.getElementById("chat-messages");
-    if (scrollableDiv) {
-      requestAnimationFrame(() => {
+    setTimeout(() => {
+      const scrollableDiv = document.getElementById("chat-messages");
+      if (scrollableDiv) {
         scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
-      });
-    }
+      }
+    }, 0);
   };  
 
   const handleSendMessage = (event) => {
