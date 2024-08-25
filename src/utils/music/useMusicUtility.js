@@ -190,7 +190,7 @@ const useMusicUtility = () => {
           album: currentTrack.album,
           artwork: [
             {
-              src: currentTrack.image,
+              src: currentTrack.image.replace(/(50x50|150x150)/, "500x500"),
               sizes: "500x500",
               type: "image/jpg",
             },

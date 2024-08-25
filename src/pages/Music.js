@@ -17,9 +17,6 @@ import WebSpeechRecognition, {
 } from "react-speech-recognition";
 Modal.setAppElement("#root");
 const Music = () => {
-  document.title = "Flexiyo Music";
-  const location = useLocation();
-
   const {
     topTracks,
     setTopTracks,
@@ -28,6 +25,10 @@ const Music = () => {
     isTrackDeckModalOpen,
     setIsTrackDeckModalOpen,
   } = useContext(MusicContext);
+
+  document.title = `${currentTrack.name} - Flexiyo Music`;
+  const location = useLocation();
+
   const { getTrackData, getTrack, deleteCachedAudioData, handleAudioPause } =
     useMusicUtility();
   const [searchText, setSearchText] = useState();
@@ -360,38 +361,46 @@ const Music = () => {
 
   return (
     <section id="music">
-      {currentTrack.id && <Helmet>
-        <meta
-          name="description"
-          content={`Listen to ${currentTrack.name} by ${currentTrack.artists
-            .split(",")[0]
-            .trim()} on Flexiyo Music.`}
-        />
-        <meta property="og:title" content={currentTrack.name} />
-        <meta
-          property="og:description"
-          content={`Listen to ${currentTrack.name} by ${currentTrack.artists
-            .split(",")[0]
-            .trim()} on Flexiyo Music.`}
-        />
-        <meta
-          property="og:image"
-          content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
-        />
-        <meta property="og:url" content={window.location.href} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={currentTrack.name} />
-        <meta
-          name="twitter:description"
-          content={`Listen to ${currentTrack.name} by ${currentTrack.artists
-            .split(",")[0]
-            .trim()} on Flexiyo Music.`}
-        />
-        <meta
-          name="twitter:image"
-          content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
-        />
-      </Helmet> }
+      {currentTrack.id && (
+        <Helmet>
+          <meta
+            name="description"
+            content={`Listen to ${currentTrack.name} by ${currentTrack.artists
+              .split(",")[0]
+              .trim()} on Flexiyo Music.`}
+          />
+          <meta
+            property="og:title"
+            content={`${currentTrack.name} - Flexiyo Music`}
+          />
+          <meta
+            property="og:description"
+            content={`Listen to ${currentTrack.name} by ${currentTrack.artists
+              .split(",")[0]
+              .trim()} on Flexiyo Music.`}
+          />
+          <meta
+            property="og:image"
+            content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
+          />
+          <meta property="og:url" content={window.location.href} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta
+            name="twitter:title"
+            content={`${currentTrack.name} - Flexiyo Music`}
+          />
+          <meta
+            name="twitter:description"
+            content={`Listen to ${currentTrack.name} by ${currentTrack.artists
+              .split(",")[0]
+              .trim()} on Flexiyo Music.`}
+          />
+          <meta
+            name="twitter:image"
+            content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
+          />
+        </Helmet>
+      )}
       <div className="music-container">
         {isMobile ? (
           <Headroom>
