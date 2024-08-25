@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
@@ -26,7 +25,9 @@ const Music = () => {
     setIsTrackDeckModalOpen,
   } = useContext(MusicContext);
 
-  document.title = `${currentTrack.name} - Flexiyo Music`;
+  document.title = currentTrack.id
+    ? `${currentTrack.name} - Flexiyo Music`
+    : "Flexiyo Music";
   const location = useLocation();
 
   const { getTrackData, getTrack, deleteCachedAudioData, handleAudioPause } =
@@ -361,50 +362,6 @@ const Music = () => {
 
   return (
     <section id="music">
-      {currentTrack.id && (
-        <Helmet>
-          <meta
-            name="description"
-            content={`Listen to ${currentTrack.name} by ${currentTrack.artists
-              .split(",")[0]
-              .trim()} on Flexiyo Music.`}
-          />
-          <meta
-            property="og:title"
-            content={`${currentTrack.name} - Flexiyo Music`}
-          />
-          <meta
-            property="og:description"
-            content={`Listen to ${currentTrack.name} by ${currentTrack.artists
-              .split(",")[0]
-              .trim()} on Flexiyo Music.`}
-          />
-          <meta
-            property="keywords"
-            content={`${currentTrack.name}, ${currentTrack.artists}, Flexiyo Music, Music, Song, Track, Download, Listen,`}
-          />
-          <meta
-            property="og:image"
-            content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
-          />
-          <meta property="og:url" content={window.location.href} />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta
-            name="twitter:title"
-            content={`${currentTrack.name} - Flexiyo Music`}
-          />
-          <meta
-            name="twitter:description"
-            content={`Listen to ${currentTrack.name} by ${currentTrack.artists
-              .split(",")[0]
-              .trim()} on Flexiyo Music.`}
-          />
-          <meta
-            name="twitter:image"
-            content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
-          />
-        </Helmet>
-      )}
       <div className="music-container">
         {isMobile ? (
           <Headroom>
