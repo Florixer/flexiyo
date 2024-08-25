@@ -23,9 +23,9 @@ import { MusicProvider } from "./context/music/MusicContext";
 import { CreateProvider } from "./context/create/CreateContext";
 import UserContext, { UserProvider } from "./context/user/UserContext";
 import LoadingScreen from "./components/app/LoadingScreen";
+import { Helmet } from "react-helmet";
 
 const App = () => {
-  document.title = "Flexiyo";
   const [appLoading, setAppLoading] = useState(true);
 
   useEffect(() => {
@@ -71,6 +71,44 @@ const App = () => {
               <BrowserRouter>
                 <MusicProvider>
                   <CreateProvider>
+                    <Helmet>
+                      <meta
+                        name="description"
+                        content="Create an account or log in to Flexiyo - Share what you love with the people who get you."
+                      />
+                      <meta
+                        name="keywords"
+                        content="Flexiyo, Social Media Platform, Online Learning, Short Videos, Music Sharing, Explore, Community, Skills Showcase, Talent, Create, Upload, Share, Kaushal Krishna, Chat, Find Friends, Post Creation, Video Enjoyment"
+                      />
+                      <meta
+                        property="og:title"
+                        content="Flexiyo - Flex in Your Onset"
+                      />
+                      <meta
+                        property="og:description"
+                        content="Create an account or log in to Flexiyo - Share what you love with the people who get you."
+                      />
+                      <meta
+                        property="og:image"
+                        content="https://flexiyo.web.app/assets/img/home-preview.png"
+                      />
+
+                      <meta name="twitter:card" content="summary_large_image" />
+                      <meta name="twitter:creator" content="@flexiyo" />
+                      <meta name="twitter:site" content="@flexiyo" />
+                      <meta
+                        name="twitter:title"
+                        content="Flexiyo - Flex in Your Onset"
+                      />
+                      <meta
+                        name="twitter:description"
+                        content="Create an account or log in to Flexiyo - Share what you love with the people who get you."
+                      />
+                      <meta
+                        name="twitter:image"
+                        content="https://flexiyo.web.app/assets/img/home-preview.png"
+                      />
+                    </Helmet>
                     <Navbar />
                     <DirectChatNotification />
                     <TrackPlayer />
