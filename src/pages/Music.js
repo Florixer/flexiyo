@@ -380,6 +380,10 @@ const Music = () => {
               .trim()} on Flexiyo Music.`}
           />
           <meta
+            property="keywords"
+            content={`${currentTrack.name}, ${currentTrack.artists}, Flexiyo Music, Music, Song, Track, Download, Listen,`}
+          />
+          <meta
             property="og:image"
             content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
           />
