@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
@@ -359,6 +360,38 @@ const Music = () => {
 
   return (
     <section id="music">
+      {currentTrack.id && <Helmet>
+        <meta
+          name="description"
+          content={`Listen to ${currentTrack.name} by ${currentTrack.artists
+            .split(",")[0]
+            .trim()} on Flexiyo Music.`}
+        />
+        <meta property="og:title" content={currentTrack.name} />
+        <meta
+          property="og:description"
+          content={`Listen to ${currentTrack.name} by ${currentTrack.artists
+            .split(",")[0]
+            .trim()} on Flexiyo Music.`}
+        />
+        <meta
+          property="og:image"
+          content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
+        />
+        <meta property="og:url" content={window.location.href} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={currentTrack.name} />
+        <meta
+          name="twitter:description"
+          content={`Listen to ${currentTrack.name} by ${currentTrack.artists
+            .split(",")[0]
+            .trim()} on Flexiyo Music.`}
+        />
+        <meta
+          name="twitter:image"
+          content={currentTrack.image.replace(/(50x50|150x150)/, "500x500")}
+        />
+      </Helmet> }
       <div className="music-container">
         {isMobile ? (
           <Headroom>
@@ -688,7 +721,14 @@ const Music = () => {
               open={isShareMenuOpen}
               onClose={() => setIsShareMenuOpen(null)}
             >
-              <MenuItem onClick={() => {setIsShareMenuOpen(null); navigator.clipboard.writeText(`https://flexiyo.web.app/music?track=${currentTrack.id}`);}}>
+              <MenuItem
+                onClick={() => {
+                  setIsShareMenuOpen(null);
+                  navigator.clipboard.writeText(
+                    `https://flexiyo.web.app/music?track=${currentTrack.id}`,
+                  );
+                }}
+              >
                 Copy Link
               </MenuItem>
             </Menu>
