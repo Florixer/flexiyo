@@ -69,6 +69,7 @@ const Music = () => {
           if (trackData) {
             const { link, ...rest } = trackData;
             setCurrentTrack(rest);
+            setIsTrackDeckModalOpen(true);
           }
         } catch (error) {
           console.error("Error fetching track data:", error);
