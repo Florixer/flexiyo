@@ -149,8 +149,6 @@ const TrackPlayer = () => {
         } else {
           handleAudioPause();
         }
-      } else if (event.ctrlKey && event.code === "ArrowRight") {
-        handleNextAudioTrack();
       } else if (event.code === "ArrowLeft") {
         setAudioProgress(audioProgress - 5);
         audio.currentTime = audio.currentTime - 5;
