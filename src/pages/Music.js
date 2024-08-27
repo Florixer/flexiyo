@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
@@ -32,6 +32,7 @@ const Music = () => {
 
   const { getTrackData, getTrack, deleteCachedAudioData, handleAudioPause } =
     useMusicUtility();
+  const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
   const [searchText, setSearchText] = useState();
   const [searchFieldActive, setSearchFieldActive] = useState(false);
   const [printError, setPrintError] = useState("");
@@ -60,6 +61,87 @@ const Music = () => {
     };
   }, []);
 
+  const searchTracks = useCallback(
+    async (searchTerm) => {
+      try {
+        setApiLoading(true);
+        const { data: response } = await axios.get(
+          `${saavnApiBaseUrl}/search/songs`,
+          {
+            params: {
+              query: searchTerm,
+              page: 1,
+              limit: 30,
+            },
+          },
+        );
+        setTracks(response.data.results);
+        setApiError(false);
+        setApiLoading(false);
+      } catch (error) {
+        setApiError(true);
+        setPrintError(`${error.code} : ${error.message}`);
+        setApiLoading(false);
+      }
+    },
+    [saavnApiBaseUrl],
+  );
+
+  const searchSpeechTracks = async (searchTerm) => {
+    try {
+      setApiLoading(true);
+      const { data: response } = await axios.get(
+        `${saavnApiBaseUrl}/search/songs`,
+        {
+          params: {
+            query: searchTerm,
+            page: 1,
+            limit: 30,
+          },
+        },
+      );
+      setTracks(response.data.results);
+      getTrack(response.data.results[0].id);
+      setApiError(false);
+      setApiLoading(false);
+    } catch (error) {
+      setApiError(true);
+      setPrintError(`${error.code} : ${error.message}`);
+      setApiLoading(false);
+    }
+  };
+
+  const downloadTrack = async (trackId) => {
+    try {
+      // Fetch the MP3 file as a blob with progress tracking
+      const response = await axios.get(modalDownloadData.fileUrl, {
+        responseType: "blob",
+        onDownloadProgress: (progressEvent) => {
+          const total = progressEvent.total || 1;
+          const current = progressEvent.loaded;
+          const percentCompleted = Math.floor((current / total) * 100);
+          setDownloadProgress(percentCompleted);
+        },
+      });
+
+      const blob = new Blob([response.data], { type: "audio/mp4" });
+
+      // Create a link element and trigger a download
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = modalDownloadData.fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Call the callback function to indicate download completion
+      closeDownloadModal();
+      setDownloadProgress(0);
+    } catch (error) {
+      console.error(`Error downloading track: ${error.message}`);
+    }
+  };
+
   useEffect(() => {
     const fetchTrackData = async () => {
       const queryParams = new URLSearchParams(location.search);
@@ -81,11 +163,9 @@ const Music = () => {
     };
 
     fetchTrackData();
-  }, []);
+  }, [location.search, setCurrentTrack]);
 
-  const saavnApiBaseUrl = process.env.REACT_APP_SAAVNAPI_BASEURL;
-
-  const getTopTracks = async () => {
+  const getTopTracks = useCallback(async () => {
     setApiLoading(true);
     try {
       const { data: response } = await axios.get(
@@ -98,7 +178,7 @@ const Music = () => {
       console.error("Error fetching top tracks:", error);
       setApiLoading(false);
     }
-  };
+  }, [saavnApiBaseUrl, setTopTracks]);
 
   const getQueryParams = (query) => {
     return new URLSearchParams(query);
@@ -112,11 +192,11 @@ const Music = () => {
 
   useEffect(() => {
     if (searchText) {
-      handleSearchSubmit(searchText);
+      searchTracks(searchText);
     } else {
       getTopTracks();
     }
-  }, [searchText]);
+  }, [searchText, getTopTracks, searchTracks]);
   const openDownloadModal = async (trackId) => {
     try {
       setIsDownloadLoading(true);
@@ -152,10 +232,10 @@ const Music = () => {
   };
 
   // Function to close speech modal and resume audio
-  const closeSpeechModal = () => {
+  const closeSpeechModal = useCallback(() => {
     setIsSpeechModalOpen(false);
     stopSpeechRecognition();
-  };
+  }, []);
 
   const startSpeechRecognition = () => {
     WebSpeechRecognition.startListening();
@@ -216,7 +296,7 @@ const Music = () => {
       searchTts.play();
       closeSpeechModal();
     }
-  }, [speechListening, speechTranscript]);
+  }, [speechListening, speechTranscript, closeSpeechModal, searchTracks]);
 
   const playOnSpeechCommand = (speechSearchTerm) => {
     if (speechSearchTerm) {
@@ -265,87 +345,6 @@ const Music = () => {
 
   const handleSearchChange = (event) => {
     setSearchText(event.target.value);
-  };
-
-  const handleSearchSubmit = (searchTerm) => {
-    searchTracks(searchTerm);
-  };
-
-  const searchTracks = async (searchTerm) => {
-    try {
-      setApiLoading(true);
-      const { data: response } = await axios.get(
-        `${saavnApiBaseUrl}/search/songs`,
-        {
-          params: {
-            query: searchTerm,
-            page: 1,
-            limit: 30,
-          },
-        },
-      );
-      setTracks(response.data.results);
-      setApiError(false);
-      setApiLoading(false);
-    } catch (error) {
-      setApiError(true);
-      setPrintError(`${error.code} : ${error.message}`);
-      setApiLoading(false);
-    }
-  };
-  const searchSpeechTracks = async (searchTerm) => {
-    try {
-      setApiLoading(true);
-      const { data: response } = await axios.get(
-        `${saavnApiBaseUrl}/search/songs`,
-        {
-          params: {
-            query: searchTerm,
-            page: 1,
-            limit: 30,
-          },
-        },
-      );
-      setTracks(response.data.results);
-      getTrack(response.data.results[0].id);
-      setApiError(false);
-      setApiLoading(false);
-    } catch (error) {
-      setApiError(true);
-      setPrintError(`${error.code} : ${error.message}`);
-      setApiLoading(false);
-    }
-  };
-
-  const downloadTrack = async (trackId) => {
-    try {
-      // Fetch the MP3 file as a blob with progress tracking
-      const response = await axios.get(modalDownloadData.fileUrl, {
-        responseType: "blob",
-        onDownloadProgress: (progressEvent) => {
-          const total = progressEvent.total || 1;
-          const current = progressEvent.loaded;
-          const percentCompleted = Math.floor((current / total) * 100);
-          setDownloadProgress(percentCompleted);
-        },
-      });
-
-      const blob = new Blob([response.data], { type: "audio/mp4" });
-
-      // Create a link element and trigger a download
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = modalDownloadData.fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Call the callback function to indicate download completion
-      closeDownloadModal();
-      setDownloadProgress(0);
-    } catch (error) {
-      console.error(`Error downloading track: ${error.message}`);
-    }
   };
 
   const renderTracks = () => {

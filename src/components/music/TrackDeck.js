@@ -68,18 +68,12 @@ const TrackDeck = () => {
       }
     };
 
-    const handleEnded = () => {
-      handleNextAudioTrack("auto");
-    };
-
     audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("ended", handleEnded);
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("ended", handleEnded);
     };
-  }, [handleNextAudioTrack, isDragging]);
+  }, [isDragging]);
 
   const handleProgressBarClick = (e) => {
     const audio = audioRef.current;

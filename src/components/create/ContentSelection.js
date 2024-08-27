@@ -153,6 +153,13 @@ const VideosGrid = ({ mediaVideos }) => {
   const { setSelectedFilePath, setSelectedFileThumbnail } =
     useContext(CreateContext);
 
+  const [videoThumbnails, setVideoThumbnails] = useState(
+    mediaVideos.map((video) => ({
+      filePath: video.uri,
+      isSelected: false,
+    })),
+  );
+
   useEffect(() => {
     const generateThumbnails = async () => {
       const updatedThumbnails = await Promise.all(
@@ -171,8 +178,10 @@ const VideosGrid = ({ mediaVideos }) => {
       setVideoThumbnails(updatedThumbnails);
     };
 
-    generateThumbnails();
-  }, []);
+    if (videoThumbnails.length > 0) {
+      generateThumbnails();
+    }
+  }, [videoThumbnails]);
 
   const generateVideoThumbnail = async (videoSrc) => {
     try {
@@ -187,17 +196,10 @@ const VideosGrid = ({ mediaVideos }) => {
     }
   };
 
-  const [videoThumbnails, setVideoThumbnails] = useState(
-    mediaVideos.map((video) => ({
-      filePath: video.uri,
-      isSelected: false,
-    })),
-  );
-
   useEffect(() => {
     setSelectedFilePath(videoThumbnails[0].filePath);
     videoThumbnails[0].isSelected = true;
-  }, [setSelectedFilePath]);
+  }, [setSelectedFilePath, videoThumbnails]);
 
   const handleVideoThumbSelect = (index) => {
     const nextVideoThumbs = videoThumbnails.map((videoThumb, i) => ({
@@ -222,52 +224,52 @@ const VideosGrid = ({ mediaVideos }) => {
     </>
   );
 };
-const AudiosGrid = ({ mediaAudios }) => {
-  const {
-    selectedFileType,
-    selectedFilePath,
-    setSelectedFilePath,
-    setSelectedFileThumbnail,
-  } = useContext(CreateContext);
+// const AudiosGrid = ({ mediaAudios }) => {
+//   const {
+//     selectedFileType,
+//     selectedFilePath,
+//     setSelectedFilePath,
+//     setSelectedFileThumbnail,
+//   } = useContext(CreateContext);
 
-  useEffect(() => {
-    const extractAudioThumbnails = () => {};
-    extractAudioThumbnails();
-  }, []);
+//   useEffect(() => {
+//     const extractAudioThumbnails = () => {};
+//     extractAudioThumbnails();
+//   }, []);
 
-  const [audioThumbnails, setAudioThumbnails] = useState(
-    mediaAudios.map((audio) => ({
-      filePath: audio.uri,
-      isSelected: false,
-    })),
-  );
+//   const [audioThumbnails, setAudioThumbnails] = useState(
+//     mediaAudios.map((audio) => ({
+//       filePath: audio.uri,
+//       isSelected: false,
+//     })),
+//   );
 
-  useEffect(() => {
-    setSelectedFilePath(audioThumbnails[0].filePath);
-  }, [setSelectedFilePath, audioThumbnails]);
+//   useEffect(() => {
+//     setSelectedFilePath(audioThumbnails[0].filePath);
+//   }, [setSelectedFilePath, audioThumbnails]);
 
-  const handleAudioThumbSelect = (index) => {
-    const nextAudioThumbs = audioThumbnails.map((audioThumb, i) => ({
-      ...audioThumb,
-      isSelected: i === index,
-    }));
-    setAudioThumbnails(nextAudioThumbs);
-    setSelectedFilePath(audioThumbnails[index].filePath);
-    setSelectedFileThumbnail(audioThumbnails[index].src);
-  };
-  return (
-    <div>
-      {audioThumbnails.length !== 0 ? (
-        <Gallery
-          images={audioThumbnails}
-          rowHeight={140}
-          onClick={(index) => handleAudioThumbSelect(index)}
-        />
-      ) : (
-        <div>No files here, upload one</div>
-      )}
-    </div>
-  );
-};
+//   const handleAudioThumbSelect = (index) => {
+//     const nextAudioThumbs = audioThumbnails.map((audioThumb, i) => ({
+//       ...audioThumb,
+//       isSelected: i === index,
+//     }));
+//     setAudioThumbnails(nextAudioThumbs);
+//     setSelectedFilePath(audioThumbnails[index].filePath);
+//     setSelectedFileThumbnail(audioThumbnails[index].src);
+//   };
+//   return (
+//     <div>
+//       {audioThumbnails.length !== 0 ? (
+//         <Gallery
+//           images={audioThumbnails}
+//           rowHeight={140}
+//           onClick={(index) => handleAudioThumbSelect(index)}
+//         />
+//       ) : (
+//         <div>No files here, upload one</div>
+//       )}
+//     </div>
+//   );
+// };
 
 export default ContentSelection;

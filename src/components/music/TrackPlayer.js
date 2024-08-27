@@ -5,11 +5,12 @@ import React, {
   useCallback,
   useContext,
 } from "react";
+import { useLocation } from "react-router-dom";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import MusicContext from "../../context/music/MusicContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
-const MusicPlayer = () => {
+const TrackPlayer = () => {
   const {
     currentTrack,
     audioRef,
@@ -23,8 +24,22 @@ const MusicPlayer = () => {
   } = useContext(MusicContext);
   const { getTrack, handleAudioPlay, handleAudioPause, handleNextAudioTrack } =
     useMusicUtility();
+  const location = useLocation();
+  const [isMusicRoute, setIsMusicRoute] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
+
+  useEffect(() => {
+    // if (!currentTrack.id) {
+    //   return;
+    // }
+
+    if (location.pathname === "/music") {
+      setIsMusicRoute(true);
+    } else {
+      setIsMusicRoute(false);
+    }
+  }, [currentTrack.id, location.pathname, setIsMusicRoute]);
 
   const progressBarRef = useRef(null);
 
@@ -49,7 +64,7 @@ const MusicPlayer = () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [handleNextAudioTrack, isDragging]);
+  }, [audioRef, setAudioProgress, handleNextAudioTrack, isDragging]);
 
   const handleProgressBarClick = (e) => {
     const audio = audioRef.current;
@@ -62,6 +77,7 @@ const MusicPlayer = () => {
   const handleTouchStart = (e) => {
     setIsDragging(true);
     setTouchStartPosition(e.touches[0].clientX);
+    return touchStartPosition;
   };
 
   const handleTouchMove = useCallback(
@@ -88,7 +104,7 @@ const MusicPlayer = () => {
         }
       }
     },
-    [isDragging],
+    [audioRef, setAudioProgress, isDragging],
   );
 
   const handleTouchEnd = useCallback(() => {
@@ -99,7 +115,7 @@ const MusicPlayer = () => {
         audio.play();
       }
     }
-  }, [isDragging, isAudioPlaying]);
+  }, [audioRef, isDragging, isAudioPlaying]);
 
   useEffect(() => {
     const handleGlobalTouchMove = (e) => {
@@ -126,18 +142,21 @@ const MusicPlayer = () => {
       if (event.code === "ArrowRight") {
         setAudioProgress(audioProgress + 5);
         audio.currentTime = audio.currentTime + 5;
-      } else if (event.ctrlKey && event.code === "Space") {
+      } else if (event.code === "Space") {
+        event.preventDefault();
         if (audio.paused) {
           handleAudioPlay();
         } else {
           handleAudioPause();
         }
+      } else if (event.ctrlKey && event.code === "ArrowRight") {
+        handleNextAudioTrack();
       } else if (event.code === "ArrowLeft") {
         setAudioProgress(audioProgress - 5);
         audio.currentTime = audio.currentTime - 5;
       }
     });
-  }, []);
+  }, [handleAudioPlay, handleAudioPause]);
 
   useEffect(() => {
     const playAudio = async () => {
@@ -155,7 +174,7 @@ const MusicPlayer = () => {
       }
     };
     playAudio();
-  }, [currentTrack.link]);
+  }, [audioRef, setIsAudioLoading, setIsAudioPlaying, currentTrack.link]);
 
   return currentTrack.id ? (
     <div className="track-player">
@@ -166,14 +185,17 @@ const MusicPlayer = () => {
         >
           <LazyLoadImage src={currentTrack.image} alt="player-image" />
         </div>
-        <div
-          className="track-player--details"
-          onClick={() => setIsTrackDeckModalOpen(true)}
-        >
-          <span className="track-player--details-name">
+        <div className="track-player--details">
+          <span
+            className="track-player--details-name"
+            onClick={() => setIsTrackDeckModalOpen(true)}
+          >
             {currentTrack.name}
           </span>
-          <span className="track-player--details-artists">
+          <span
+            className="track-player--details-artists"
+            onClick={() => setIsTrackDeckModalOpen(true)}
+          >
             {currentTrack.artists}
           </span>
           <div
@@ -260,4 +282,4 @@ const MusicPlayer = () => {
   ) : null;
 };
 
-export default MusicPlayer;
+export default TrackPlayer;
