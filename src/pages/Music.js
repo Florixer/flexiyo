@@ -207,7 +207,7 @@ const Music = () => {
       // Show a confirmation dialog
       const artistsArray = resultData.artists.primary;
       setModalDownloadData({
-        fileUrl: resultData.downloadUrl[4].url,
+        fileUrl: resultData.downloadUrl[3].url,
         fileName: `${resultData.name} - ${artistsArray[0].name}.mp3`,
       });
       setIsDownloadModalOpen(true);
