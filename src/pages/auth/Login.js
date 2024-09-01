@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Container, Typography, TextField, Button } from "@mui/material";
+import { Alert, Container, Typography, TextField, Button } from "@mui/material";
 import TypewriterComponent from "typewriter-effect";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -15,6 +15,8 @@ const Login = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [alertText, setAlertText] = useState("");
   const [isForgotPasswordClicked, setIsForgotPasswordClicked] = useState(false);
+  const [isLoginUserAccountReqLoading, setIsLoginUserAccountReqLoading] =
+    useState(false);
 
   const LoginSchema = Yup.object().shape({
     emailOrUsername: Yup.string().required("Email or Username is required"),
@@ -54,6 +56,7 @@ const Login = () => {
   }, [isUserAuthenticated, navigate]);
 
   const handleLoginUser = async (values) => {
+    setIsLoginUserAccountReqLoading(true);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_FMAPI_BASEURL}/users/login_account`,
@@ -63,9 +66,11 @@ const Login = () => {
         },
       );
       setIsUserAuthenticated(true);
+      setIsLoginUserAccountReqLoading(false);
       setUserInfo(response.data.user);
     } catch (error) {
-      alert(error.message);
+      setAlertText(error.response?.data?.message || "Internal Server Error");
+      setIsLoginUserAccountReqLoading(false);
       setIsUserAuthenticated(false);
     }
   };
@@ -154,6 +159,21 @@ const Login = () => {
           </Typography>
           <br />
           <br />
+          {alertText && (
+            <Alert
+              color="error"
+              severity="error"
+              sx={{
+                borderRadius: ".7rem",
+                borderLeft: `2px solid red`,
+                mb: 3,
+                ml: 3,
+                mr: 3,
+              }}
+            >
+              {alertText}
+            </Alert>
+          )}
           <form onSubmit={formik.handleSubmit}>
             <TextField
               margin="normal"
@@ -213,8 +233,9 @@ const Login = () => {
                 variant="contained"
                 style={{ borderRadius: "2rem", padding: ".5rem 1.5rem" }}
                 onClick={formik.handleSubmit}
+                disabled={isLoginUserAccountReqLoading}
               >
-                Login
+                {isLoginUserAccountReqLoading ? "Loading..." : "Login"}
               </Button>
             </Container>
           </form>

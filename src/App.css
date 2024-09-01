@@ -2709,14 +2709,29 @@ b {
   align-items: center;
   text-align: center;
   flex-direction: column;
+    height: 90%;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .auth-main--forms form {
+  padding: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
 }
+
+@keyframes decreaseWidth {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+    display: none;
+  }
+}
+
 
 @media screen and (max-width: 950px) {
   .chat-area {
