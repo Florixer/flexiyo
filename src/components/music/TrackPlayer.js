@@ -142,7 +142,7 @@ const TrackPlayer = () => {
       if (event.code === "ArrowRight") {
         setAudioProgress(audioProgress + 5);
         audio.currentTime = audio.currentTime + 5;
-      } else if (event.code === "Space") {
+      } else if (Ctrlkey && event.code === "Space") {
         event.preventDefault();
         if (audio.paused) {
           handleAudioPlay();
