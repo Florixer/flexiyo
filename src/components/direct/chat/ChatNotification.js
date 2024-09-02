@@ -20,7 +20,6 @@ const ChatNotification = () => {
       setTimeout(() => {
         setNotification(null);
       }, 2500);
-      console.log("Notification:", notification);
     };
 
     socket.on("receive-message", handleReceiveMessage);
