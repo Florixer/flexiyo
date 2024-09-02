@@ -22,6 +22,7 @@ import Notifications from "./pages/Notifications";
 import { MusicProvider } from "./context/music/MusicContext";
 import { CreateProvider } from "./context/create/CreateContext";
 import UserContext, { UserProvider } from "./context/user/UserContext";
+import { SocketProvider } from "./context/SocketProvider.js";
 import LoadingScreen from "./components/app/LoadingScreen";
 
 const App = () => {
@@ -68,97 +69,99 @@ const App = () => {
               return <LoadingScreen />;
             }
             return (
-              <BrowserRouter>
-                <MusicProvider>
-                  <CreateProvider>
-                    <Navbar />
-                    <DirectChatNotification />
-                    <TrackPlayer />
-                    <Routes>
-                      <Route path="*" element={<NotFound404 />} />
-                      <Route
-                        exact
-                        path="/auth/signup"
-                        element={<AuthSignup />}
-                      />
-                      <Route
-                        index
-                        exact
-                        path="/"
-                        element={
-                          <ProtectedRoute>
-                            <Home />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route exact path="/search" element={<Search />} />
-                      <Route exact path="/music" element={<Music />} />
-                      <Route
-                        exact
-                        path="/stories"
-                        element={
-                          <ProtectedRoute>
-                            <Stories />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        exact
-                        path="/notifications"
-                        element={
-                          <ProtectedRoute>
-                            <Notifications />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        exact
-                        path="/direct/inbox"
-                        element={
-                          <ProtectedRoute>
-                            <DirectInbox />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        exact
-                        path="direct/t/:currentRoomId"
-                        element={
-                          <ProtectedRoute>
-                            <DirectChat />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        exact
-                        path="/create"
-                        element={
-                          <ProtectedRoute>
-                            <Create />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        exact
-                        path="/clips"
-                        element={
-                          <ProtectedRoute>
-                            <Clips />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/profile"
-                        element={
-                          <ProtectedRoute>
-                            <Profile />
-                          </ProtectedRoute>
-                        }
-                      />
-                    </Routes>
-                  </CreateProvider>
-                </MusicProvider>
-              </BrowserRouter>
+              <SocketProvider>
+                <BrowserRouter>
+                  <MusicProvider>
+                    <CreateProvider>
+                      <Navbar />
+                      <DirectChatNotification />
+                      <TrackPlayer />
+                      <Routes>
+                        <Route path="*" element={<NotFound404 />} />
+                        <Route
+                          exact
+                          path="/auth/signup"
+                          element={<AuthSignup />}
+                        />
+                        <Route
+                          index
+                          exact
+                          path="/"
+                          element={
+                            <ProtectedRoute>
+                              <Home />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route exact path="/search" element={<Search />} />
+                        <Route exact path="/music" element={<Music />} />
+                        <Route
+                          exact
+                          path="/stories"
+                          element={
+                            <ProtectedRoute>
+                              <Stories />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          exact
+                          path="/notifications"
+                          element={
+                            <ProtectedRoute>
+                              <Notifications />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          exact
+                          path="/direct/inbox"
+                          element={
+                            <ProtectedRoute>
+                              <DirectInbox />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          exact
+                          path="direct/t/:currentRoomId"
+                          element={
+                            <ProtectedRoute>
+                              <DirectChat />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          exact
+                          path="/create"
+                          element={
+                            <ProtectedRoute>
+                              <Create />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          exact
+                          path="/clips"
+                          element={
+                            <ProtectedRoute>
+                              <Clips />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/profile"
+                          element={
+                            <ProtectedRoute>
+                              <Profile />
+                            </ProtectedRoute>
+                          }
+                        />
+                      </Routes>
+                    </CreateProvider>
+                  </MusicProvider>
+                </BrowserRouter>
+              </SocketProvider>
             );
           }}
         </UserContext.Consumer>

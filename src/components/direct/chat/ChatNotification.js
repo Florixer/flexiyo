@@ -1,16 +1,16 @@
 import { useState, useEffect, useContext } from "react";
-import UserContext from "../../../context/user/UserContext";
-import useSocketService from "../../../hooks/user/useSocketService";
+import UserContext from "../../../context/user/UserContext.js";
+import { useSocket } from "../../../context/SocketProvider.js";
 
 const ChatNotification = () => {
   const { userInfo } = useContext(UserContext);
-  const { socket, socketUser } = useSocketService();
+  const { socket } = useSocket();
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (!socket) return;
 
-    const handleRecieveMessage = (username, message) => {
+    const handleReceiveMessage = (username, message) => {
       if (userInfo.username === username) return;
       setNotification({ title: username, content: message });
       setTimeout(() => {
@@ -18,10 +18,10 @@ const ChatNotification = () => {
       }, 2500);
     };
 
-    socket.on("recieve-message", handleRecieveMessage);
+    socket.on("receive-message", handleReceiveMessage);
 
     return () => {
-      socket.off("recieve-message", handleRecieveMessage);
+      socket.off("receive-message", handleReceiveMessage);
     };
   }, [socket]);
 
