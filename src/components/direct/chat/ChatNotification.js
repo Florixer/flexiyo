@@ -8,13 +8,9 @@ const ChatNotification = () => {
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
-    if (!socket) {
-      console.log("Socket not initialized");
-      return;
-    }
+    if (!socket) return;
 
     const handleReceiveMessage = (username, message) => {
-      console.log("Received message:", { username, message });
       if (userInfo.username === username) return;
       setNotification({ title: username, content: message });
       setTimeout(() => {
@@ -25,7 +21,6 @@ const ChatNotification = () => {
     socket.on("receive-message", handleReceiveMessage);
 
     return () => {
-      console.log("Cleaning up receive-message listener");
       socket.off("receive-message", handleReceiveMessage);
     };
   }, [socket, userInfo.username]);
