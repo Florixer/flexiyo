@@ -10,9 +10,9 @@ const ChatNotification = () => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleReceiveMessage = (username, message) => {
+    const handleReceiveMessage = (avatar, username, message) => {
       if (userInfo?.username === username) return;
-      setNotification({ title: username, content: message });
+      setNotification({ cover: avatar, title: username, content: message });
       setTimeout(() => {
         setNotification(null);
       }, 2500);
@@ -30,7 +30,7 @@ const ChatNotification = () => {
       {notification && (
         <>
           <div className="chat-notification--pfp">
-            <img src="https://i.pravatar.cc/300" alt="notification-pfp" />
+            <img src={notification.cover} alt="notification-pfp" />
           </div>
           <div className="chat-notification--body">
             <span className="chat-notification--body-title">

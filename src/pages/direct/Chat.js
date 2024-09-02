@@ -73,6 +73,7 @@ const Chat = () => {
         {
           text: inputText,
           sender: userInfo.username,
+          avatar: userInfo.avatar,
         },
       ]);
       socket.emit(
