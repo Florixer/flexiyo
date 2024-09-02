@@ -10,11 +10,10 @@ import UserContext from "../../context/user/UserContext";
 import demoPersonPfp from "../../assets/media/img/demo-person.jpg";
 
 async function generateKey() {
-  return crypto.subtle.generateKey(
-    { name: "AES-GCM", length: 256 },
-    true,
-    ["encrypt", "decrypt"]
-  );
+  return crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, [
+    "encrypt",
+    "decrypt",
+  ]);
 }
 
 async function encryptMessage(message, key) {
@@ -24,7 +23,7 @@ async function encryptMessage(message, key) {
   const encrypted = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv: iv },
     key,
-    data
+    data,
   );
   return { encryptedData: encrypted, iv: iv };
 }
@@ -33,7 +32,7 @@ async function decryptMessage(encryptedData, iv, key) {
   const decrypted = await crypto.subtle.decrypt(
     { name: "AES-GCM", iv: iv },
     key,
-    encryptedData
+    encryptedData,
   );
   const decoder = new TextDecoder();
   return decoder.decode(decrypted);
@@ -50,6 +49,7 @@ const Chat = () => {
   const [isUserFilesSheetOpen, setIsUserFilesSheetOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [encryptionKey, setEncryptionKey] = useState(null);
+
   useEffect(() => {
     const mediaQuery = matchMedia("(max-width: 950px)");
     const handleMediaQueryChange = () => {
@@ -66,22 +66,20 @@ const Chat = () => {
 
   const { currentRoomId } = useParams();
   const roomId = parseInt(currentRoomId, 10);
+  
+  useEffect(() => {
+    generateKey().then(setEncryptionKey);
+  }, []);
 
   useEffect(() => {
     if (!socket) return;
 
-    // Generate an encryption key when the component mounts
-    generateKey().then(setEncryptionKey);
-
     const handleReceiveMessage = async (username, encryptedMessage, iv) => {
-      console.log("Received encrypted message:", encryptedMessage);
       const decryptedMessage = await decryptMessage(
         encryptedMessage,
         iv,
-        encryptionKey
+        encryptionKey,
       );
-      console.log("Decrypted message:", decryptedMessage);
-
       setMessages((prevMessages) => [
         ...prevMessages,
         { text: decryptedMessage, sender: username },
@@ -94,7 +92,7 @@ const Chat = () => {
     return () => {
       socket.off("receive-message", handleReceiveMessage);
     };
-  }, [socket, encryptionKey]);
+  }, [socket]);
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -107,15 +105,25 @@ const Chat = () => {
 
   const handleSendMessage = async (event) => {
     event.preventDefault();
-    if (inputText !== "") {
-      const { encryptedData, iv } = await encryptMessage(inputText, encryptionKey);
+    if (inputText.trim() !== "") {
+      const { encryptedData, iv } = await encryptMessage(
+        inputText,
+        encryptionKey,
+      );
 
-      setMessages([
-        ...messages,
+      setMessages((prevMessages) => [
+        ...prevMessages,
         { text: inputText, sender: userInfo.username },
       ]);
 
-      socket.emit("send-message", roomId, socketUser.id, userInfo.username, encryptedData, iv);
+      socket.emit(
+        "send-message",
+        roomId,
+        socketUser.id,
+        userInfo.username,
+        encryptedData,
+        iv,
+      );
       setUserMessage("");
       setInputText("");
     }
@@ -237,4 +245,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default React.memo(Chat);
