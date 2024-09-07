@@ -2409,7 +2409,6 @@ b {
   height: var(--fm-profile-user-banner-height);
   background-size: cover;
   background-clip: border-box;
-  background: url("./assets/media/img/backgrounds/profile-user/profile-user-banner.svg");
   filter: brightness(70%);
 }
 

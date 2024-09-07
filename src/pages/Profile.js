@@ -3,7 +3,6 @@ import Headroom from "react-headroom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import UserContext from "../context/user/UserContext";
-import defaultUserPfp from "../assets/media/img/default-avatar.png";
 
 export default function Profile() {
   const { userInfo } = useContext(UserContext);
@@ -36,18 +35,21 @@ export default function Profile() {
     <section id="profile">
       <Headroom>
         <CustomTopNavbar
-          navbarCover={userInfo.pfp}
+          navbarCover={userInfo.avatar}
           navbarTitle="demo_.person"
           navbarFirstIcon="fa fa-plus"
           navbarSecondIcon="fa fa-gear"
         />
       </Headroom>
       <div className="profile-container">
-        <div className="profile-container--banner"></div>
+        <div
+          className="profile-container--banner"
+          style={{ backgroundImage: `url(${userInfo.banner})` }}
+        ></div>
         <div className="profile-user">
           <div className="user-card">
             <div className="user-card--avatar">
-              <LazyLoadImage src={userInfo.pfp ? userInfo.pfp : defaultUserPfp} alt="Demo Person" />
+              <LazyLoadImage src={userInfo.avatar} alt="Demo Person" />
             </div>
             <div className="user-card-connections">
               <div className="user-card-connections-items">
