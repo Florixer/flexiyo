@@ -17,7 +17,7 @@ const useMusicUtility = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const saavnApiBaseUrl = "https://saavn.dev/api";
+  const saavnApiBaseUrl = "https://fiyo-saavn.vercel.app/api";
 
   const getTrackData = async (trackId) => {
     try {
