@@ -32,7 +32,7 @@ const Music = () => {
 
   const { getTrackData, getTrack, deleteCachedAudioData, handleAudioPause } =
     useMusicUtility();
-  const saavnApiBaseUrl = "https://fiyo-saavn.vercel.app/api;
+  const saavnApiBaseUrl = "https://fiyo-saavn.vercel.app/api";
   const [searchText, setSearchText] = useState();
   const [searchFieldActive, setSearchFieldActive] = useState(false);
   const [printError, setPrintError] = useState("");
