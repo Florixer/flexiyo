@@ -36,7 +36,7 @@ export default function Profile() {
       <Headroom>
         <CustomTopNavbar
           navbarCover={userInfo.avatar}
-          navbarTitle="demo_.person"
+          navbarTitle="Profile"
           navbarFirstIcon="fa fa-plus"
           navbarSecondIcon="fa fa-gear"
         />
@@ -44,12 +44,12 @@ export default function Profile() {
       <div className="profile-container">
         <div
           className="profile-container--banner"
-          style={{ backgroundImage: `url(${userInfo.banner})` }}
+          style={{ background: `url(${userInfo.banner})` }}
         ></div>
         <div className="profile-user">
           <div className="user-card">
             <div className="user-card--avatar">
-              <LazyLoadImage src={userInfo.avatar} alt="Demo Person" />
+              <LazyLoadImage src={userInfo.avatar} alt="User-Avatar"/>
             </div>
             <div className="user-card-connections">
               <div className="user-card-connections-items">
@@ -84,11 +84,10 @@ export default function Profile() {
           </div>
           <div className="user-block">
             <div className="user-details">
-              <span className="user-details--name">Demo Person</span>
-              <span className="user-details--username">@demo_.person</span>
+              <span className="user-details--name">{userInfo.username}</span>
+              <span className="user-details--username">@{userInfo.username}</span>
               <span className="user-details--about">
-                About me and my bio my current state, job, passion and many
-                more.
+                {userInfo.bio}
               </span>
             </div>
             <div className="user-block-right">

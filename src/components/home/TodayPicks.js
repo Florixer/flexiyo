@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import {Link } from "react-router-dom"
 const TodayPicks = () => {
   const [todayPicksVisibility, setTodayPicksVisibility] = useState(true);
 
@@ -29,8 +29,14 @@ const TodayPicks = () => {
               <div className="hr-border"></div>
               <div className="suggestion-container">
                 <label className="suggestion-txt">
-                  Explore more about <b>Sanatan Dharma</b> here with interactive
-                  videos and photos.
+                  {/*Explore more about <b>Sanatan Dharma</b> here with interactive
+                  videos and photos.*/}
+                  <h5>App in Development!</h5>
+                  You can still explore, Just click those fuzzy icons and
+                  email me for any suggestion: <br/>flexiyo02@gmail.com: <Link to="mailto:
+                  flexiyo02@gmail.com" style={{color: "#1DA1F2"}}><b
+                  style={{textDecoration: "underline"}}>Send
+                  Email</b></Link>
                 </label>
                 <button className="suggestion-rdr-btn">
                   Check Now
