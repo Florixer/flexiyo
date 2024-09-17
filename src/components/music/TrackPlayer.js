@@ -155,9 +155,9 @@ const TrackPlayer = () => {
       }
     });
   }, [handleAudioPlay, handleAudioPause]);
-  
+
   useEffect(() => {
-     const playAudio = async () => {
+    const playAudio = async () => {
       if (currentTrack.link) {
         try {
           const audio = audioRef.current;
@@ -172,17 +172,7 @@ const TrackPlayer = () => {
       }
     };
     playAudio();
-  }, [currentTrack.link]);
-
-  const queryParams = new URLSearchParams(location.search);
-  const playParam = queryParams.get("play");
-  if (playParam) {
-      try {
-        playAudio();
-      } catch (error) {
-        console.error("Error playing track:", error);
-      }
-    }
+  }, [audioRef, setIsAudioLoading, setIsAudioPlaying, currentTrack.link]);
 
   return currentTrack.id ? (
     <div className="track-player">
