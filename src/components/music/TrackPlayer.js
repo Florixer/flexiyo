@@ -158,6 +158,7 @@ const TrackPlayer = () => {
     const playParam = queryParams.get("play");
     if (playParam) {
       handleAudioPlay();
+      alert("Hi play")
     }
   }, [handleAudioPlay, handleAudioPause]);
 
