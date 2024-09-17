@@ -12,7 +12,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const TrackPlayer = () => {
   const {
-    tracks,
+    topTracks,
     currentTrack,
     audioRef,
     isAudioLoading,
@@ -140,6 +140,38 @@ const TrackPlayer = () => {
   }, [handleTouchMove, handleTouchEnd]);
 
   useEffect(() => {
+    const autoPlayAudio = async () => {
+      const queryParams = new URLSearchParams(location.search);
+      const playParam = queryParams.get("play");
+
+      if (playParam !== "true") return;
+
+      try {
+        const track = queryParams.get("track");
+
+        setIsAudioLoading(true);
+
+        if (track) {
+          await getTrack(track);
+        } else if (topTracks.length > 0) {
+          const firstTrack = topTracks[0].id;
+          await getTrack(firstTrack);
+        }
+        setIsAudioPlaying(true);
+      } catch (error) {
+        console.error("Error playing audio:", error);
+        setIsAudioPlaying(false);
+      } finally {
+        setIsAudioLoading(false);
+      }
+    };
+    if (topTracks && topTracks.length > 0) {
+      autoPlayAudio();
+      console.log(topTracks);
+    }
+  }, [topTracks]);
+
+  useEffect(() => {
     const audio = audioRef.current;
     document.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight") {
@@ -157,24 +189,6 @@ const TrackPlayer = () => {
         audio.currentTime = audio.currentTime - 5;
       }
     });
-    const queryParams = new URLSearchParams(location.search);
-    const playParam = queryParams.get("play");
-    try {
-      if (playParam === "true") {
-        if (queryParams.get("track")) {
-          getTrack(queryParams.get("track"));
-          setIsAudioPlaying(true);
-          setIsAudioLoading(false);
-        } else {
-          getTrack(tracks[0].id);
-          setIsAudioPlaying(true);
-          setIsAudioLoading(false);
-        }
-      }
-    } catch (error) {
-      console.error("Error playing audio:", error);
-      setIsAudioPlaying(false);
-    }
   }, [handleAudioPlay, handleAudioPause]);
 
   useEffect(() => {

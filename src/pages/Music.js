@@ -62,7 +62,7 @@ const Music = () => {
   }, []);
 
   const searchTracks = useCallback(
-    async (searchTerm) => {
+    async (searchTerm, invoker) => {
       try {
         setApiLoading(true);
         const { data: response } = await axios.get(
@@ -75,7 +75,12 @@ const Music = () => {
             },
           },
         );
-        setTracks(response.data.results);
+        if (invoker === "paramQuery") {
+          setTracks(response.data.results);
+          setTopTracks(response.data.results);
+        } else {
+          setTracks(response.data.results);
+        }
         setApiError(false);
         setApiLoading(false);
       } catch (error) {
@@ -187,16 +192,21 @@ const Music = () => {
   useEffect(() => {
     const queryParams = getQueryParams(location.search);
     const q = queryParams.get("q");
-    setSearchText(q);
+    setSearchText(q || "");
   }, [location.search]);
 
   useEffect(() => {
-    if (searchText) {
-      searchTracks(searchText);
+    if (searchText && searchText.trim() !== "") {
+      if (searchText === getQueryParams(location.search).get("q")) {
+        searchTracks(searchText, "paramQuery");
+      } else {
+        searchTracks(searchText);
+      }
     } else {
       getTopTracks();
     }
   }, [searchText, getTopTracks, searchTracks]);
+
   const openDownloadModal = async (trackId) => {
     try {
       setIsDownloadLoading(true);
