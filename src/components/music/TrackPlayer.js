@@ -161,7 +161,6 @@ const TrackPlayer = () => {
     if (playParam === "true") {
       try {
         getTrack(queryParams.get("track"));
-        audio.play();
         setIsAudioPlaying(true);
         setIsAudioLoading(false);
       } catch (error) {
