@@ -155,8 +155,9 @@ const TrackPlayer = () => {
       }
     });
   }, [handleAudioPlay, handleAudioPause]);
-
-  const playAudio = async () => {
+  
+  useEffect(() => {
+     const playAudio = async () => {
       if (currentTrack.link) {
         try {
           const audio = audioRef.current;
@@ -170,8 +171,6 @@ const TrackPlayer = () => {
         }
       }
     };
-  
-  useEffect(() => {
     playAudio();
   }, [currentTrack.link]);
 
