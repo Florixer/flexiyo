@@ -29,6 +29,8 @@ const TrackPlayer = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
 
+  const playAudioBtnRef = useRef(null);
+
   useEffect(() => {
     // if (!currentTrack.id) {
     //   return;
@@ -156,11 +158,9 @@ const TrackPlayer = () => {
     });
     const queryParams = new URLSearchParams(location.search);
     const playParam = queryParams.get("play");
-    if (playParam) {
+    if (playParam === "true") {
       try {
-        const audio = audioRef.current;
-        audio.src = currentTrack.link;
-        audio.play();
+        getTrack(queryParams.get("track"));
         setIsAudioPlaying(true);
         setIsAudioLoading(false);
       } catch (error) {
@@ -255,7 +255,7 @@ const TrackPlayer = () => {
             {isAudioLoading && (
               <div className="track-player--controls-preloader"></div>
             )}
-            {isAudioPlaying && !isAudioLoading && currentTrack.link ? (
+            {isAudioPlaying && !isAudioLoading ? (
               <svg
                 role="img"
                 aria-hidden="true"
@@ -269,6 +269,7 @@ const TrackPlayer = () => {
                 role="img"
                 aria-hidden="true"
                 viewBox="0 0 24 24"
+                ref={playAudioBtnRef}
                 onClick={() => {
                   handleAudioPlay();
                   if (!currentTrack.link) {
