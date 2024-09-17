@@ -158,7 +158,9 @@ const TrackPlayer = () => {
     const playParam = queryParams.get("play");
     if (playParam) {
       try {
-        playAudio();
+        if (audio.paused) {
+          handleAudioPlay();
+        }
       } catch (error) {
         console.error("Error playing track:", error);
       }
