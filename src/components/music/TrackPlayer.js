@@ -154,6 +154,15 @@ const TrackPlayer = () => {
         audio.currentTime = audio.currentTime - 5;
       }
     });
+    const queryParams = new URLSearchParams(location.search);
+    const playParam = queryParams.get("play");
+    if (playParam) {
+      try {
+        playAudio();
+      } catch (error) {
+        console.error("Error playing track:", error);
+      }
+    }
   }, [handleAudioPlay, handleAudioPause]);
 
   useEffect(() => {
