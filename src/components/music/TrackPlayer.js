@@ -181,6 +181,7 @@ const TrackPlayer = () => {
         } catch (error) {
           console.error("Error fetching track data:", error);
         }
+      }
   }, [audioRef, setIsAudioLoading, setIsAudioPlaying, currentTrack.link]);
 
   return currentTrack.id ? (
