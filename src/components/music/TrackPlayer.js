@@ -12,6 +12,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const TrackPlayer = () => {
   const {
+    tracks,
     currentTrack,
     audioRef,
     isAudioLoading,
@@ -158,15 +159,21 @@ const TrackPlayer = () => {
     });
     const queryParams = new URLSearchParams(location.search);
     const playParam = queryParams.get("play");
-    if (playParam === "true") {
-      try {
-        getTrack(queryParams.get("track"));
-        setIsAudioPlaying(true);
-        setIsAudioLoading(false);
-      } catch (error) {
-        console.error("Error playing audio:", error);
-        setIsAudioPlaying(false);
+    try {
+      if (playParam === "true") {
+        if (queryParams.get("track")) {
+          getTrack(queryParams.get("track"));
+          setIsAudioPlaying(true);
+          setIsAudioLoading(false);
+        } else {
+          getTrack(tracks[0].id);
+          setIsAudioPlaying(true);
+          setIsAudioLoading(false);
+        }
       }
+    } catch (error) {
+      console.error("Error playing audio:", error);
+      setIsAudioPlaying(false);
     }
   }, [handleAudioPlay, handleAudioPause]);
 
