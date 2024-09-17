@@ -157,8 +157,16 @@ const TrackPlayer = () => {
     const queryParams = new URLSearchParams(location.search);
     const playParam = queryParams.get("play");
     if (playParam) {
-      handleAudioPlay();
-      alert("Hi play")
+      try {
+        const audio = audioRef.current;
+        audio.src = currentTrack.link;
+        audio.play();
+        setIsAudioPlaying(true);
+        setIsAudioLoading(false);
+      } catch (error) {
+        console.error("Error playing audio:", error);
+        setIsAudioPlaying(false);
+      }
     }
   }, [handleAudioPlay, handleAudioPause]);
 
