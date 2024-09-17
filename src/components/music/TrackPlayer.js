@@ -172,6 +172,15 @@ const TrackPlayer = () => {
       }
     };
     playAudio();
+    const queryParams = new URLSearchParams(location.search);
+      const playParam = queryParams.get("track");
+
+      if (playParam) {
+        try {
+          playAudio();
+        } catch (error) {
+          console.error("Error fetching track data:", error);
+        }
   }, [audioRef, setIsAudioLoading, setIsAudioPlaying, currentTrack.link]);
 
   return currentTrack.id ? (
