@@ -249,7 +249,7 @@ useEffect(() => {
   } else {
     getTopTracks();
   }
-}, [searchText, topTracks]);
+}, [topTracks]);
   const openDownloadModal = async (trackId) => {
     try {
       setIsDownloadLoading(true);
