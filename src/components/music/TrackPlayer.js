@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import MusicContext from "../../context/music/MusicContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -26,7 +26,7 @@ const TrackPlayer = () => {
   const { getTrack, handleAudioPlay, handleAudioPause, handleNextAudioTrack } =
     useMusicUtility();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isMusicRoute, setIsMusicRoute] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
@@ -161,10 +161,10 @@ const TrackPlayer = () => {
           // If the 'play' param exists, remove it after playing the track
           if (queryParams.has('play')) {
             queryParams.delete('play');
-            history.replace({
+            navigate({
               pathname: location.pathname,
               search: queryParams.toString(),
-            });
+            }, { replace: true });
           }
         }
 
