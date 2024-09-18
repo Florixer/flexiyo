@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import useMusicUtility from "../../utils/music/useMusicUtility";
 import MusicContext from "../../context/music/MusicContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -26,6 +26,7 @@ const TrackPlayer = () => {
   const { getTrack, handleAudioPlay, handleAudioPause, handleNextAudioTrack } =
     useMusicUtility();
   const location = useLocation();
+  const history = useHistory():
   const [isMusicRoute, setIsMusicRoute] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
@@ -156,10 +157,14 @@ const TrackPlayer = () => {
         } else if (topTracks.length > 0){
           const firstTrack = topTracks[0].id;
           await getTrack(firstTrack);
-          queryParams.delete("play");
-        } else {
-          return null
-        };
+          if (queryParams.has('play')) {
+            queryParams.delete('play');
+            history.replace({
+            pathname: location.pathname,
+            search: queryParams.toString(),
+            });
+          }
+        }
         setIsAudioPlaying(true);
       } catch (error) {
         console.error("Error playing audio:", error);
