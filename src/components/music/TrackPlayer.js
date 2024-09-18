@@ -156,6 +156,7 @@ const TrackPlayer = () => {
         } else if (topTracks.length > 0){
           const firstTrack = topTracks[0].id;
           await getTrack(firstTrack);
+          queryParams.delete("play");
         } else {
           return null
         };
