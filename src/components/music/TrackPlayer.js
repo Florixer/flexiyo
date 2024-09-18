@@ -181,7 +181,7 @@ const TrackPlayer = () => {
     if (topTracks && topTracks.length > 0) {
       autoPlayAudio();
     }
-  }, [topTracks, location, history, getTrack, setIsAudioLoading, setIsAudioPlaying]);
+  }, [topTracks, location, navigate, getTrack, setIsAudioLoading, setIsAudioPlaying]);
 
   useEffect(() => {
     const audio = audioRef.current;
