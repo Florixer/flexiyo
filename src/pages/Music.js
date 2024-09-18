@@ -202,10 +202,6 @@ useEffect(() => {
   const queryParams = getQueryParams(location.search);
   
   const autoPlayAudio = async (index) => {
-    const playParam = queryParams.get("play");
-
-    if (playParam !== "true") return;
-
     try {
       const track = queryParams.get("track");
       setIsAudioLoading(true);
@@ -222,10 +218,7 @@ useEffect(() => {
         }
       }
       queryParams.delete("play");
-      // navigate({
-      //   pathname: location.pathname,
-      //   search: queryParams.toString(),
-      // }, { replace: true });
+      zz
 
       setIsAudioPlaying(true);
     } catch (error) {
@@ -237,19 +230,25 @@ useEffect(() => {
   };
 
   if (searchText && searchText.trim() !== "") {
+    const playParam = queryParams.get("play");
     if (searchText === queryParams.get("q")) {
       searchTracks(searchText, "paramQuery");
-      if (topTracks && topTracks.length > 0) {
+      console.log("searchText", searchText);
+
+      if (topTracks && topTracks.length > 0  && playParam) {
         autoPlayAudio("first");
+      } else {
+        autoPlayAudio("random");
       }
     } else {
       searchTracks(searchText);
-      autoPlayAudio("random");
+      console.log("searchText", searchText);
+      
     }
   } else {
     getTopTracks();
   }
-}, [topTracks]);
+}, [searchText, getQueryParams, location.search, getTrack, topTracks]);
   const openDownloadModal = async (trackId) => {
     try {
       setIsDownloadLoading(true);
