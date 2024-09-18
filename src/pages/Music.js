@@ -186,35 +186,73 @@ const Music = () => {
   }, [saavnApiBaseUrl, setTopTracks]);
 
   const getQueryParams = (query) => {
-    return new URLSearchParams(query);
+  return new URLSearchParams(query);
+};
+
+useEffect(() => {
+  const queryParams = getQueryParams(location.search);
+  const q = queryParams.get("q");
+  setSearchText(q || "");
+}, [location.search]);
+
+useEffect(() => {
+  const queryParams = getQueryParams(location.search);
+  
+  const autoPlayAudio = async (index) => {
+    const playParam = queryParams.get("play");
+
+    if (playParam !== "true") return;
+
+    try {
+      const track = queryParams.get("track");
+      setIsAudioLoading(true);
+
+      if (track) {
+        await getTrack(track);
+      } else if (topTracks.length > 0) {
+        if(index === "random") {
+          const randomTrack = topTracks[Math.floor(Math.random() * topTracks.length)].id;
+          await getTrack(randomTrack);
+        } else {
+          const firstTrack = topTracks[0].id;
+          await getTrack(firstTrack);
+        }
+      }
+      queryParams.delete("play");
+      navigate({
+        pathname: location.pathname,
+        search: queryParams.toString(),
+      }, { replace: true });
+
+      setIsAudioPlaying(true);
+    } catch (error) {
+      console.error("Error playing audio:", error);
+      setIsAudioPlaying(false);
+    } finally {
+      setIsAudioLoading(false);
+    }
   };
 
-  useEffect(() => {
-    const queryParams = getQueryParams(location.search);
-    const q = queryParams.get("q");
-    setSearchText(q || "");
-  }, [location.search]);
-
-  useEffect(() => {
-    if (searchText && searchText.trim() !== "") {
-      if (searchText === getQueryParams(location.search).get("q")) {
-        searchTracks(searchText, "paramQuery");
-      } else {
-        searchTracks(searchText);
+  if (searchText && searchText.trim() !== "") {
+    if (searchText === queryParams.get("q")) {
+      searchTracks(searchText, "paramQuery");
+      if (topTracks && topTracks.length > 0) {
+        autoPlayAudio("first");
       }
     } else {
-      getTopTracks();
+      searchTracks(searchText);
+      autoPlayAudio("random");
     }
-  }, [searchText, getTopTracks, searchTracks]);
-
+  } else {
+    getTopTracks();
+  }
+}, [searchText, getTopTracks, searchTracks, topTracks, location.search, navigate]);
   const openDownloadModal = async (trackId) => {
     try {
       setIsDownloadLoading(true);
-      // Fetch the audio data
       const { data } = await axios.get(`${saavnApiBaseUrl}/songs/${trackId}`);
 
       const resultData = data.data[0];
-      // Show a confirmation dialog
       const artistsArray = resultData.artists.primary;
       setModalDownloadData({
         fileUrl: resultData.downloadUrl[3].url,
@@ -234,7 +272,6 @@ const Music = () => {
     setIsDownloadModalOpen(false);
   };
 
-  // Function to open speech modal and pause audio
   const openSpeechModal = () => {
     setIsSpeechModalOpen(true);
     startSpeechRecognition();
