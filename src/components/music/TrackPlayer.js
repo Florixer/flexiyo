@@ -155,9 +155,13 @@ const TrackPlayer = () => {
         if (track) {
           await getTrack(track);  // Play the specific track
         } else if (topTracks.length > 0) {
-          const firstTrack = topTracks[0].id; // Play the first available track
-          await getTrack(firstTrack);
-
+          if (queryParams.get("q") {
+            const firstTrack = topTracks[0].id; // Play the first available track
+            await getTrack(firstTrack);
+          } else {
+            const randomTrack = topTracks[Math.floor(Math.random() * topTracks.length)].id;
+            await getTrack(randomTrack);
+          }
           // If the 'play' param exists, remove it after playing the track
           if (queryParams.has('play')) {
             queryParams.delete('play');
