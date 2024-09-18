@@ -222,10 +222,10 @@ useEffect(() => {
         }
       }
       queryParams.delete("play");
-      navigate({
-        pathname: location.pathname,
-        search: queryParams.toString(),
-      }, { replace: true });
+      // navigate({
+      //   pathname: location.pathname,
+      //   search: queryParams.toString(),
+      // }, { replace: true });
 
       setIsAudioPlaying(true);
     } catch (error) {
