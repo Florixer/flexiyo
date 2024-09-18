@@ -155,7 +155,7 @@ const TrackPlayer = () => {
         if (track) {
           await getTrack(track);  // Play the specific track
         } else if (topTracks.length > 0) {
-          if (queryParams.get("q") {
+          if (queryParams.get("q")) {
             const firstTrack = topTracks[0].id; // Play the first available track
             await getTrack(firstTrack);
           } else {
