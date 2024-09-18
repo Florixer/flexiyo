@@ -141,53 +141,6 @@ const TrackPlayer = () => {
   }, [handleTouchMove, handleTouchEnd]);
 
   useEffect(() => {
-    const autoPlayAudio = async () => {
-      const queryParams = new URLSearchParams(location.search);
-      const playParam = queryParams.get("play");
-
-      // If the play param is not "true", do nothing
-      if (playParam !== "true") return;
-
-      try {
-        const track = queryParams.get("track");
-        setIsAudioLoading(true);
-
-        if (track) {
-          await getTrack(track);  // Play the specific track
-        } else if (topTracks.length > 0) {
-          if (queryParams.get("q")) {
-            const firstTrack = topTracks[0].id; // Play the first available track
-            await getTrack(firstTrack);
-          } else {
-            const randomTrack = topTracks[Math.floor(Math.random() * topTracks.length)].id;
-            await getTrack(randomTrack);
-          }
-          // If the 'play' param exists, remove it after playing the track
-          if (queryParams.has('play')) {
-            queryParams.delete('play');
-            navigate({
-              pathname: location.pathname,
-              search: queryParams.toString(),
-            }, { replace: true });
-          }
-        }
-
-        setIsAudioPlaying(true);  // Set audio as playing
-      } catch (error) {
-        console.error("Error playing audio:", error);
-        setIsAudioPlaying(false); // Stop audio in case of error
-      } finally {
-        setIsAudioLoading(false); // Audio loading is complete, either success or failure
-      }
-    };
-
-    // Run the function if topTracks is available
-    if (topTracks && topTracks.length > 0) {
-      autoPlayAudio();
-    }
-  }, [topTracks]);
-
-  useEffect(() => {
     const audio = audioRef.current;
     document.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight") {
