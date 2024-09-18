@@ -145,39 +145,43 @@ const TrackPlayer = () => {
       const queryParams = new URLSearchParams(location.search);
       const playParam = queryParams.get("play");
 
+      // If the play param is not "true", do nothing
       if (playParam !== "true") return;
 
       try {
         const track = queryParams.get("track");
-
         setIsAudioLoading(true);
 
         if (track) {
-          await getTrack(track);
-        } else if (topTracks.length > 0){
-          const firstTrack = topTracks[0].id;
+          await getTrack(track);  // Play the specific track
+        } else if (topTracks.length > 0) {
+          const firstTrack = topTracks[0].id; // Play the first available track
           await getTrack(firstTrack);
+
+          // If the 'play' param exists, remove it after playing the track
           if (queryParams.has('play')) {
             queryParams.delete('play');
             history.replace({
-            pathname: location.pathname,
-            search: queryParams.toString(),
+              pathname: location.pathname,
+              search: queryParams.toString(),
             });
           }
         }
-        setIsAudioPlaying(true);
+
+        setIsAudioPlaying(true);  // Set audio as playing
       } catch (error) {
         console.error("Error playing audio:", error);
-        setIsAudioPlaying(false);
+        setIsAudioPlaying(false); // Stop audio in case of error
       } finally {
-        setIsAudioLoading(false);
+        setIsAudioLoading(false); // Audio loading is complete, either success or failure
       }
     };
+
+    // Run the function if topTracks is available
     if (topTracks && topTracks.length > 0) {
       autoPlayAudio();
-      console.log(topTracks);
     }
-  }, [topTracks]);
+  }, [topTracks, location, history, getTrack, setIsAudioLoading, setIsAudioPlaying]);
 
   useEffect(() => {
     const audio = audioRef.current;
