@@ -26,7 +26,7 @@ const TrackPlayer = () => {
   const { getTrack, handleAudioPlay, handleAudioPause, handleNextAudioTrack } =
     useMusicUtility();
   const location = useLocation();
-  const history = useHistory():
+  const history = useHistory();
   const [isMusicRoute, setIsMusicRoute] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
