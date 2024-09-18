@@ -153,10 +153,7 @@ const TrackPlayer = () => {
 
         if (track) {
           await getTrack(track);
-        } else if (topTracks.length > 0 && !queryParams.get("q")) {
-          const randomTrack = topTracks[Math.floor(Math.random() * topTracks.length)].id;
-          await getTrack(randomTrack);
-        } else if (topTracks.length > 0 && queryParams.get("q")){
+        } else if (topTracks.length > 0){
           const firstTrack = topTracks[0].id;
           await getTrack(firstTrack);
         } else {
