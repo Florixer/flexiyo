@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
 import Modal from "react-modal";
@@ -20,6 +20,8 @@ const Music = () => {
     topTracks,
     setTopTracks,
     currentTrack,
+    isAudioPlaying,
+    isAudioLoading,
     setCurrentTrack,
     isTrackDeckModalOpen,
     setIsTrackDeckModalOpen,
@@ -29,6 +31,7 @@ const Music = () => {
     ? `${currentTrack.name} - Flexiyo Music`
     : "Flexiyo Music";
   const location = useLocation();
+  const navigate = useNavigate();
 
   const { getTrackData, getTrack, deleteCachedAudioData, handleAudioPause } =
     useMusicUtility();
