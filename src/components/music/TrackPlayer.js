@@ -153,10 +153,15 @@ const TrackPlayer = () => {
 
         if (track) {
           await getTrack(track);
-        } else if (topTracks.length > 0) {
+        } else if (topTracks.length > 0 && !queryParams.get("q")) {
           const randomTrack = topTracks[Math.floor(Math.random() * topTracks.length)].id;
           await getTrack(randomTrack);
-        }
+        } else if (topTracks.length > 0 && queryParams.get("q"){
+          const firstTrack = topTracks[0].id;
+          await getTrack(firstTrack);
+        } else {
+          return null
+        };
         setIsAudioPlaying(true);
       } catch (error) {
         console.error("Error playing audio:", error);
