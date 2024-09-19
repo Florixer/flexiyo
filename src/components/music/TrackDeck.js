@@ -205,7 +205,7 @@ const TrackDeck = () => {
         >
           <i className="fas fa-repeat" style={{ fontSize: "1.5rem", color: loopAudio ? "#1ED760" : "#ffffff" }} />
         </span>
-        {isAudioPlaying && !isAudioLoading && currentTrack.link ? (
+        {isAudioPlaying && !isAudioLoading ? (
           <span
             className="track-deck--controls-item"
             style={{
