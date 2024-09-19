@@ -164,8 +164,6 @@ const Music = () => {
     if (isAudioPlaying) return;
     setIsAudioLoading(true);
     try {
-      const a = document.createElement("a");
-      a.click();
       await getTrack(trackId);
       setIsAudioPlaying(true);
     } catch (error) {
@@ -224,7 +222,11 @@ const Music = () => {
         } else {
           const topTracksResult = await getTopTracks();
 
-          if (playParam === "true" && !trackParam && topTracksResult.length > 0) {
+          if (
+            playParam === "true" &&
+            !trackParam &&
+            topTracksResult.length > 0
+          ) {
             const randomTrack =
               topTracksResult[
                 Math.floor(Math.random() * topTracksResult.length)
@@ -246,16 +248,11 @@ const Music = () => {
     const value = e.target.value;
     setSearchText(value);
 
-    const newQueryParams = new URLSearchParams(location.search);
     if (value) {
-      newQueryParams.set("q", value);
       searchTracks(value);
     } else {
-      newQueryParams.delete("q");
       getTopTracks();
     }
-
-    navigate({ search: newQueryParams.toString() }, { replace: true });
   };
 
   const openDownloadModal = async (trackId) => {
