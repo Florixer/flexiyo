@@ -20,6 +20,7 @@ const Music = () => {
     topTracks,
     setTopTracks,
     currentTrack,
+    isAudioPlaying,
     setIsAudioPlaying,
     setIsAudioLoading,
     setCurrentTrack,
@@ -33,10 +34,10 @@ const Music = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { getTrackData, getTrack, deleteCachedAudioData, handleAudioPause } =
+  const { getTrack, getTrackData, deleteCachedAudioData, handleAudioPause } =
     useMusicUtility();
   const saavnApiBaseUrl = "https://fiyo-saavn.vercel.app/api";
-  const [searchText, setSearchText] = useState();
+  const [searchText, setSearchText] = useState("");
   const [searchFieldActive, setSearchFieldActive] = useState(false);
   const [printError, setPrintError] = useState("");
   const [apiError, setApiError] = useState(false);
@@ -65,7 +66,7 @@ const Music = () => {
   }, []);
 
   const searchTracks = useCallback(
-    async (searchTerm, invoker) => {
+    async (searchTerm) => {
       try {
         setApiLoading(true);
         const { data: response } = await axios.get(
@@ -78,14 +79,10 @@ const Music = () => {
             },
           },
         );
-        if (invoker === "paramQuery") {
-          setTracks(response.data.results);
-          setTopTracks(response.data.results);
-        } else {
-          setTracks(response.data.results);
-        }
+        setTracks(response.data.results);
         setApiError(false);
         setApiLoading(false);
+        return response.data.results;
       } catch (error) {
         setApiError(true);
         setPrintError(`${error.code} : ${error.message}`);
@@ -119,9 +116,24 @@ const Music = () => {
     }
   };
 
+  const getTopTracks = useCallback(async () => {
+    setApiLoading(true);
+    try {
+      const { data: response } = await axios.get(
+        `${saavnApiBaseUrl}/playlists?id=1134543272&limit=50`,
+      );
+      setTopTracks(response.data.songs);
+      setTracks(response.data.songs);
+      setApiLoading(false);
+      return response.data.songs;
+    } catch (error) {
+      console.error("Error fetching top tracks:", error);
+      setApiLoading(false);
+    }
+  }, [saavnApiBaseUrl, setTopTracks]);
+
   const downloadTrack = async (trackId) => {
     try {
-      // Fetch the MP3 file as a blob with progress tracking
       const response = await axios.get(modalDownloadData.fileUrl, {
         responseType: "blob",
         onDownloadProgress: (progressEvent) => {
@@ -134,7 +146,6 @@ const Music = () => {
 
       const blob = new Blob([response.data], { type: "audio/mp4" });
 
-      // Create a link element and trigger a download
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = modalDownloadData.fileName;
@@ -142,11 +153,26 @@ const Music = () => {
       link.click();
       document.body.removeChild(link);
 
-      // Call the callback function to indicate download completion
       closeDownloadModal();
       setDownloadProgress(0);
     } catch (error) {
       console.error(`Error downloading track: ${error.message}`);
+    }
+  };
+
+  const playTrack = async (trackId) => {
+    if (isAudioPlaying) return;
+    setIsAudioLoading(true);
+    try {
+      const a = document.createElement("a");
+      a.click();
+      await getTrack(trackId);
+      setIsAudioPlaying(true);
+    } catch (error) {
+      console.error("Error playing track:", error);
+      setIsAudioPlaying(false);
+    } finally {
+      setIsAudioLoading(false);
     }
   };
 
@@ -173,85 +199,64 @@ const Music = () => {
     fetchTrackData();
   }, [location.search, setCurrentTrack]);
 
-  const getTopTracks = useCallback(async () => {
-    setApiLoading(true);
-    try {
-      const { data: response } = await axios.get(
-        `${saavnApiBaseUrl}/playlists?id=1134543272&limit=50`,
-      );
-      setTopTracks(response.data.songs);
-      setTracks(response.data.songs);
-      setApiLoading(false);
-    } catch (error) {
-      console.error("Error fetching top tracks:", error);
-      setApiLoading(false);
-    }
-  }, [saavnApiBaseUrl, setTopTracks]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const queryParams = new URLSearchParams(location.search);
+      const queryParam = queryParams.get("q");
+      const trackParam = queryParams.get("track");
+      const playParam = queryParams.get("play");
 
-  const getQueryParams = (query) => {
-  return new URLSearchParams(query);
-};
-
-useEffect(() => {
-  const queryParams = getQueryParams(location.search);
-  const q = queryParams.get("q");
-  setSearchText(q || "");
-}, [location.search]);
-
-useEffect(() => {
-  const queryParams = getQueryParams(location.search);
-  
-  const autoPlayAudio = async (index) => {
-    const playParam = queryParams.get("play");
-
-    if (playParam !== "true") return;
-
-    try {
-      const track = queryParams.get("track");
-      setIsAudioLoading(true);
-
-      if (track) {
-        await getTrack(track);
-      } else if (topTracks.length > 0) {
-        if(index === "random") {
-          const randomTrack = topTracks[Math.floor(Math.random() * topTracks.length)].id;
-          await getTrack(randomTrack);
-        } else {
-          const firstTrack = topTracks[0].id;
-          await getTrack(firstTrack);
+      try {
+        if (trackParam && playParam === "true") {
+          await playTrack(trackParam);
         }
-      }
-      queryParams.delete("play");
-      navigate({
-        pathname: location.pathname,
-        search: queryParams.toString(),
-      }, { replace: true });
 
-      setIsAudioPlaying(true);
-    } catch (error) {
-      console.error("Error playing audio:", error);
-      setIsAudioPlaying(false);
-    } finally {
-      setIsAudioLoading(false);
-    }
-  };
+        if (queryParam) {
+          const tracksResult = await searchTracks(queryParam);
+          setSearchText(queryParam);
 
-  if (searchText && searchText.trim() !== "") {
-    if (searchText === queryParams.get("q")) {
-      searchTracks(searchText, "paramQuery");
-      if (topTracks && topTracks.length > 0) {
-        autoPlayAudio("first");
+          if (playParam === "true" && !trackParam && tracksResult.length > 0) {
+            const firstTrack = tracksResult[0].id;
+            if (currentTrack.id !== firstTrack) {
+              await playTrack(firstTrack);
+            }
+          }
+        } else {
+          const topTracksResult = await getTopTracks();
+
+          if (playParam === "true" && !trackParam && topTracksResult.length > 0) {
+            const randomTrack =
+              topTracksResult[
+                Math.floor(Math.random() * topTracksResult.length)
+              ].id;
+            if (currentTrack.id !== randomTrack) {
+              await playTrack(randomTrack);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
+    };
+
+    fetchData();
+  }, [location.search]);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchText(value);
+
+    const newQueryParams = new URLSearchParams(location.search);
+    if (value) {
+      newQueryParams.set("q", value);
+      searchTracks(value);
     } else {
-      searchTracks(searchText);
-      autoPlayAudio("random");
+      newQueryParams.delete("q");
+      getTopTracks();
     }
-  }
-}, [topTracks]);
 
-useEffect(() => {
-  getTopTracks();
-}, [])
+    navigate({ search: newQueryParams.toString() }, { replace: true });
+  };
 
   const openDownloadModal = async (trackId) => {
     try {
@@ -284,7 +289,6 @@ useEffect(() => {
     handleAudioPause();
   };
 
-  // Function to close speech modal and resume audio
   const closeSpeechModal = useCallback(() => {
     setIsSpeechModalOpen(false);
     stopSpeechRecognition();
@@ -394,10 +398,6 @@ useEffect(() => {
       backgroundColor: "rgba(0, 0, 0, 0.4)",
       zIndex: "1",
     },
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchText(event.target.value);
   };
 
   const renderTracks = () => {

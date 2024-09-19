@@ -62,8 +62,7 @@ const useMusicUtility = () => {
 
     const params = new URLSearchParams(window.location.search);
     params.set("track", trackId);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState(null, '', newUrl);
+    navigate(`${location.pathname}?${params.toString()}`, { replace: true });
 
     if (cachedTracks[trackId]) {
       const cachedTrackData = cachedTracks[trackId];
