@@ -44,6 +44,7 @@
     "deploy": "react-scripts build && firebase deploy --only hosting:flexiyo && npx cap sync android && date",
     "push": "git add . && git commit-date && git push origin master",
     "start": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "firebase_build": "CI=false react-scripts build",
     "android": "react-scripts build && npx cap sync && npx cap run android",
