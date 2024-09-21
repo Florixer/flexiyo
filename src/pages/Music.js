@@ -24,7 +24,6 @@ const Music = () => {
     setIsAudioPlaying,
     setIsAudioLoading,
     setCurrentTrack,
-    loopAudio,
     setLoopAudio,
     isTrackDeckModalOpen,
     setIsTrackDeckModalOpen,

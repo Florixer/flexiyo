@@ -150,20 +150,15 @@ const useMusicUtility = () => {
           audio.play();
           setIsAudioPlaying(true);
           await getTrack(currentTrack.id);
-          return;
         } else if ((!loopAudio && callType === "auto") || callType !== "auto") {
           audio.currentTime = 0;
           audio.pause();
           setIsAudioPlaying(false);
-          setIsAudioLoading(true);
           await getTrack(trackIdToFetch);
         } else {
-          return null;
         }
       } catch (error) {
         console.error("Error handling next track:", error);
-      } finally {
-        setIsAudioLoading(false);
       }
     },
     [getTrack],
