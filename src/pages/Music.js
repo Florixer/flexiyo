@@ -24,6 +24,8 @@ const Music = () => {
     setIsAudioPlaying,
     setIsAudioLoading,
     setCurrentTrack,
+    loopAudio,
+    setLoopAudio,
     isTrackDeckModalOpen,
     setIsTrackDeckModalOpen,
   } = useContext(MusicContext);
@@ -203,10 +205,15 @@ const Music = () => {
       const queryParam = queryParams.get("q");
       const trackParam = queryParams.get("track");
       const playParam = queryParams.get("play");
+      const loopParam = queryParams.get("loop");
 
       try {
         if (trackParam && playParam === "true") {
           await playTrack(trackParam);
+        }
+
+        if (loopParam === "true") {
+          setLoopAudio(true);
         }
 
         if (queryParam) {
