@@ -434,7 +434,7 @@ const Music = () => {
           </Headroom>
         ) : null}
         <div className="search-container">
-          <form id="searchTracksForm" className="search-box">
+          <div className="search-box">
             <div
               className="search-bar"
               style={{
@@ -506,7 +506,7 @@ const Music = () => {
                 ></i>
               </button>
             </div>
-          </form>
+          </div>
         </div>
         <div
           className={`print-error alert alert-danger ${
