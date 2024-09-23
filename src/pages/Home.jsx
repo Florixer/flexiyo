@@ -2,7 +2,7 @@ import React from "react";
 import matchMedia from "matchmedia";
 import TodayPicks from "../components/home/TodayPicks";
 import Post from "../components/home/Post";
-import HomeNavbar from "../layout/items/HomeNavbar.js";
+import HomeNavbar from "../layout/items/HomeNavbar";
 export default function Home() {
   document.title = "Flexiyo";
 

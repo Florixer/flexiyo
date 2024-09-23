@@ -9,7 +9,7 @@ import CustomTopNavbar from "../layout/items/CustomTopNavbar";
 import TrackItem from "../components/music/TrackItem";
 import TrackDeck from "../components/music/TrackDeck";
 import MusicContext from "../context/music/MusicContext";
-import useMusicUtility from "../utils/music/useMusicUtility.js";
+import useMusicUtility from "../utils/music/useMusicUtility";
 import spotifyLogo from "../assets/media/img/logo/spotifyLogo.svg";
 import WebSpeechRecognition, {
   useSpeechRecognition,
@@ -179,6 +179,7 @@ const Music = () => {
     const fetchTrackData = async () => {
       const queryParams = new URLSearchParams(location.search);
       const trackParam = queryParams.get("track");
+      const playParam = queryParams.get("play");
 
       if (trackParam) {
         try {
@@ -187,7 +188,9 @@ const Music = () => {
           if (trackData) {
             const { link, ...rest } = trackData;
             setCurrentTrack(rest);
-            setIsTrackDeckModalOpen(true);
+            if (playParam === "true") {
+              setIsTrackDeckModalOpen(true);
+            }
           }
         } catch (error) {
           console.error("Error fetching track data:", error);

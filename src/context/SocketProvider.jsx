@@ -5,8 +5,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { createSocket } from "../hooks/user/socketService.js";
-import UserContext from "../context/user/UserContext.js";
+import { createSocket } from "../hooks/user/socketService";
+import UserContext from "../context/user/UserContext";
 
 const SOCKET_URL =
   "https://fm-server-2xtf.onrender.com" || "http://localhst:4000";

@@ -22,7 +22,7 @@ import Notifications from "./pages/Notifications";
 import { MusicProvider } from "./context/music/MusicContext";
 import { CreateProvider } from "./context/create/CreateContext";
 import UserContext, { UserProvider } from "./context/user/UserContext";
-import { SocketProvider } from "./context/SocketProvider.js";
+import { SocketProvider } from "./context/SocketProvider";
 import LoadingScreen from "./components/app/LoadingScreen";
 
 const App = () => {
