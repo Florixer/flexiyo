@@ -90,7 +90,7 @@ const Music = () => {
         setApiLoading(false);
       }
     },
-    [saavnApiBaseUrl],
+    [saavnApiBaseUrl]
   );
 
   const searchSpeechTracks = async (searchTerm) => {
@@ -131,7 +131,7 @@ const Music = () => {
       console.error("Error fetching top tracks:", error);
       setApiLoading(false);
     }
-  }, [saavnApiBaseUrl, setTopTracks]);
+  }, [saavnApiBaseUrl]);
 
   const downloadTrack = async (trackId) => {
     try {
