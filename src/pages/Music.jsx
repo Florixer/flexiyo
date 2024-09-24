@@ -251,7 +251,7 @@ const Music = () => {
     };
 
     fetchData();
-  }, [location.search]);
+  }, []);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;

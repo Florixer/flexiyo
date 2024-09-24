@@ -56,13 +56,20 @@ const TrackDeck = () => {
 
   useEffect(() => {
     const getTrackLyricsLocally = async () => {
-      const lyrics = await getTrackLyrics();
-      if (lyrics === null) {
-        lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
-      } else if (lyrics === "loading") {
-        lyricsWrapperRef.current.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
-      } else {
-        lyricsWrapperRef.current.innerHTML = lyrics;
+      const lyricsWrapper = lyricsWrapperRef.current;
+      let lyrics;
+
+      if (currentTrack.id !== lyricsWrapper.trackId) {
+        const lyricsMetadata = await getTrackLyrics();
+        lyricsWrapper.trackId = lyricsMetadata.trackId;
+
+        if (lyrics === null) {
+          lyricsWrapper.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Couldn't load lyrics for this song.</div>`;
+        } else if (lyrics === "loading") {
+          lyricsWrapper.innerHTML = `<div style="display: flex; height: 90%; justify-content: center; align-items: center;">Loading...</div>`;
+        } else {
+          lyricsWrapper.innerHTML = lyricsMetadata.lyrics;
+        }
       }
     };
     getTrackLyricsLocally();
@@ -291,6 +298,7 @@ const TrackDeck = () => {
         <div
           className="track-deck--lyrics-wrapper"
           ref={lyricsWrapperRef}
+          trackId={null}
           style={{ whiteSpace: "pre-wrap" }}
         ></div>
       </div>
