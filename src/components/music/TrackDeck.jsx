@@ -27,6 +27,7 @@ const TrackDeck = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPosition, setTouchStartPosition] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLyricsCopied, setIsLyricsCopied] = useState(false);
 
   useEffect(() => {
     const mediaQuery = matchMedia("(max-width: 950px)");
@@ -41,6 +42,17 @@ const TrackDeck = () => {
       mediaQuery.removeListener(handleMediaQueryChange);
     };
   }, []);
+
+  const handleCopyLyrics = () => {
+    navigator.clipboard
+      .writeText(lyricsWrapperRef.current.innerText)
+      .then(() => {
+        setIsLyricsCopied(true);
+        setTimeout(() => {
+          setIsLyricsCopied(false);
+        }, 2000);
+      });
+  };
 
   useEffect(() => {
     const getTrackLyricsLocally = async () => {
@@ -203,7 +215,13 @@ const TrackDeck = () => {
           style={{ width: "2rem", height: "2rem" }}
           onClick={() => (loopAudio ? setLoopAudio(false) : setLoopAudio(true))}
         >
-          <i className="fas fa-repeat" style={{ fontSize: "1.5rem", color: loopAudio ? "#1ED760" : "#ffffff" }} />
+          <i
+            className="fas fa-repeat"
+            style={{
+              fontSize: "1.5rem",
+              color: loopAudio ? "#1ED760" : "#ffffff",
+            }}
+          />
         </span>
         {isAudioPlaying && !isAudioLoading ? (
           <span
@@ -257,15 +275,17 @@ const TrackDeck = () => {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            onClick={() =>
-              navigator.clipboard.writeText(lyricsWrapperRef.current.innerText)
-            }
+            onClick={handleCopyLyrics}
           >
-            <path
-              stroke="#fff"
-              strokeWidth="2"
-              d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2m-6 4h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"
-            ></path>
+            {isLyricsCopied ? (
+              <path stroke="#fff" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+            ) : (
+              <path
+                stroke="#fff"
+                strokeWidth="2"
+                d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2m-6 4h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"
+              ></path>
+            )}
           </svg>
         </div>
         <div
